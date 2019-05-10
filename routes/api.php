@@ -15,14 +15,24 @@ use Illuminate\Http\Request;
 
 Route::group([
 
-    'middleware' => 'api',
+    'middleware' => ['api'],
     'prefix' => 'auth'
 
 ], function () {
+    Route::post('register','ApiAuthController@register');
+    Route::post('login', 'ApiAuthController@login');
+    Route::post('logout', 'ApiAuthController@logout');
+    Route::post('refresh', 'ApiAuthController@refresh');
+    Route::post('me', 'ApiAuthController@me');
 
-    Route::post('login', 'AuthController@login');
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
+});
 
+
+Route::group([
+    'middleware' => ['api']
+], function () {
+    //Account
+    Route::get('get-profile','ApiAccountController@profile');
+    Route::post('reset-password','ApiPasswordResetController@sendEmail');
+    Route::post('change-password','ApiPasswordResetController@changePassword');
 });

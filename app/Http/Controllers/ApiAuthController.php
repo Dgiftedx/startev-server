@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mentor;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
+class ApiAuthController extends Controller
 {
+
+    protected $user;
+
     /**
      * AuthController constructor.
+     * @param User $userModel
      */
-    public function __construct()
+    public function __construct(User $userModel)
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->user = $userModel;
+        $this->middleware('auth:api', ['except' => ['login','register']]);
     }
 
     /**
@@ -21,13 +29,38 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $credentials = request(['email', 'password']);
+        //Get login credentials from request
+        $credentials = request(['username', 'password']);
 
+        //if credentials does not match/exists
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            //return error message
+            return response()->json(['error' => 'Invalid username & Password'], '401');
         }
 
+        //return user instance with token
         return $this->respondWithToken($token);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register( Request $request )
+    {
+        $data = $request->all();
+        $user = $this->user->create($data);
+        $data['user_id'] = $user->id;
+
+        if ($data['role'] === 'student') {
+            Student::create($data);
+        }
+
+        if ($data['role'] === 'mentor'){
+            Mentor::create($data);
+        }
+
+        return $this->login($request);
     }
 
     /**

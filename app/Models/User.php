@@ -16,7 +16,21 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'dob',
+        'avatar',
+        'phone',
+        'email',
+        'password',
+        'username',
+        'country',
+        'state',
+        'city',
+        'bio',
+        'bg_image',
+        'email_verified_at'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -58,5 +72,32 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Encrypt password field that will be stored in user object
+     * @param $value
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+
+    public function mentor()
+    {
+        return $this->hasOne(Mentor::class);
+    }
+
+    public function industries()
+    {
+        return $this->belongsToMany(Industry::class);
     }
 }
