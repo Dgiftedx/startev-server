@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddBgImageToUsersTable extends Migration
+class AddCurrentJobTitleToMentorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddBgImageToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('bg_image')->nullable();
+        Schema::table('mentors', function (Blueprint $table) {
+            $table->string('current_job_position')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class AddBgImageToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('mentors', function (Blueprint $table) {
             //
         });
     }

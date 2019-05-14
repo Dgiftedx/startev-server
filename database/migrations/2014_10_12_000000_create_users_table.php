@@ -18,8 +18,10 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('username');
             $table->string('avatar')->nullable();
+            $table->string('bg_image')->nullable();
             $table->string('phone')->nullable();
             $table->dateTime('dob')->nullable();
+            $table->text('bio')->nullable();
             $table->string('country')->nullable();
             $table->string('state')->nullable();
             $table->string('city')->nullable();

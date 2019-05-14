@@ -15,38 +15,44 @@ class ApiAccountController extends Controller
         $this->middleware('auth:api');
     }
 
-
-    public function profile()
+    public function getCompletionProgress()
     {
-        $userId = auth()->user()->id;
-        $profile = $this->userData($userId);
-        return response()->json(['data' => $profile]);
+        return response()->json(['progress' => $this->checkProfileProgress(auth()->user()->id)]);
     }
 
-    public function userData($id)
+    public function checkProfileProgress( $id )
     {
-        $user = $this->user->with('mentor')->with('student')->find($id);
-        $result = [];
+        $user = $this->user->find($id);
+        $roleData = HelperController::fetchRoleData($id);
 
-        if (!is_null($user->mentor)){
-            $result['role'] = [
-                'student' => false,
-                'mentor' => true,
-                'name' => 'Mentor'
-            ];
-            $result['profile'] = $user->mentor;
+        $totalFields = 0;
+        $filled = 0;
+
+        $userObj = (array) $user;
+        $roleDataObj = (array) $roleData['data'];
+
+        $userObj = $userObj["\x00*\x00attributes"];
+        $roleDataObj = $roleDataObj["\x00*\x00attributes"];
+
+        foreach ($userObj as $key => $item){
+            $totalFields++;
+            if (!is_null($userObj[$key])) {
+                $filled++;
+            }
         }
 
-        if (!is_null($user->student)){
-            $result['role'] = [
-                'student' => true,
-                'mentor' => false,
-                'name' => 'Student'
-            ];
-            $result['profile'] = $user->student;
+        foreach ($roleDataObj as $index => $value) {
+            $totalFields++;
+
+            if (!is_null($roleDataObj[$index])){
+                $filled++;
+            }
         }
 
-        return $result;
+        $progressCal = ( $filled / $totalFields ) * 100;
+        $progressCal = round($progressCal);
+
+        return $progressCal;
     }
 
 

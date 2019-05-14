@@ -96,8 +96,13 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Mentor::class);
     }
 
+    public function business()
+    {
+        return $this->hasOne(Business::class);
+    }
+
     public function industries()
     {
-        return $this->belongsToMany(Industry::class);
+        return $this->belongsToMany(Industry::class, 'user_industry');
     }
 }

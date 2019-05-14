@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMentorsTable extends Migration
+class CreateBusinessesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateMentorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mentors', function (Blueprint $table) {
+        Schema::create('businesses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->string('employmentStatus')->nullable();
-            $table->json('workExperience')->nullable();
-            $table->json('education')->nullable();
+            $table->string('name')->nullable();
+            $table->longText('description')->nullable();
+            $table->json('services')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+            $table->json('social_handle')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +33,6 @@ class CreateMentorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mentors');
+        Schema::dropIfExists('businesses');
     }
 }

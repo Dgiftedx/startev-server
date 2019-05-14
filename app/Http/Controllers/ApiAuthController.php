@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
 use App\Models\Mentor;
 use App\Models\Student;
 use App\Models\User;
@@ -53,14 +54,23 @@ class ApiAuthController extends Controller
         $data['user_id'] = $user->id;
 
         if ($data['role'] === 'student') {
+            // Log a new profile for student & login
             Student::create($data);
-        }
 
-        if ($data['role'] === 'mentor'){
+            return $this->login($request);
+        }
+        else if ($data['role'] === 'mentor'){
+            // If Mentor, log a new profile & login
             Mentor::create($data);
-        }
 
-        return $this->login($request);
+            return $this->login($request);
+        }else {
+
+            //otherwise, it's a business body, Log & login
+            Business::create($data);
+
+            return $this->login($request);
+        }
     }
 
     /**
@@ -104,11 +114,21 @@ class ApiAuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+
+        $roleData = HelperController::fetchRoleData(auth()->user()->id);
+
+        $userData = [
+            'roleData' =>  $roleData['data'],
+            'role' => $roleData['role'],
+            'progress' => (new ApiAccountController($this->user))->checkProfileProgress(auth()->user()->id)
+        ];
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'user' => auth()->user(),
+            'accessData' => $userData
         ]);
     }
 }

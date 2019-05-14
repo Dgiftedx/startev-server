@@ -35,4 +35,9 @@ Route::group([
     Route::get('get-profile','ApiAccountController@profile');
     Route::post('reset-password','ApiPasswordResetController@sendEmail');
     Route::post('change-password','ApiPasswordResetController@changePassword');
+
+    //Industries
+    Route::get('industries','ApiCommonController@industries');
+    Route::get('all-industries','ApiCommonController@allIndustries');
+    Route::get('single-industry/{slug}','ApiCommonController@singleIndustry');
 });
