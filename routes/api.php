@@ -32,7 +32,7 @@ Route::group([
     'middleware' => ['api']
 ], function () {
     //Account
-    Route::get('get-profile','ApiAccountController@profile');
+    Route::get('get-profile','ApiCommonController@profile');
     Route::post('reset-password','ApiPasswordResetController@sendEmail');
     Route::post('change-password','ApiPasswordResetController@changePassword');
 
@@ -40,4 +40,10 @@ Route::group([
     Route::get('industries','ApiCommonController@industries');
     Route::get('all-industries','ApiCommonController@allIndustries');
     Route::get('single-industry/{slug}','ApiCommonController@singleIndustry');
+
+    //Location
+    Route::get('countries','ApiCommonController@countries');
+    Route::get('states/{id}','ApiCommonController@states');
+    Route::get('cities/{id}','ApiCommonController@cities');
+
 });
