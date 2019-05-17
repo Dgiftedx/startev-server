@@ -11,8 +11,7 @@ class Mentor extends Model
      */
     protected $fillable = [
         'user_id',
-        'careerPath',
-        'secondaryCP',
+        'current_job_position',
         'workExperience',
         'education',
         'employmentStatus'

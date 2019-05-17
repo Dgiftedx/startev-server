@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CareerPath;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Industry;
@@ -19,21 +20,6 @@ class ApiCommonController extends Controller
     {
         $this->user = $userModel;
         $this->middleware('auth:api');
-    }
-
-
-    public function profile()
-    {
-        $roleData = HelperController::fetchRoleData(auth()->user()->id);
-
-        $profileData = [
-            'roleData' =>  $roleData['data'],
-            'role' => $roleData['role'],
-            'user' => auth()->user(),
-            'progress' => (new ApiAccountController($this->user))->checkProfileProgress(auth()->user()->id)
-        ];
-
-        return response()->json(['profileData' =>  $profileData]);
     }
 
 
@@ -71,6 +57,12 @@ class ApiCommonController extends Controller
     {
         $industry = $this->prepareSingleIndustry($slug);
         return response()->json(['industry' => $industry]);
+    }
+
+    public function careerPaths()
+    {
+        $careers = CareerPath::orderBy('id','asc')->get(['id','name']);
+        return response()->json(['careers' => $careers]);
     }
 
     public function prepareFewIndustries()

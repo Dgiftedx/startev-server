@@ -52,6 +52,11 @@ class User extends Authenticatable implements JWTSubject
     ];
 
 
+    protected $dates = [
+        'dob'
+    ];
+
+
 
     // Rest omitted for brevity
 

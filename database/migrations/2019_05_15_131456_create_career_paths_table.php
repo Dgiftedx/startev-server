@@ -15,6 +15,8 @@ class CreateCareerPathsTable extends Migration
     {
         Schema::create('career_paths', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('slug');
+            $table->string('name');
             $table->timestamps();
         });
     }
