@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
 use App\Models\CareerPath;
 use App\Models\City;
 use App\Models\Country;
@@ -260,6 +261,22 @@ class ApiAccountController extends Controller
 
         $updated = $this->user->with('industries')->find($id);
         return response()->json(['success' => true ,'updated' => $updated->industries]);
+    }
+
+
+    public function updateBusinessData( Request $request, $id )
+    {
+        $data = $request->all();
+
+        $business = Business::where('user_id','=',$id)->first();
+
+        Business::find($business->id)->update($data);
+
+        $updated = Business::find($business->id);
+
+        $progress = $this->checkProfileProgress($id);
+
+        return response()->json(['success' => true, 'roleData' => $updated, 'progress' => $progress]);
     }
 
 

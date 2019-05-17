@@ -39,6 +39,7 @@ Route::group([
     Route::post('update-mentor-data/{id}','ApiAccountController@updateMentorData');
     Route::post('update-password-data/{id}','ApiAccountController@updatePasswordData');
     Route::post('update-industry-data/{id}','ApiAccountController@updateIndustryData');
+    Route::post('update-business-data/{id}','ApiAccountController@updateBusinessData');
     Route::post('reset-password','ApiPasswordResetController@sendEmail');
     Route::post('change-password','ApiPasswordResetController@changePassword');
     Route::post('update-user-header-image/{id}','ApiAccountController@updateHeaderImage');

@@ -67,7 +67,7 @@ class ApiAuthController extends Controller
         }else {
 
             //otherwise, it's a business body, Log & login
-            Business::create($data);
+            Business::create(['user_id' => $user->id]);
 
             return $this->login($request);
         }

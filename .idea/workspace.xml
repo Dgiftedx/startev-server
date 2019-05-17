@@ -2,19 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d59cda94-0568-435e-b440-f488a20d5179" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/ApiAccountController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/ApiAccountController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/ApiCommonController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/ApiCommonController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/HelperController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/HelperController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Models/CareerPath.php" afterPath="$PROJECT_DIR$/app/Models/CareerPath.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Models/Mentor.php" afterPath="$PROJECT_DIR$/app/Models/Mentor.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Models/User.php" afterPath="$PROJECT_DIR$/app/Models/User.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.lock" afterPath="$PROJECT_DIR$/composer.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/app.php" afterPath="$PROJECT_DIR$/config/app.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/jwt.php" afterPath="$PROJECT_DIR$/config/jwt.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/migrations/2019_05_15_131456_create_career_paths_table.php" afterPath="$PROJECT_DIR$/database/migrations/2019_05_15_131456_create_career_paths_table.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" afterPath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/ApiAuthController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/ApiAuthController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/api.php" afterPath="$PROJECT_DIR$/routes/api.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,7 +19,7 @@
       <file leaf-file-name="ApiCommonController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ApiCommonController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
+            <state relative-caret-position="1425">
               <caret line="63" column="67" lean-forward="false" selection-start-line="63" selection-start-column="67" selection-end-line="63" selection-end-column="67" />
               <folding>
                 <element signature="e#40#66#0#PHP" expanded="true" />
@@ -42,10 +31,10 @@
       <file leaf-file-name="ApiAccountController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ApiAccountController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="569">
-              <caret line="150" column="0" lean-forward="true" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
+            <state relative-caret-position="544">
+              <caret line="279" column="5" lean-forward="true" selection-start-line="279" selection-start-column="5" selection-end-line="279" selection-end-column="5" />
               <folding>
-                <element signature="e#40#66#0#PHP" expanded="true" />
+                <element signature="e#40#64#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -64,7 +53,7 @@
       <file leaf-file-name="HelperController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/HelperController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
+            <state relative-caret-position="1300">
               <caret line="55" column="99" lean-forward="false" selection-start-line="55" selection-start-column="99" selection-end-line="55" selection-end-column="99" />
               <folding>
                 <element signature="e#40#60#0#PHP" expanded="true" />
@@ -76,8 +65,8 @@
       <file leaf-file-name="api.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/api.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
-              <caret line="45" column="16" lean-forward="true" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
+            <state relative-caret-position="619">
+              <caret line="46" column="16" lean-forward="true" selection-start-line="46" selection-start-column="16" selection-end-line="46" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -115,7 +104,6 @@
         <option value="$PROJECT_DIR$/database/migrations/2019_05_10_070109_create_mentors_table.php" />
         <option value="$PROJECT_DIR$/app/Models/Business.php" />
         <option value="$PROJECT_DIR$/database/migrations/2019_05_14_083306_create_businesses_table.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/ApiAuthController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/TestController.php" />
         <option value="$PROJECT_DIR$/database/migrations/2019_05_14_125748_add_current_job_title_to_mentors_table.php" />
         <option value="$PROJECT_DIR$/database/seeds/IndustriesTableSeeder.php" />
@@ -140,6 +128,7 @@
         <option value="$PROJECT_DIR$/config/jwt.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/HelperController.php" />
         <option value="$PROJECT_DIR$/app/Models/Mentor.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/ApiAuthController.php" />
         <option value="$PROJECT_DIR$/routes/api.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/ApiAccountController.php" />
       </list>
@@ -175,7 +164,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -513,6 +501,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -625,11 +614,12 @@
       <workItem from="1557924094665" duration="4910000" />
       <workItem from="1558014421650" duration="15346000" />
       <workItem from="1558074567843" duration="9857000" />
+      <workItem from="1558108522921" duration="1121000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89120000" />
+    <option name="totallyTimeSpent" value="90241000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="32" width="1920" height="1048" extended-state="0" />
@@ -849,16 +839,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ApiAuthController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2819">
-          <caret line="123" column="10" lean-forward="true" selection-start-line="117" selection-start-column="8" selection-end-line="123" selection-end-column="10" />
-          <folding>
-            <element signature="e#40#64#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database/migrations/2019_05_15_084211_add_address_to_users_table.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -900,9 +880,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="669">
           <caret line="287739" column="1" lean-forward="true" selection-start-line="287739" selection-start-column="1" selection-end-line="287739" selection-end-column="1" />
-          <folding>
-            <element signature="e#7#27#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -960,9 +937,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="9" column="6" lean-forward="true" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
-          <folding>
-            <element signature="e#7#38#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -970,9 +944,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="719">
           <caret line="76" column="25" lean-forward="false" selection-start-line="76" selection-start-column="25" selection-end-line="76" selection-end-column="25" />
-          <folding>
-            <element signature="e#7#38#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -987,7 +958,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
           <caret line="14" column="51" lean-forward="true" selection-start-line="14" selection-start-column="51" selection-end-line="14" selection-end-column="51" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -995,7 +965,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="594">
           <caret line="231" column="59" lean-forward="false" selection-start-line="231" selection-start-column="59" selection-end-line="231" selection-end-column="59" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1003,18 +972,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="525">
           <caret line="103" column="30" lean-forward="false" selection-start-line="103" selection-start-column="30" selection-end-line="103" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storage/app/public/users/avatar/2G3E2MNCOQ.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/storage/app/public/users/avatar/2G3E2MNCOQ.png" />
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ApiCommonController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
+        <state relative-caret-position="1425">
           <caret line="63" column="67" lean-forward="false" selection-start-line="63" selection-start-column="67" selection-end-line="63" selection-end-column="67" />
           <folding>
             <element signature="e#40#66#0#PHP" expanded="true" />
@@ -1024,7 +988,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/HelperController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
+        <state relative-caret-position="1300">
           <caret line="55" column="99" lean-forward="false" selection-start-line="55" selection-start-column="99" selection-end-line="55" selection-end-column="99" />
           <folding>
             <element signature="e#40#60#0#PHP" expanded="true" />
@@ -1048,20 +1012,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ApiAuthController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1156">
+          <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/api.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="45" column="16" lean-forward="true" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
+        <state relative-caret-position="619">
+          <caret line="46" column="16" lean-forward="true" selection-start-line="46" selection-start-column="16" selection-end-line="46" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ApiAccountController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="569">
-          <caret line="150" column="0" lean-forward="true" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
+        <state relative-caret-position="544">
+          <caret line="279" column="5" lean-forward="true" selection-start-line="279" selection-start-column="5" selection-end-line="279" selection-end-column="5" />
           <folding>
-            <element signature="e#40#66#0#PHP" expanded="true" />
+            <element signature="e#40#64#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
