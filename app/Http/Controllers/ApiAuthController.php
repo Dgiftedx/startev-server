@@ -50,6 +50,7 @@ class ApiAuthController extends Controller
     public function register( Request $request )
     {
         $data = $request->all();
+        $data['slug'] = uniqid(rand(), true);
         $user = $this->user->create($data);
         $data['user_id'] = $user->id;
 

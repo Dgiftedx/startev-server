@@ -57,4 +57,6 @@ Route::group([
     //Career Paths
     Route::get('career-paths','ApiCommonController@careerPaths');
 
+    //Mentor
+    Route::get('single-mentor-profile/{slug}','ApiCommonController@singleMentor');
 });

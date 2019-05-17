@@ -77,7 +77,7 @@ class ApiCommonController extends Controller
 
     public function prepareSingleIndustry($slug)
     {
-        return Industry::whereSlug($slug)->with('mentors')->first();
+        return Industry::whereSlug($slug)->with('mentors')->with('mentors.mentor')->with('mentors.business')->first();
     }
 
     public function prepareStates($country_id)
@@ -88,5 +88,20 @@ class ApiCommonController extends Controller
     public function prepareCities($country_id)
     {
         return City::where('country_id','=',$country_id)->orderBy('id','asc')->get(['id','name']);
+    }
+
+
+    //Mentor
+    public function singleMentor( $slug )
+    {
+        $user = $this->user->whereSlug($slug)->first();
+        $roleData = HelperController::fetchRoleData($user->id);
+
+        $profile = [
+            'user' => $user,
+            'roleData' => $roleData
+        ];
+        
+        return response()->json(['profile' => $profile]);
     }
 }
