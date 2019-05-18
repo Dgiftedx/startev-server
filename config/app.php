@@ -163,6 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Pusher\Laravel\PusherServiceProvider::class,
 
 
         /*
@@ -230,6 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Pusher' => Pusher\Laravel\Facades\Pusher::class,
     ],
 
 ];

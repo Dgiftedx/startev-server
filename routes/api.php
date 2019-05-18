@@ -59,4 +59,8 @@ Route::group([
 
     //Mentor
     Route::get('single-mentor-profile/{slug}','ApiCommonController@singleMentor');
+
+    //Feeds
+    Route::get('get-feeds','ApiFeedsController@index');
+    Route::post('feed-post-article','ApiFeedsController@post');
 });
