@@ -17,7 +17,10 @@ class CreateFeedsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->string('title');
-            $table->text('body');
+            $table->longText('body');
+            $table->string('image')->nullable();
+            $table->string('video')->nullable();
+            $table->text('link')->nullable();
             $table->string('post_type');
             $table->timestamp('time');
             $table->timestamps();

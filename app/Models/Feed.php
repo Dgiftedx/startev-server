@@ -10,6 +10,9 @@ class Feed extends Model
         'user_id',
         'title',
         'body',
+        'image',
+        'video',
+        'link',
         'time',
         'post_type'
     ];
