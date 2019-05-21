@@ -68,4 +68,13 @@ Route::group([
     //Follow & Un-follow
     Route::get('follow/{userId}/{target}', 'ApiFollowController@follow');
     Route::get('toggle-follow/{userId}/{target}', 'ApiFollowController@toggleFollow');
+
+
+    //Venture
+    Route::get('all-ventures','ApiVentureController@index');
+    Route::post('new-venture','ApiVentureController@store');
+    Route::get('/all-business','ApiVentureController@allBusiness');
+    Route::post('update-venture/{id}','ApiVentureController@update');
+    Route::get('business-ventures/{id}', 'ApiVentureController@ventureByBusiness');
+    Route::get('remove-venture/{business_id}/{id}', 'ApiVentureController@removeVenture');
 });

@@ -36,4 +36,9 @@ class Business extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function ventures()
+    {
+        return $this->hasMany(BusinessVenture::class, 'business_id');
+    }
 }
