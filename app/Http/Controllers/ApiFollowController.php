@@ -28,13 +28,33 @@ class ApiFollowController extends Controller
         $this->url = url('/');
     }
 
-
     public function follow($userId, $target)
     {
         $user = $this->user->find($userId);
         $user->follow($target);
         $people = (new ApiFeedsController($this->user, $this->feed))->gatherPeopleToFollow($userId);
         return response()->json(['success' => true, 'people' => $people]);
+    }
+
+    public function toggleFollow($userId, $target)
+    {
+
+        $user = $this->user->find($userId);
+        $user->toggleFollow($target);
+
+        $targetUser = $this->user->find($target);
+
+        if ($user->isFollowing($target)){
+            $message = "You are now following {$targetUser->name}. You'll now receive updates from this user";
+        }else{
+            $message = "You've stopped following {$targetUser->name}. You'll no longer receive updates from this user";
+        }
+        return response([
+            'message' => $message,
+            'people' => (new ApiFeedsController($this->user, $this->feed))->gatherPeopleToFollow($userId),
+            'following' => $user->followings()->get(),
+            'followers' => $user->followers()->get()
+        ]);
     }
 
 }

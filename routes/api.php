@@ -67,4 +67,5 @@ Route::group([
 
     //Follow & Un-follow
     Route::get('follow/{userId}/{target}', 'ApiFollowController@follow');
+    Route::get('toggle-follow/{userId}/{target}', 'ApiFollowController@toggleFollow');
 });

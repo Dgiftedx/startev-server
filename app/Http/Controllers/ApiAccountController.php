@@ -93,12 +93,24 @@ class ApiAccountController extends Controller
     public function prepareProfile($id)
     {
         $roleData = HelperController::fetchRoleData($id);
+        $user = $this->user->with('industries')->find($id);
+        $followers = $user->followers()->get();
+
+        foreach ($followers as $follower){
+            if ($user->isFollowing($follower->id)){
+                $follower->isFollowing = true;
+            }else{
+                $follower->isfollowing = false;
+            }
+        }
 
         $profileData = [
             'roleData' =>  $roleData['data'],
             'role' => $roleData['role'],
-            'user' => $this->user->with('industries')->find($id),
-            'progress' => $this->checkProfileProgress($id)
+            'user' => $user,
+            'progress' => $this->checkProfileProgress($id),
+            'followers' => $user->followers()->get(),
+            'following' => $user->followings()->get()
         ];
 
         return $profileData;
