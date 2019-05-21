@@ -62,5 +62,9 @@ Route::group([
 
     //Feeds
     Route::get('get-feeds','ApiFeedsController@index');
+    Route::get('get-people','ApiFeedsController@people'); //Get people to follow
     Route::post('feed-post-article','ApiFeedsController@post');
+
+    //Follow & Un-follow
+    Route::get('follow/{userId}/{target}', 'ApiFollowController@follow');
 });

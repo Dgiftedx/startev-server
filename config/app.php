@@ -164,6 +164,7 @@ return [
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Pusher\Laravel\PusherServiceProvider::class,
+        Overtrue\LaravelFollow\FollowServiceProvider::class,
 
 
         /*

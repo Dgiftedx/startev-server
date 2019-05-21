@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
+use App\Models\Mentor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -9,6 +11,12 @@ use Intervention\Image\Facades\Image;
 
 class HelperController extends Controller
 {
+
+    /**
+     * Fetch Role Data
+     * @param $id
+     * @return array
+     */
     public static function fetchRoleData( $id )
     {
         $user = User::with('mentor')->with('student')->with('business')->find($id);
@@ -25,6 +33,24 @@ class HelperController extends Controller
         }
     }
 
+
+    /**
+     * Get real mentors Ids
+     * @return mixed
+     */
+    public static function realMentorsId()
+    {
+        return Mentor::orderBy('id','asc')->pluck('user_id')->toArray();
+    }
+
+    /**
+     * Get real business Ids
+     * @return mixed
+     */
+    public static function realBusinessId()
+    {
+        return Business::orderBy('id','asc')->pluck('user_id')->toArray();
+    }
 
     public static function generateIdentifier($length){
         $token = "";

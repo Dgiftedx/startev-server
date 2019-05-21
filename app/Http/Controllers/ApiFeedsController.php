@@ -39,6 +39,7 @@ class ApiFeedsController extends Controller
             ->get()
             ->mapToGroups(function ($item) use (&$feeds) {
                 $feeds[] = [
+                    'id' => $item->id,
                     'postType' => $item->post_type,
                     'roleData' => HelperController::fetchRoleData($item->user_id),
                     'user' => $this->user->where('id','=',$item->user_id)->get(['id','name','avatar']),
@@ -69,7 +70,7 @@ class ApiFeedsController extends Controller
             'time' => Carbon::now()
         ];
 
-        if ($request->has('image')){
+        if (!is_null($request->file('image')) && $request->file('image')->isValid()){
             //upload image and add link to array
             $path = $this->url. '/storage'. HelperController::processImageUpload($request->file('image'),$data['title'],'feeds',640,800);
             $feedData['image'] = $path;
@@ -96,6 +97,55 @@ class ApiFeedsController extends Controller
         $this->feed->create($feedData);
 
         return response()->json(['success' => true, 'message' => 'Post published successfully']);
+    }
+
+    /**
+     * Get people to follow
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function people()
+    {
+        //get authenticated user
+        $userId = auth()->user()->id;
+        $people = $this->gatherPeopleToFollow($userId);
+        return response()->json($people);
+    }
+
+    public function gatherPeopleToFollow($userId)
+    {
+        //get mentors id array
+        $mentors = HelperController::realMentorsId();
+        //get business/companies id array
+        $business = HelperController::realBusinessId();
+
+        //get already followed ids
+        $followings = $this->followingIds($userId);
+        //combine mentors and business ids
+        $combined = array_merge($mentors, $business);
+        //exclude already followed people, also the current user id from combined ids
+        $followings[] = $userId;
+        $toFollow = array_diff($combined, $followings);
+
+        $people = $this->user->whereIn('id',$toFollow)->take(10)->get(['id','name','avatar']);
+
+        foreach ($people as $person) {
+            $person->roleData = HelperController::fetchRoleData($person->id);
+        }
+
+        return $people;
+    }
+
+    public function followingIds( $user_id )
+    {
+        $user = $this->user->find($user_id);
+        return $user->followings()->pluck('id')->toArray();
+    }
+
+
+    public function followings( $user_id )
+    {
+        $user = $this->user->find($user_id);
+        return $user->followings()->get();
     }
 
 }
