@@ -76,5 +76,9 @@ Route::group([
     Route::get('/all-business','ApiVentureController@allBusiness');
     Route::post('update-venture/{id}','ApiVentureController@update');
     Route::get('business-ventures/{id}', 'ApiVentureController@ventureByBusiness');
+    Route::get('venture-by-business/{id}', 'ApiVentureController@ventureBusiness');
     Route::get('remove-venture/{business_id}/{id}', 'ApiVentureController@removeVenture');
+
+    //Partner
+    Route::get('single-venture/{identifier}','ApiVentureController@singleVenture');
 });

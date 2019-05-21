@@ -33,7 +33,7 @@ class ApiVentureController extends Controller
         $all = BusinessVenture::with('business')
             ->with('business.user')
             ->orderBy('id','desc')
-            ->get(['id','business_id','venture_name','created_at']);
+            ->get(['id','business_id','identifier','venture_name','created_at']);
         return response()->json(['ventures' => $all]);
     }
 
@@ -81,6 +81,12 @@ class ApiVentureController extends Controller
         return Business::with('ventures')->find($businessID);
     }
 
+    public function ventureBusiness( $id )
+    {
+        $ventures = BusinessVenture::with('business')->with('business.user')->where('business_id','=',$id)->get();
+        return response()->json(['ventures' => $ventures]);
+    }
+
 
     public function removeVenture($business_id, $id)
     {
@@ -89,5 +95,17 @@ class ApiVentureController extends Controller
         $ventures = $this->businessVentures($business_id);
 
         return response()->json(['ventures' => $ventures->ventures]);
+    }
+
+
+    public function singleVenture($identifier)
+    {
+        $venture = BusinessVenture::with('business')->with('business.user')->where('identifier','=', $identifier)->first();
+        $data = [
+            'venture' => $venture,
+            'similar' => BusinessVenture::with('business')->with('business.user')->where('business_id','=',$venture->business_id)->get()
+        ];
+
+        return response()->json(['result' => $data]);
     }
 }
