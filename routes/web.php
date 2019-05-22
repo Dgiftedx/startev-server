@@ -18,3 +18,5 @@ Route::get('/', function () {
 Route::get('/build-countries', 'TestQueryController@buildCountries');
 Route::get('/build-states', 'TestQueryController@buildStates');
 Route::get('/build-cities', 'TestQueryController@buildCities');
+
+Route::get('/test-carbon','TestController@testCarbon');

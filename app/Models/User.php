@@ -114,4 +114,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Industry::class, 'user_industry');
     }
+
+    public function partnerUserPivot()
+    {
+        return $this->hasOne(Partnership::class,'user_id');
+    }
+
+    public function businessPartners()
+    {
+        return $this->belongsToMany(BusinessVenture::class, 'partnerships','user_id','venture_id');
+    }
 }

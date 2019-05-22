@@ -18,4 +18,14 @@ class BusinessVenture extends Model
     {
         return $this->belongsTo(Business::class, 'business_id');
     }
+
+    public function partnerVenturePivot()
+    {
+        return $this->hasOne(Partnership::class, 'venture_id');
+    }
+
+    public function partners()
+    {
+        return $this->belongsToMany(User::class, 'partnerships','user_id','venture_id');
+    }
 }

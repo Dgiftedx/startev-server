@@ -81,4 +81,6 @@ Route::group([
 
     //Partner
     Route::get('single-venture/{identifier}','ApiVentureController@singleVenture');
+    Route::get('apply-to-partner/{venture}/{user_id}','ApiVentureController@applyToPartner');
+    Route::get('accept-partnership/{partnership_id}/{user_id}','ApiVentureController@acceptPartnership');
 });

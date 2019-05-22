@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use App\Models\BusinessVenture;
+use App\Models\Partnership;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -47,7 +48,8 @@ class ApiVentureController extends Controller
     public function ventureByBusiness($id)
     {
         $ventures = $this->businessVentures($id);
-        return response()->json(['ventures' => $ventures->ventures]);
+        $partners = Partnership::where('business_id','=',$id)->with('venture')->with('user')->with('business')->get();
+        return response()->json(['ventures' => $ventures->ventures, 'partners' => $partners]);
     }
 
 
@@ -78,7 +80,7 @@ class ApiVentureController extends Controller
 
     public function businessVentures($businessID)
     {
-        return Business::with('ventures')->find($businessID);
+        return Business::with('ventures')->with('ventures.partners')->find($businessID);
     }
 
     public function ventureBusiness( $id )
@@ -101,11 +103,52 @@ class ApiVentureController extends Controller
     public function singleVenture($identifier)
     {
         $venture = BusinessVenture::with('business')->with('business.user')->where('identifier','=', $identifier)->first();
+        $venturePartners = Partnership::where('venture_id','=',$venture->id)->where('business_id','=',$venture->business_id)->get();
         $data = [
+            'venturePartners' => $venturePartners,
             'venture' => $venture,
             'similar' => BusinessVenture::with('business')->with('business.user')->where('business_id','=',$venture->business_id)->get()
         ];
 
+        if (auth()->check()){
+            $data['userIsPartner'] = Partnership::where('user_id','=',auth()->user()->id)
+                ->where('venture_id','=',$venture->id)->first();
+        }
+
         return response()->json(['result' => $data]);
+    }
+
+
+    public function applyToPartner( $ventureId, $userId )
+    {
+        $data = [];
+        $role = HelperController::fetchRoleData($userId);
+        $venture = BusinessVenture::where('id','=',$ventureId)->first();
+
+        $data['user_id'] = $userId;
+        $data['role_data_id'] = $role['data']->id;
+        $data['venture_id'] = $ventureId;
+        $data['business_id'] = $venture->business_id;
+
+        $id = Partnership::create($data);
+
+        $update = Partnership::find($id);
+
+        return response()->json($update[0]);
+    }
+
+    public function acceptPartnership( $partnershipId, $userId )
+    {
+        $user = $this->user->find($userId);
+        $ref_link = HelperController::generateIdentifier(15);
+        $record = Partnership::find($partnershipId);
+        $record->update([
+            'ref_link' => $this->url . '/api/referral/' .$ref_link . '-' .$user->slug,
+            'status' => 'accepted'
+        ]);
+
+        $partners = Partnership::where('business_id','=',$record->business_id)->with('venture')->with('user')->get();
+
+        return response()->json($partners);
     }
 }
