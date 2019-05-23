@@ -18,6 +18,13 @@ class TestController extends Controller
         $this->user = $userModel;
     }
 
+    public function feeds()
+    {
+        $feeds = Feed::orderBy('id','desc')->get();
+        foreach ($feeds as $feed) {
+            dump($feed->likers()->get());
+        }
+    }
 
     public function testCarbon()
     {

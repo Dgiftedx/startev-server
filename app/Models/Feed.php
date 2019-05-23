@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Overtrue\LaravelFollow\Traits\CanBeLiked;
+use PhpParser\Comment;
 
 class Feed extends Model
 {
+    use CanBeLiked;
+
     protected $fillable = [
         'user_id',
         'title',
@@ -14,9 +18,14 @@ class Feed extends Model
         'video',
         'link',
         'time',
+        'hasLiked',
         'post_type'
     ];
 
 
+    public function feedComments()
+    {
+        return $this->hasMany(FeedComment::class, 'feed_id');
+    }
 
 }

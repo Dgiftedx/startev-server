@@ -7,11 +7,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Overtrue\LaravelFollow\Traits\CanFollow;
+use Overtrue\LaravelFollow\Traits\CanLike;
 use Overtrue\LaravelFollow\Traits\CanBeFollowed;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, CanFollow, CanBeFollowed;
+    use Notifiable, CanFollow, CanLike, CanBeFollowed;
 
     /**
      * The attributes that are mass assignable.
@@ -123,5 +124,10 @@ class User extends Authenticatable implements JWTSubject
     public function businessPartners()
     {
         return $this->belongsToMany(BusinessVenture::class, 'partnerships','user_id','venture_id');
+    }
+
+    public function userComment()
+    {
+        return $this->belongsTo(FeedComment::class, 'user_id');
     }
 }

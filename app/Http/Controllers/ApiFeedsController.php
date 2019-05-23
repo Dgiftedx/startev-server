@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Feed;
+use App\Models\FeedComment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class ApiFeedsController extends Controller
     {
         $feeds = [];
 
-        $this->feed->orderBy('id','desc')
+        $this->feed->with('feedComments')->with('feedComments.user')->orderBy('id','desc')
             ->get()
             ->mapToGroups(function ($item) use (&$feeds) {
                 $feeds[] = [
@@ -43,7 +44,10 @@ class ApiFeedsController extends Controller
                     'postType' => $item->post_type,
                     'roleData' => HelperController::fetchRoleData($item->user_id),
                     'user' => $this->user->where('id','=',$item->user_id)->get(['id','name','avatar']),
+                    'hasLiked' => $item->hasLiked,
                     'title' => $item->title,
+                    'likers' => $item->likers()->get(),
+                    'comments'=> $item->feedComments,
                     'image' => $item->image,
                     'video' => $item->image,
                     'link' => $item->link,
@@ -70,10 +74,19 @@ class ApiFeedsController extends Controller
             'time' => Carbon::now()
         ];
 
+        $databaseUpdate = [
+            'user_id' => $data['user_id'],
+            'title' => $data['title'],
+            'body' => $data['body'],
+            'post_type' => $data['post_type'],
+            'time' => Carbon::now()
+        ];
+
         if (!is_null($request->file('image')) && $request->file('image')->isValid()){
             //upload image and add link to array
             $path = $this->url. '/storage'. HelperController::processImageUpload($request->file('image'),$data['title'],'feeds',640,800);
             $feedData['image'] = $path;
+            $databaseUpdate['image'] = $path;
         }
 
         if ($request->has('video') && !is_null($data['video'])){
@@ -85,16 +98,11 @@ class ApiFeedsController extends Controller
             //Crawl link information and save inside link in array
         }
 
+        $update = $this->feed->create($databaseUpdate);
+
+        $feedData['id'] = $update->id;
+
         Pusher::trigger('my-channel', 'my-event', $feedData);
-
-        $feedData['user_id'] = $data['user_id'];
-        unset($feedData['user']);
-        unset($feedData['roleData']);
-        $feedData['post_type'] = $feedData['postType'];
-
-        unset($feedData['postType']);
-
-        $this->feed->create($feedData);
 
         return response()->json(['success' => true, 'message' => 'Post published successfully']);
     }
@@ -146,6 +154,54 @@ class ApiFeedsController extends Controller
     {
         $user = $this->user->find($user_id);
         return $user->followings()->get();
+    }
+
+    public function toggleLike($userId, $feed)
+    {
+
+        $targetFeed = Feed::find($feed);
+
+        $user = $this->user->find($userId);
+
+        $user->toggleLike($targetFeed);
+
+        if ($user->hasLiked($targetFeed)){
+            $message = "You Liked {$targetFeed->title}.";
+            $targetFeed->update(['hasLiked' => true]);
+        }else{
+            $targetFeed->update(['hasLiked' => false]);
+            $message = "You've UnLiked ({$targetFeed->title}).";
+        }
+
+        $targetFeed->hasliked = $user->hasLiked($targetFeed);
+
+        return response([
+            'message' => $message,
+            'hasLiked' => $user->hasLiked($targetFeed),
+            'likers' => $targetFeed->likers()->get(),
+            'targetFeed' => $targetFeed
+        ]);
+    }
+
+    public function postComment( Request $request, $userId )
+    {
+        $comment = $request->all();
+        $comment['user_id'] = $userId;
+        $comment['feed_id'] = $comment['feedId'];
+        $comment['comment'] = $comment['text'];
+
+        unset($comment['feedId']);
+        unset($comment['text']);
+
+        $new = FeedComment::create($comment);
+
+        $update = Feed::with('feedComments')->with('feedComments.user')->find($new->feed_id);
+        return response()->json([
+            'success' => true,
+            'feed_id' => $new->feed_id,
+            'comments' => $update->feedComments
+        ]);
+
     }
 
 }

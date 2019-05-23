@@ -69,6 +69,11 @@ Route::group([
     Route::get('follow/{userId}/{target}', 'ApiFollowController@follow');
     Route::get('toggle-follow/{userId}/{target}', 'ApiFollowController@toggleFollow');
 
+    //Like & Un-Like
+    Route::get('toggle-like/{userId}/{feed}', 'ApiFeedsController@toggleLike');
+
+    //Comments on Feeds
+    Route::post('post-comment/{user_id}','ApiFeedsController@postComment');
 
     //Venture
     Route::get('all-ventures','ApiVentureController@index');
