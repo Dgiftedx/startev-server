@@ -22,6 +22,11 @@ class Feed extends Model
         'post_type'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 
     public function feedComments()
     {

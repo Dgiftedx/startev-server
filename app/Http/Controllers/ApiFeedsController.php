@@ -204,4 +204,11 @@ class ApiFeedsController extends Controller
 
     }
 
+    public function showSingle($feed_id)
+    {
+        $feed = Feed::with('user')->with('feedComments')->with('feedComments.user')->find($feed_id);
+        $likers = $feed->likers()->get();
+        return response()->json(['likers' => $likers, 'feed' => $feed]);
+    }
+
 }

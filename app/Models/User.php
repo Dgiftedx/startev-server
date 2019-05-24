@@ -126,8 +126,18 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(BusinessVenture::class, 'partnerships','user_id','venture_id');
     }
 
+    public function feeds()
+    {
+        return $this->hasMany(Feed::class, 'user_id');
+    }
+
     public function userComment()
     {
         return $this->belongsTo(FeedComment::class, 'user_id');
+    }
+
+    public function publications()
+    {
+        return $this->hasMany(Publication::class, 'user_id');
     }
 }

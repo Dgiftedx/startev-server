@@ -64,6 +64,7 @@ Route::group([
     Route::get('get-feeds','ApiFeedsController@index');
     Route::get('get-people','ApiFeedsController@people'); //Get people to follow
     Route::post('feed-post-article','ApiFeedsController@post');
+    Route::get('single-feed/{feed_id}','ApiFeedsController@showSingle');
 
     //Follow & Un-follow
     Route::get('follow/{userId}/{target}', 'ApiFollowController@follow');
@@ -88,4 +89,8 @@ Route::group([
     Route::get('single-venture/{identifier}','ApiVentureController@singleVenture');
     Route::get('apply-to-partner/{venture}/{user_id}','ApiVentureController@applyToPartner');
     Route::get('accept-partnership/{partnership_id}/{user_id}','ApiVentureController@acceptPartnership');
+
+
+    //Publication
+    Route::post('publish-publication','PublicationController@store');
 });
