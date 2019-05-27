@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Overtrue\LaravelFollow\Traits\CanBeLiked;
 
 class Publication extends Model
 {
+    use CanBeLiked;
+
     protected $fillable = [
         'user_id',
         'title',

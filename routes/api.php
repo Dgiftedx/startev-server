@@ -92,5 +92,8 @@ Route::group([
 
 
     //Publication
-    Route::post('publish-publication','PublicationController@store');
+    Route::get('get-publications','ApiPublicationController@index');
+    Route::post('publish-publication','ApiPublicationController@store');
+    Route::get('single-publication/{publication_id}','ApiPublicationController@show');
+    Route::get('toggle-publication-like/{userId}/{publication}', 'ApiPublicationController@toggleLike');
 });

@@ -43,6 +43,13 @@ class HelperController extends Controller
         return Mentor::orderBy('id','asc')->pluck('user_id')->toArray();
     }
 
+    public static function mentors()
+    {
+        $mentorsId = self::realMentorsId();
+
+        return User::whereIn('id',$mentorsId)->with('mentor')->get();
+    }
+
     /**
      * Get real business Ids
      * @return mixed

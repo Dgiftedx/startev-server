@@ -99,7 +99,11 @@ class ApiCommonController extends Controller
 
         $profile = [
             'user' => $user,
-            'roleData' => $roleData
+            'roleData' => $roleData,
+            'role' => $roleData['role'],
+            'followers' => $user->followers()->get(),
+            'following' => $user->followings()->get(),
+            'mentors' => HelperController::mentors()
         ];
         
         return response()->json(['profile' => $profile]);
