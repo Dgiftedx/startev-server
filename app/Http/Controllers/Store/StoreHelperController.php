@@ -1,0 +1,205 @@
+<?php
+
+namespace App\Http\Controllers\Store;
+
+use App\Http\Controllers\HelperController;
+use App\Models\Store\UserStore;
+use App\Models\Store\UserVentureCommission;
+use App\Models\Store\UserVentureOrder;
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+/**
+ * Class StoreHelperController
+ * @package App\Http\Controllers\Store
+ */
+class StoreHelperController extends Controller
+{
+
+    /**
+     * Store checker : check if user has an active
+     * Store.
+     * @param $userId
+     * @return mixed
+     */
+    public static function hasActiveStore($userId)
+    {
+        return UserStore::hasStore($userId);
+    }
+
+
+    /**
+     * Chec if user has commission
+     * @param $userId
+     * @return mixed
+     */
+    public static function hasCommission($userId)
+    {
+        return UserVentureCommission::hasCommission($userId);
+
+    }
+
+
+    /**
+     * Check if user has an active store and made orders.
+     * @param $userId
+     * @return bool
+     */
+    public static function hasStoreAndOrders( $userId )
+    {
+        //Check if use has an active store and has orders
+        return self::hasActiveStore($userId) &&
+            UserVentureOrder::hasOrders(UserStore::storeId($userId))?true:false;
+    }
+
+
+    /**
+     * Create user store with setup data
+     * if it has not been created
+     * @param $userId
+     * @return void
+     */
+    public static function CreateUserStore($userId)
+    {
+        if (!self::hasActiveStore($userId)){
+            $setupData = self::prepareStoreInitialData();
+            $setupData['user_id'] = $userId;
+            UserStore::create($setupData);
+        }
+    }
+
+    /**
+     * Get initial setup settings needed for new store
+     * Some of this settings can be changes later,
+     * While some are permanent, e.g slug and identifier
+     * @return array
+     */
+    private static function prepareStoreInitialData()
+    {
+        return [
+            'slug' => uniqid(rand(), true),
+            'identifier' => HelperController::generateIdentifier(18),
+        ];
+    }
+
+
+
+    /**
+     * Get orders total amount
+     * @param $userId
+     * @return float|int
+     */
+    public static function OrdersTotalAmount( $userId )
+    {
+        // If user has an active store and has orders
+        // return orders total amount.
+        if (self::hasStoreAndOrders($userId)) {
+            //return amount
+            return self::getOrdersTotalAmount(UserStore::storeId($userId));
+        }
+
+        // if there is no active store, return 0,
+        // of course you must have an active store before
+        // calling this guy.
+        return 0;
+
+    }
+
+
+    public static function OrdersDeliveredAmount( $userId )
+    {
+        // If user has an active store and has orders
+        // return total orders delivered amount.
+        if (self::hasStoreAndOrders($userId)) {
+            //return amount
+            return self::getOrdersDeliveredAmount(UserStore::storeId($userId));
+        }
+
+        // if there is no active store, or orders,
+        // of course you must have an active store before
+        // calling this guy.
+        return 0;
+    }
+
+    /**
+     * Get total commission sor far
+     * @param $userId
+     * @return float|int
+     */
+    public static function totalCommission($userId)
+    {
+        // If user has commission, get total commission so far
+        if (self::hasCommission($userId)) {
+            return self::getTotalCommission(UserStore::storeId($userId), $userId);
+        }
+
+        return 0;
+    }
+
+
+    /**
+     * Get recent orders
+     * @param $userId
+     * @return mixed
+     */
+    public static function recentOrders($userId)
+    {
+        //Build query array
+        $query = [
+            'store_id' => UserStore::storeId($userId),
+            'status' => 'pending'
+        ];
+
+        return self::getOrders($query);
+    }
+
+
+    /**
+     * Get total amount of orders in store
+     * @param $storeId
+     * @return float|int
+     */
+    private static function getOrdersTotalAmount($storeId)
+    {
+        $total = UserVentureOrder::where('store_id','=',$storeId)->pluck(['amount'])->toArray();
+        return array_sum($total);
+    }
+
+
+    /**
+     * Get amount of orders deleivered so far.
+     * @param $storeId
+     * @return float|int
+     */
+    private static function getOrdersDeliveredAmount($storeId)
+    {
+        $deliveredAmount = UserVentureOrder::where('store_id','=',$storeId)
+            ->where('status','=','delivered')->pluck(['amount'])->toArray();
+        return array_sum($deliveredAmount);
+    }
+
+    /**
+     * Get user total commissions
+     * @param $storeId
+     * @param $userId
+     * @return float|int
+     */
+    private static function getTotalCommission($storeId, $userId)
+    {
+        $total = UserVentureCommission::where('store_id','=',$storeId)
+            ->where('user_id','=', $userId)->pluck(['commission'])->toArray();
+        return array_sum($total);
+    }
+
+
+    /**
+     * query Orders Model and return result
+     * @param $query
+     * @return mixed
+     */
+    public static function getOrders($query)
+    {
+        return UserVentureOrder::with('buyer')->with('product')->byFilter($query)->get();
+    }
+}

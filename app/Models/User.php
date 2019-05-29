@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Store\UserStore;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -101,43 +102,78 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Student::class);
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function mentor()
     {
         return $this->hasOne(Mentor::class);
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function business()
     {
         return $this->hasOne(Business::class);
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function industries()
     {
         return $this->belongsToMany(Industry::class, 'user_industry');
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function partnerUserPivot()
     {
         return $this->hasOne(Partnership::class,'user_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function businessPartners()
     {
         return $this->belongsToMany(BusinessVenture::class, 'partnerships','user_id','venture_id');
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function feeds()
     {
         return $this->hasMany(Feed::class, 'user_id');
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function userComment()
     {
         return $this->belongsTo(FeedComment::class, 'user_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function publications()
     {
         return $this->hasMany(Publication::class, 'user_id');
+    }
+
+    public function userStore()
+    {
+        return $this->hasOne(UserStore::class,'user_id');
     }
 }

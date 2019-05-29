@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Store\StoreHelperController;
 use App\Models\Business;
 use App\Models\BusinessVenture;
 use App\Models\Partnership;
@@ -36,6 +37,13 @@ class ApiVentureController extends Controller
             ->orderBy('id','desc')
             ->get(['id','business_id','identifier','venture_name','created_at']);
         return response()->json(['ventures' => $all]);
+    }
+
+    public function getPartners()
+    {
+        $id = auth()->user()->id;
+        $partners = $this->user->with('partnerUserPivot')->find($id);
+        return response()->json(['partners' => $partners->partnerUserPivot]);
     }
 
     public function allBusiness()
@@ -142,6 +150,12 @@ class ApiVentureController extends Controller
         $user = $this->user->find($userId);
         $ref_link = HelperController::generateIdentifier(15);
         $record = Partnership::find($partnershipId);
+
+        // Handle user store as partnership comes with automatic store activation.
+        // If this user doesn't has a store in place, create one.
+        StoreHelperController::CreateUserStore($userId);
+
+        //Update partnership data with referral link
         $record->update([
             'ref_link' => $this->url . '/api/referral/' .$ref_link . '-' .$user->slug,
             'status' => 'accepted'

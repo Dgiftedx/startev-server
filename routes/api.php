@@ -86,6 +86,7 @@ Route::group([
     Route::get('remove-venture/{business_id}/{id}', 'ApiVentureController@removeVenture');
 
     //Partner
+    Route::get('get-partners','ApiVentureController@getPartners');
     Route::get('single-venture/{identifier}','ApiVentureController@singleVenture');
     Route::get('apply-to-partner/{venture}/{user_id}','ApiVentureController@applyToPartner');
     Route::get('accept-partnership/{partnership_id}/{user_id}','ApiVentureController@acceptPartnership');
@@ -96,4 +97,23 @@ Route::group([
     Route::post('publish-publication','ApiPublicationController@store');
     Route::get('single-publication/{publication_id}','ApiPublicationController@show');
     Route::get('toggle-publication-like/{userId}/{publication}', 'ApiPublicationController@toggleLike');
+
+
+    //Help Tips
+    Route::get('get-help-tips/{userId}','ApiHelpTipsController@index');
+});
+
+
+Route::group([
+    'middleware' => ['api'],
+    'prefix' => 'store'
+], function () {
+
+
+    //////////////////////////////////////////////////////////////////////////////
+    /// Start
+
+    Route::get('check-has-store/{user}','Store\UserStoreController@hasStore');
+    Route::get('get-store-orders/{user}','Store\UserStoreController@storeOrders');
+    Route::get('get-dashboard-data/{user}','Store\UserStoreController@dashboard');
 });
