@@ -112,8 +112,11 @@ Route::group([
 
     //////////////////////////////////////////////////////////////////////////////
     /// Start
-
+    Route::get('get-reviews/{user}','Store\UserStoreController@reviews');
+    Route::get('get-ventures/{user}','Store\UserStoreController@ventureList');
     Route::get('check-has-store/{user}','Store\UserStoreController@hasStore');
     Route::get('get-store-orders/{user}','Store\UserStoreController@storeOrders');
     Route::get('get-dashboard-data/{user}','Store\UserStoreController@dashboard');
+    Route::get('get-store-settings/{user}','Store\UserStoreController@storeSettings');
+    Route::post('save-store-settings/{user}','Store\UserStoreController@saveStoreSettings');
 });

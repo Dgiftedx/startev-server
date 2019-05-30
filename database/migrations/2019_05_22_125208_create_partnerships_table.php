@@ -20,9 +20,9 @@ class CreatePartnershipsTable extends Migration
             $table->integer('venture_id');
             $table->integer('business_id');
             $table->string('ref_link')->nullable();
-            $table->double('total_commission')->nullable();
             $table->double('total_ref')->nullable();
             $table->enum('status', ['pending','accepted','rejected'])->default('pending');
+            $table->boolean('is_products_imported')->default(0);
             $table->timestamps();
         });
     }

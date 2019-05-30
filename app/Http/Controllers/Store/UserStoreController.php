@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Store;
 
+use App\Http\Controllers\HelperController;
 use App\Models\Store\UserStore;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -36,6 +37,36 @@ class UserStoreController extends Controller
         $this->middleware('auth:api');
         //Base url
         $this->url = url('/');
+    }
+
+    /**
+     * Get user store
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeSettings( $userId )
+    {
+        $settings = StoreHelperController::userStore($userId);
+        return response()->json($settings);
+    }
+
+
+    public function saveStoreSettings( Request $request, $user_id )
+    {
+        $data = $request->all();
+
+        if ($data['store_logo'] !== 'null' && $request->file('store_logo')->isValid()) {
+            //upload store logo
+            $path = $this->url. '/storage'. HelperController::processImageUpload($request->file('store_logo'),$data['store_name'],'store',150, 150);
+            $data['store_logo'] = $path;
+        }else{
+            unset($data['store_logo']);
+        }
+
+        UserStore::find(UserStore::storeId($user_id))->update($data);
+
+        $update = StoreHelperController::userStore($user_id);
+        return response()->json($update);
     }
 
     /**
@@ -79,6 +110,30 @@ class UserStoreController extends Controller
         $query = ['store_id' => UserStore::storeId($userId)];
         $orders = StoreHelperController::getOrders($query);
         return response()->json($orders);
+    }
+
+
+    /**
+     * Get user venture list/partnerships
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function ventureList( $userId )
+    {
+        $ventures = StoreHelperController::getVentureList($userId);
+        return response()->json($ventures);
+    }
+
+
+    /**
+     * Get user store reviews
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reviews( $userId )
+    {
+        $reviews = StoreHelperController::gatherReviews( $userId );
+        return response()->json($reviews);
     }
 
 }

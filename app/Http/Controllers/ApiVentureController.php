@@ -100,11 +100,16 @@ class ApiVentureController extends Controller
 
     public function removeVenture($business_id, $id)
     {
+        //denial request if venture has been partnered with already
+
+        if (Partnership::where('venture_id','=',$id)->exists()) {
+            return response()->json(['success' => false, "message" => "Can't remove venture. People already partnered with this venture"]);
+        }
         BusinessVenture::find($id)->delete();
 
         $ventures = $this->businessVentures($business_id);
 
-        return response()->json(['ventures' => $ventures->ventures]);
+        return response()->json(['success' => true, 'ventures' => $ventures->ventures]);
     }
 
 

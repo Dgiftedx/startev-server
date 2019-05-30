@@ -119,6 +119,23 @@ class HelperController extends Controller
     }
 
 
+
+    public static function processStoreImage( $image, $name = 'image', $dir = 'store')
+    {
+        if (!file_exists(storage_path('app/public/'.$dir))) {
+            mkdir(storage_path('app/public/'.$dir), 0777, true);
+        }
+        //Process new image
+        $imageName = preg_replace('/\s+/', '', $name);
+        $store_image = '/'.$dir. uniqid(rand()) . $imageName . '.' . $image->getClientOriginalExtension();
+
+        Storage::disk('public')->put($store_image, $image);
+
+        return $store_image;
+    }
+
+
+
     public static function processSimpleUpload($file, $user_id = null)
     {
         if (!is_null($user_id)){
