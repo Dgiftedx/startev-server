@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Publication;
+use App\Models\Trainee;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -52,7 +53,13 @@ class ApiPublicationController extends Controller
                 return [];
             });
 
-        return response()->json(['publications' => $publications]);
+        $userConnections = [];
+
+        if (auth()->check()){
+            $userConnections = Trainee::where('trainee_id','=',auth()->user()->id)->get();
+        }
+
+        return response()->json(['publications' => $publications, 'connections' => $userConnections]);
     }
 
 
@@ -114,6 +121,13 @@ class ApiPublicationController extends Controller
             ->with('user.mentor')
             ->find($publicationId);
         $likers = $publication->likers()->get();
-        return response()->json(['publication' => $publication,'likers' => $likers]);
+
+
+        $userConnections = [];
+
+        if (auth()->check()){
+            $userConnections = Trainee::where('trainee_id','=',auth()->user()->id)->get();
+        }
+        return response()->json(['publication' => $publication,'likers' => $likers, 'connections' => $userConnections]);
     }
 }

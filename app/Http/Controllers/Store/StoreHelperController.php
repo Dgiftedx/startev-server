@@ -10,6 +10,7 @@ use App\Models\Partnership;
 use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureCommission;
 use App\Models\Store\UserVentureOrder;
+use App\Models\Store\UserVentureProduct;
 use App\Models\Store\UserVentureReview;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -423,6 +424,21 @@ class StoreHelperController extends Controller
 
 
         return $ventures;
+    }
+
+
+    public static function attachSingleProductCount($venture)
+    {
+        return $venture->product_count = UserVentureProduct::where('venture_id','=',$venture->id)->count();
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public static function getBusinessProducts($query)
+    {
+        return UserBusinessProduct::orderBy('id','desc')->byFilter($query)->get();
     }
 
 }

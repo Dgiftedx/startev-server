@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\HelperController;
+use App\Models\Partnership;
 use App\Models\Store\UserStore;
+use App\Models\Store\UserVentureOrder;
+use App\Models\Store\UserVentureProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -120,8 +123,16 @@ class UserStoreController extends Controller
      */
     public function ventureList( $userId )
     {
-        $ventures = StoreHelperController::getVentureList($userId);
-        return response()->json($ventures);
+        // Grab ventures
+        $partnerships = StoreHelperController::getVentureList($userId);
+
+
+        foreach ($partnerships as $partnership) {
+            // attach product counts
+            $partnership->venture = StoreHelperController::attachSingleProductCount($partnership->venture);
+        }
+
+        return response()->json($partnerships);
     }
 
 
@@ -134,6 +145,169 @@ class UserStoreController extends Controller
     {
         $reviews = StoreHelperController::gatherReviews( $userId );
         return response()->json($reviews);
+    }
+
+
+    /**
+     * Import Venture Products
+     * @param $userId
+     * @param $ventureId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function importVentureProducts( $userId, $ventureId )
+    {
+        // get business id;
+        $partnership = Partnership::where('user_id','=',$userId)->first();
+
+        $query = [
+            'business_id' => $partnership->business_id,
+            'venture_id' => $partnership->venture_id
+        ];
+
+        $products = StoreHelperController::getBusinessProducts($query);
+
+        foreach ($products as $product){
+            //Attach user store ID
+            $product->store_id = UserStore::storeId($userId);
+
+            //check if this product already exists
+            if(UserVentureProduct::where('store_id','=',UserStore::storeId($userId))->where('sku','=',$product->sku)->exists()){
+                //only update
+                //but i don't think this is necessary as this might revert any changes made
+                // to user products before this import.
+            }else{
+
+                //create product copy into user store
+                UserVentureProduct::create([
+                    'store_id' => $product->store_id,
+                    'venture_id' => $ventureId,
+                    'sku' => $product->sku,
+                    'slug' => uniqid(rand(), true),
+                    'images' => $product->images,
+                    'product_name' => $product->product_name,
+                    'product_price' => $product->product_price,
+                    'highlight' => $product->highlight,
+                    'sizes' => $product->sizes,
+                    'colors' => $product->colors,
+                    'product_description' => $product->product_description,
+                    'stock_status' => $product->stock_status,
+                    'discount_price' => $product->discount_price
+                ]);
+            }
+        }
+
+
+        //then we need to set the imported_flag to avoid future import
+        Partnership::find($partnership->id)->update(['is_products_imported' => true ]);
+
+        return response()->json(['success' => true, 'message' => "Product importation completed"]);
+    }
+
+
+    /**
+     * Synchronize Products with Source Venture
+     * @param $userId
+     * @param $ventureId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function syncVentureProducts( $userId, $ventureId )
+    {
+        // get business id;
+        $partnership = Partnership::where('user_id','=',$userId)->first();
+
+        $query = [
+            'business_id' => $partnership->business_id,
+            'venture_id' => $partnership->venture_id
+        ];
+
+        $products = StoreHelperController::getBusinessProducts($query);
+
+        foreach ($products as $product){
+            //Attach user store ID
+            $product->store_id = UserStore::storeId($userId);
+
+            //check if this product already exists
+            if(UserVentureProduct::where('store_id','=',UserStore::storeId($userId))->where('sku','=',$product->sku)->exists()){
+                //only update
+                //but i don't think this is necessary as this might revert any changes made
+                // to user products before this import.
+                // update only stock status of already imported products
+                $imported = UserVentureProduct::where('store_id','=',UserStore::storeId($userId))->where('sku','=',$product->sku)->first();
+
+                UserVentureProduct::find($imported->id)->update([
+                    'stock_status' => $product->stock_status
+                ]);
+            }else{
+
+                //create product copy into user store
+                UserVentureProduct::create([
+                    'store_id' => $product->store_id,
+                    'venture_id' => $ventureId,
+                    'sku' => $product->sku,
+                    'slug' => uniqid(rand(), true),
+                    'images' => $product->images,
+                    'product_name' => $product->product_name,
+                    'product_price' => $product->product_price,
+                    'highlight' => $product->highlight,
+                    'sizes' => $product->sizes,
+                    'colors' => $product->colors,
+                    'product_description' => $product->product_description,
+                    'stock_status' => $product->stock_status,
+                    'discount_price' => $product->discount_price
+                ]);
+            }
+        }
+
+
+
+        return response()->json(['success' => true, 'message' => "Product synchronization completed"]);
+    }
+
+
+    /**
+     * Remove venture products from user store
+     * @param $userId
+     * @param $ventureId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function detachVentureProducts( $userId, $ventureId )
+    {
+
+        // get business id;
+        $partnership = Partnership::where('user_id','=',$userId)->first();
+
+        $products = UserVentureProduct::where('store_id','=',UserStore::storeId($userId))->where('venture_id','=',$ventureId)->get();
+
+        foreach ($products as $product) {
+            $product->delete();
+        }
+
+        //then we need to disable the imported_flag to allow future import
+        Partnership::find($partnership->id)->update(['is_products_imported' => false ]);
+
+        return response()->json(['success' => true, 'message' => "Products detachment completed"]);
+    }
+
+
+    /**
+     * Track order form business store
+     * @param $orderId
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function trackOrder( $orderId , $userId )
+    {
+
+        if(UserVentureOrder::where('store_id','=',UserStore::storeId($userId))->where('identifier','=',$orderId)->exists()){
+            $order = UserVentureOrder::with('buyer')->where('store_id','=',UserStore::storeId($userId))->where('identifier_id','=',$orderId)->first();
+            $message = "Order Found, See Details Below";
+            return response()->json(['success' => true, 'message' => $message, 'order' => $order]);
+        }
+
+
+        $message = "Order not found. Please check order ID to be sure it's valid.";
+
+        return response()->json(['success' => false, 'message' => $message]);
     }
 
 }

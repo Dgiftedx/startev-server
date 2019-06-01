@@ -98,6 +98,8 @@ Route::group([
     Route::get('single-publication/{publication_id}','ApiPublicationController@show');
     Route::get('toggle-publication-like/{userId}/{publication}', 'ApiPublicationController@toggleLike');
 
+    // Connect
+    Route::get('toggle-connection/{user}/{mentor}','ApiAccountController@toggleConnection');
 
     //Help Tips
     Route::get('get-help-tips/{userId}','ApiHelpTipsController@index');
@@ -115,10 +117,14 @@ Route::group([
     Route::get('get-reviews/{user}','Store\UserStoreController@reviews');
     Route::get('get-ventures/{user}','Store\UserStoreController@ventureList');
     Route::get('check-has-store/{user}','Store\UserStoreController@hasStore');
+    Route::get('track-order/{Id}/{user}','Store\UserStoreController@trackOrder');
     Route::get('get-store-orders/{user}','Store\UserStoreController@storeOrders');
     Route::get('get-dashboard-data/{user}','Store\UserStoreController@dashboard');
     Route::get('get-store-settings/{user}','Store\UserStoreController@storeSettings');
     Route::post('save-store-settings/{user}','Store\UserStoreController@saveStoreSettings');
+    Route::get('sync-venture-products/{user}/{venture}','Store\UserStoreController@syncVentureProducts');
+    Route::get('import-venture-products/{user}/{venture}','Store\UserStoreController@importVentureProducts');
+    Route::get('detach-venture-products/{user}/{venture}','Store\UserStoreController@detachVentureProducts');
 
 
     //////////////////////////////////////////////////////////////////////////////

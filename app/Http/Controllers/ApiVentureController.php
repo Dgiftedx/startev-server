@@ -63,6 +63,7 @@ class ApiVentureController extends Controller
 
     public function store( Request $request )
     {
+
         $data = $request->all();
         $business = Business::find($data['business_id']);
         $data['identifier'] = strtoupper(substr($business->name, 0 ,3)) . HelperController::generateIdentifier(5);
@@ -72,6 +73,7 @@ class ApiVentureController extends Controller
         $ventures = $this->businessVentures($data['business_id']);
 
         return response()->json($ventures);
+
     }
 
 

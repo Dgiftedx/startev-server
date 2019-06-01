@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Industry;
 use App\Models\State;
+use App\Models\Trainee;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -56,7 +57,11 @@ class ApiCommonController extends Controller
     public function singleIndustry( $slug )
     {
         $industry = $this->prepareSingleIndustry($slug);
-        return response()->json(['industry' => $industry]);
+        $userConnections  = [];
+        if (auth()->check()) {
+            $userConnections = Trainee::where('trainee_id','=',auth()->user()->id)->get();
+        }
+        return response()->json(['industry' => $industry, 'connections' => $userConnections]);
     }
 
     public function careerPaths()
@@ -77,7 +82,7 @@ class ApiCommonController extends Controller
 
     public function prepareSingleIndustry($slug)
     {
-        return Industry::whereSlug($slug)->with('mentors')->with('mentors.mentor')->with('mentors.business')->first();
+        return Industry::whereSlug($slug)->with('mentors')->with('mentors.mentor')->with('mentors.trainerPivot')->with('mentors.business')->first();
     }
 
     public function prepareStates($country_id)

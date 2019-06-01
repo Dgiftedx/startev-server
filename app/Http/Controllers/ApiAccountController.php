@@ -339,4 +339,11 @@ class ApiAccountController extends Controller
 
     }
 
+
+    public function toggleConnection( $user, $mentor )
+    {
+        $connections = HelperController::toggleConnection($user, $mentor);
+        return response()->json(['connections' => $connections['connections'], 'message' => $connections['message']]);
+    }
+
 }

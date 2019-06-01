@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use App\Models\Mentor;
+use App\Models\Trainee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -165,18 +166,31 @@ class HelperController extends Controller
     }
 
 
-    public static function stripImageSuffix( $imageUrl, $mainFolderCount)
-    {
-       //
-    }
 
-    public function removeImage( $image, $hasSuffix = false )
+    public static function toggleConnection( $user, $mentor )
     {
-        //Remove old image from storage if exists
-        if(Storage::disk('public')->exists($image)){
-            //remove
-            Storage::disk('public')->delete($image);
+        if (Trainee::where('trainee_id','=',$user)->where('trainer_id','=',$mentor)->exists()) {
+            $exists = Trainee::where('trainee_id','=',$user)->where('trainer_id','=',$mentor)->first();
+
+            Trainee::find($exists->id)->delete();
+
+            return [
+                'connections' => Trainee::where('trainee_id','=',$user)->get(),
+                'message' => 'Disconnected'
+            ];
         }
+
+        // user does not have previous connection with mentor
+        //init new connection
+        Trainee::create([
+            'trainee_id' => $user,
+            'trainer_id' => $mentor
+        ]);
+
+        return [
+            'connections' => Trainee::where('trainee_id','=',$user)->get(),
+            'message' => 'Connected'
+        ];
     }
 
 

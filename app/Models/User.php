@@ -111,6 +111,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Mentor::class);
     }
 
+    public function trainerPivot()
+    {
+        return $this->hasMany(Trainee::class,'trainer_id');
+    }
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
