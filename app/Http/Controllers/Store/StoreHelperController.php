@@ -473,7 +473,10 @@ class StoreHelperController extends Controller
         return $ventures;
     }
 
-
+    /**
+     * @param $venture
+     * @return mixed
+     */
     public static function attachSingleProductCount($venture)
     {
         return $venture->product_count = UserVentureProduct::where('venture_id','=',$venture->id)->count();
@@ -488,4 +491,23 @@ class StoreHelperController extends Controller
         return UserBusinessProduct::orderBy('id','desc')->byFilter($query)->get();
     }
 
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    /// Main Store Helpers
+
+
+    public static function getMainStoreInfo( $identifier )
+    {
+        return UserStore::where('identifier','=',$identifier)->first(['store_name','store_logo','user_id','id']);
+    }
+
+
+
+    public static function getMainStoreProducts($query)
+    {
+
+        return UserVentureProduct::orderBy('id','desc')->byFilter($query)->get();
+    }
 }

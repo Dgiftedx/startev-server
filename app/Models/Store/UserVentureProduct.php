@@ -20,4 +20,16 @@ class UserVentureProduct extends Model
         return $this->belongsTo(UserStore::class, 'store_id');
     }
 
+    public function scopeByFilter($query,$data){
+        $whereClause=[];
+        $whereParam=[];
+        foreach($data as $k=>$v){
+            $whereClause[]=$k.'=?';
+            $whereParam[]=$v;
+        }
+        $whereClause=implode(' and ',$whereClause);
+        $result= $query->whereRaw($whereClause,$whereParam); //Collect the result using ->first() or ->get()
+        return ($result);
+    }
+
 }

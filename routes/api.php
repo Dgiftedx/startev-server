@@ -144,4 +144,11 @@ Route::group([
     Route::post('store-manager/update-venture/{venture}/{businessId}','Store\BusinessStoreController@updateVenture');
     Route::post('store-manager/attach-products-to-venture/{venture}','Store\BusinessStoreController@attachProductVenture');
     Route::get('store-manager/detach-products-from-venture/{venture}','Store\BusinessStoreController@detachProductVenture');
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    /// Main Store routes starts
+    Route::get('main-store-get-products/{identifier}', 'Store\MainStoreController@index');
+    Route::get('main-store-get-single-product/{product}', 'Store\MainStoreController@singleProduct');
 });
