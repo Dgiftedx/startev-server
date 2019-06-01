@@ -29,6 +29,12 @@ class Business extends Model
         'social_handle' => 'array'
     ];
 
+
+    public function scopeBusinessId($query, $user)
+    {
+        return $query->where('user_id','=',$user)->first()->id;
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -37,6 +43,9 @@ class Business extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function ventures()
     {
         return $this->hasMany(BusinessVenture::class, 'business_id');

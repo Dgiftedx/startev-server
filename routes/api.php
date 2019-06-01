@@ -111,7 +111,7 @@ Route::group([
 
 
     //////////////////////////////////////////////////////////////////////////////
-    /// Start
+    /// User store routes starts
     Route::get('get-reviews/{user}','Store\UserStoreController@reviews');
     Route::get('get-ventures/{user}','Store\UserStoreController@ventureList');
     Route::get('check-has-store/{user}','Store\UserStoreController@hasStore');
@@ -119,4 +119,23 @@ Route::group([
     Route::get('get-dashboard-data/{user}','Store\UserStoreController@dashboard');
     Route::get('get-store-settings/{user}','Store\UserStoreController@storeSettings');
     Route::post('save-store-settings/{user}','Store\UserStoreController@saveStoreSettings');
+
+
+    //////////////////////////////////////////////////////////////////////////////
+    /// Business store routes starts
+    Route::post('store-manager/add-product/{userId}','Store\BusinessStoreController@addProduct');
+    Route::get('store-manager/get-ventures/{userId}','Store\BusinessStoreController@getVentures');
+    Route::post('store-manager/add-venture/{businessId}','Store\BusinessStoreController@addVenture');
+    Route::get('store-manager/get-settings/{businessId}','Store\BusinessStoreController@getSettings');
+    Route::get('store-manager/get-dashboard-data/{userId}','Store\BusinessStoreController@dashboard');
+    Route::get('store-manager/get-store-orders/{userId}','Store\BusinessStoreController@storeOrders');
+    Route::get('store-manager/get-single-product/{Id}','Store\BusinessStoreController@singleProduct');
+    Route::get('store-manager/track-order/{Id}/{business}','Store\BusinessStoreController@trackOrder');
+    Route::get('store-manager/delete-single-product/{Id}','Store\BusinessStoreController@deleteProduct');
+    Route::get('store-manager/get-store-products/{userId}','Store\BusinessStoreController@storeProducts');
+    Route::post('store-manager/edit-product/{product}/{userId}','Store\BusinessStoreController@editProduct');
+    Route::post('store-manager/update-settings/{businessId}','Store\BusinessStoreController@updateSettings');
+    Route::post('store-manager/update-venture/{venture}/{businessId}','Store\BusinessStoreController@updateVenture');
+    Route::post('store-manager/attach-products-to-venture/{venture}','Store\BusinessStoreController@attachProductVenture');
+    Route::get('store-manager/detach-products-from-venture/{venture}','Store\BusinessStoreController@detachProductVenture');
 });

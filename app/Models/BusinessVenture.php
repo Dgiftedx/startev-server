@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Business\UserBusinessProduct;
 use Illuminate\Database\Eloquent\Model;
 
 class BusinessVenture extends Model
@@ -27,5 +28,10 @@ class BusinessVenture extends Model
     public function partners()
     {
         return $this->belongsToMany(User::class, 'partnerships','user_id','venture_id');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(UserBusinessProduct::class, 'venture_id');
     }
 }

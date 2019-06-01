@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\HelperController;
+use App\Models\Business;
+use App\Models\Business\UserBusinessProduct;
+use App\Models\Business\UserBusinessOrder;
 use App\Models\Partnership;
 use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureCommission;
@@ -253,4 +256,173 @@ class StoreHelperController extends Controller
         // Return query result
         return $reviews;
     }
+
+
+
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    /// Business Store Helpers
+
+
+    public static function businessHasOrders($userId)
+    {
+        return UserBusinessOrder::hasOrders(Business::businessId($userId));
+    }
+
+    /**
+     * Get recent orders
+     * @param $userId
+     * @return mixed
+     */
+    public static function recentBusinessOrders($userId)
+    {
+        //Build query array
+        $query = [
+            'business_id' => Business::businessId($userId),
+            'status' => 'pending'
+        ];
+
+        return self::businessGetOrders($query);
+    }
+
+
+
+    /**
+     * Get business orders total amount
+     * @param $userId
+     * @return float|int
+     */
+    public static function businessOrdersTotalAmount( $userId )
+    {
+        // If business store has orders
+        if (self::businessHasOrders($userId)) {
+            //return amount
+            return self::getBusinessOrdersTotalAmount($userId);
+        }
+
+        // if there are no orders, return 0
+        return 0;
+
+    }
+
+
+    /**
+     * Get delivered business orders
+     * @param $userId
+     * @return float|int
+     */
+    public static function businessOrdersDeliveredAmount( $userId )
+    {
+        // If business store has orders
+        if (self::businessHasOrders($userId)) {
+            //return amount
+            return self::getBusinessOrdersDeliveredAmount($userId);
+        }
+
+        // if there are no orders, return 0
+        return 0;
+    }
+
+    /**
+     * Get business total amount of orders in store
+     * @param $userId
+     * @return float|int
+     */
+    private static function getBusinessOrdersTotalAmount($userId)
+    {
+        $total = UserBusinessOrder::where('business_id','=', Business::businessId($userId))->pluck(['amount'])->toArray();
+        return array_sum($total);
+    }
+
+    /**
+     * Get Business Orders
+     * @param $query
+     * @return mixed
+     */
+    public static function businessGetOrders( $query )
+    {
+        return UserBusinessOrder::with('buyer')->byFilter($query)->get();
+    }
+
+    /**
+     * Get business amount of orders deleivered so far.
+     * @param $userId
+     * @return float|int
+     */
+    private static function getBusinessOrdersDeliveredAmount($userId)
+    {
+        $deliveredAmount = UserVentureOrder::where('business_id','=', Business::businessId($userId))
+            ->where('status','=','delivered')->pluck(['amount'])->toArray();
+        return array_sum($deliveredAmount);
+    }
+
+
+    /**
+     * Get total partners
+     * @param $userId
+     * @return mixed
+     */
+    public static function totalPartners( $userId )
+    {
+        return Partnership::where('business_id','=', Business::businessId($userId))->count();
+    }
+
+    public static function businessProducts($query)
+    {
+        $products = [];
+        UserBusinessProduct::orderBy('id','desc')
+            ->byFilter($query)
+            ->get()
+            ->mapToGroups(function($item) use (&$products) {
+                $products[] = [
+                    'image' => $item->images? $item->images[0]: null,
+                    'name' => $item->product_name,
+                    'sku' => $item->sku,
+                    'amount' => $item->product_price,
+                    'status' => $item->stock_status,
+                    'id' => $item->id,
+                ];
+
+                return [];
+            });
+
+        return $products;
+    }
+
+
+    /**
+     * Strip unwanted html tags from text
+     * @param $value
+     * @return string
+     */
+    public static function stripTextTags( $value )
+    {
+        return strip_tags($value, "<p><b><a><img><h1><h2><h3><h4><h5><h6>");
+    }
+
+
+    /**
+     * Attach product count to ventures model
+     * @param $ventures
+     * @return mixed
+     */
+    public static function attachProductCount( $ventures )
+    {
+        foreach ( $ventures as $venture ) {
+            if (UserBusinessProduct::where('venture_id','=',$venture->id)->exists()) {
+                $venture->product_count = UserBusinessProduct::where('venture_id','=',$venture->id)->count();
+            }else{
+                $venture->product_count = 0;
+            }
+
+        }
+
+
+        return $ventures;
+    }
+
 }

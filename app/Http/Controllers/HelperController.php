@@ -127,7 +127,7 @@ class HelperController extends Controller
         }
         //Process new image
         $imageName = preg_replace('/\s+/', '', $name);
-        $store_image = '/'.$dir. uniqid(rand()) . $imageName . '.' . $image->getClientOriginalExtension();
+        $store_image = '/'.$dir.'/'. uniqid(rand()) . $imageName . '.' . $image->getClientOriginalExtension();
 
         Storage::disk('public')->put($store_image, $image);
 
@@ -151,6 +151,34 @@ class HelperController extends Controller
         Storage::disk('public')->put($path, $file);
         return $path;
     }
+
+
+    public static function processProductsImage( $image, $name = 'image', $dir = 'store')
+    {
+        if (!file_exists(storage_path('app/public/'.$dir))) {
+            mkdir(storage_path('app/public/'.$dir), 0777, true);
+        }
+        //Process new image
+        $store_image = '/'.$dir.$image->getClientOriginalExtension();
+
+        return Storage::disk('public')->put($store_image, $image);
+    }
+
+
+    public static function stripImageSuffix( $imageUrl, $mainFolderCount)
+    {
+       //
+    }
+
+    public function removeImage( $image, $hasSuffix = false )
+    {
+        //Remove old image from storage if exists
+        if(Storage::disk('public')->exists($image)){
+            //remove
+            Storage::disk('public')->delete($image);
+        }
+    }
+
 
 
 }
