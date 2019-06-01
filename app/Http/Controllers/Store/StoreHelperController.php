@@ -215,7 +215,31 @@ class StoreHelperController extends Controller
      */
     public static function getOrders($query)
     {
-        return UserVentureOrder::with('buyer')->with('product')->byFilter($query)->get();
+        $orders = [];
+
+        UserVentureOrder::with('buyer')
+            ->with('product')
+            ->byFilter($query)
+            ->get()
+            ->mapToGroups( function($item) use (&$orders) {
+
+                $orders[] = [
+                    'name' => $item->buyer->name,
+                    'order_id' => $item->identifier,
+                    'image' => $item->product->images[0],
+                    'product_name' => $item->product->product_name,
+                    'amount' => $item->amount,
+                    'quantity' => $item->quantity,
+                    'date' => $item->created_at,
+                    'status' => $item->status
+                ];
+
+
+                return [];
+            });
+
+
+        return $orders;
     }
 
 
@@ -346,7 +370,30 @@ class StoreHelperController extends Controller
      */
     public static function businessGetOrders( $query )
     {
-        return UserBusinessOrder::with('buyer')->byFilter($query)->get();
+        $orders = [];
+
+        UserBusinessOrder::with('buyer')
+            ->with('product')
+            ->byFilter($query)
+            ->get()
+            ->mapToGroups( function($item) use (&$orders) {
+
+                $orders[] = [
+                    'name' => $item->buyer->name,
+                    'order_id' => $item->identifier,
+                    'image' => $item->product->images[0],
+                    'product_name' => $item->product->product_name,
+                    'amount' => $item->amount,
+                    'quantity' => $item->quantity,
+                    'date' => $item->created_at,
+                    'status' => $item->status
+                ];
+
+
+                return [];
+            });
+
+        return $orders;
     }
 
     /**

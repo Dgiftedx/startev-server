@@ -2,6 +2,7 @@
 
 namespace App\Models\Business;
 
+use App\Models\Store\UserVentureProduct;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,11 @@ class UserBusinessOrder extends Model
     public function buyer()
     {
         return $this->belongsTo(User::class, 'buyer_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(UserVentureProduct::class,'product_sku');
     }
 
     public function scopeByFilter($query,$data){
