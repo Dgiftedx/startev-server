@@ -115,6 +115,25 @@ class UserStoreController extends Controller
         return response()->json($orders);
     }
 
+    public function singleOrder( $orderId )
+    {
+        $orders = UserVentureOrder::with('buyer')
+            ->with('product')
+            ->where('identifier','=', $orderId)->get();
+
+        $all = [
+            'name' => $orders[0]->buyer->name,
+            'delivery_address' => $orders[0]->delivery_address,
+            'order_date' => $orders[0]->created_at,
+            'orders' => $orders,
+            'transaction_ref' => $orders[0]->transaction_ref
+        ];
+
+        return response()->json($all);
+    }
+
+
+
 
     /**
      * Get user venture list/partnerships
@@ -299,7 +318,7 @@ class UserStoreController extends Controller
     {
 
         if(UserVentureOrder::where('store_id','=',UserStore::storeId($userId))->where('identifier','=',$orderId)->exists()){
-            $order = UserVentureOrder::with('buyer')->where('store_id','=',UserStore::storeId($userId))->where('identifier_id','=',$orderId)->first();
+            $order = UserVentureOrder::with('buyer')->where('store_id','=',UserStore::storeId($userId))->where('identifier','=',$orderId)->first();
             $message = "Order Found, See Details Below";
             return response()->json(['success' => true, 'message' => $message, 'order' => $order]);
         }

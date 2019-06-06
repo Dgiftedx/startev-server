@@ -6,6 +6,7 @@ use App\Models\Store\UserStore;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Cache;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Overtrue\LaravelFollow\Traits\CanFollow;
 use Overtrue\LaravelFollow\Traits\CanLike;
@@ -94,6 +95,12 @@ class User extends Authenticatable implements JWTSubject
         $this->attributes['password'] = bcrypt($value);
     }
 
+
+    public function isOnline()
+    {
+        return Cache::has('user-is-online-'. $this->id);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -111,6 +118,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Mentor::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function trainerPivot()
     {
         return $this->hasMany(Trainee::class,'trainer_id');
@@ -177,6 +187,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Publication::class, 'user_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function userStore()
     {
         return $this->hasOne(UserStore::class,'user_id');

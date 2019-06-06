@@ -195,4 +195,37 @@ class HelperController extends Controller
 
 
 
+    public static function pullContacts( $userId )
+    {
+        $user = User::find($userId);
+
+        $connections = Trainee::where('trainee_id','=',$userId)->get();
+        $followers = $user->followers()->get();
+        $following = $user->followings()->get();
+
+        $contacts = [];
+
+        //pull ids of connections
+        foreach ($connections as $connection) {
+            $contacts[] = $connection->trainer_id;
+        }
+
+        //pull ids of followers
+        foreach ($followers as $follower){
+            $contacts[] = $follower->id;
+        }
+
+        //pull ids of followings
+        foreach ($following as $item) {
+            $contacts[] = $item->id;
+        }
+
+        $contacts = array_values(array_unique($contacts));
+
+        return $contacts;
+
+    }
+
+
+
 }

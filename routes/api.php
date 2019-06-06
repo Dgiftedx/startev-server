@@ -103,6 +103,13 @@ Route::group([
 
     //Help Tips
     Route::get('get-help-tips/{userId}','ApiHelpTipsController@index');
+
+
+    //Messaging
+    Route::post('send-message','Chat\MessagingController@sendMessage');
+    Route::post('send-typing-event','Chat\MessagingController@typingEvent');
+    Route::get('/chat-get-contacts/{user}','Chat\MessagingController@getContacts');
+    Route::get('/chat-get-messages/{user}','Chat\MessagingController@getMessages');
 });
 
 
@@ -121,6 +128,7 @@ Route::group([
     Route::get('get-store-orders/{user}','Store\UserStoreController@storeOrders');
     Route::get('get-dashboard-data/{user}','Store\UserStoreController@dashboard');
     Route::get('get-store-settings/{user}','Store\UserStoreController@storeSettings');
+    Route::get('get-single-order/{orderId}', 'Store\UserStoreController@singleOrder');
     Route::post('save-store-settings/{user}','Store\UserStoreController@saveStoreSettings');
     Route::get('sync-venture-products/{user}/{venture}','Store\UserStoreController@syncVentureProducts');
     Route::get('import-venture-products/{user}/{venture}','Store\UserStoreController@importVentureProducts');
@@ -149,6 +157,11 @@ Route::group([
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     /// Main Store routes starts
+    Route::get('main-store-get-cart', 'Store\MainStoreController@getCart');
+    Route::post('main-store-add-to-cart', 'Store\MainStoreController@addToCart');
+    Route::post('main-store-place-order', 'Store\MainStoreController@placeOrder');
     Route::get('main-store-get-products/{identifier}', 'Store\MainStoreController@index');
+    Route::get('main-store-remove-from-cart/{item_id}', 'Store\MainStoreController@removeFromCart');
     Route::get('main-store-get-single-product/{product}', 'Store\MainStoreController@singleProduct');
+    Route::get('main-store-get-products-with-query/{identifier}', 'Store\MainStoreController@byFilter');
 });

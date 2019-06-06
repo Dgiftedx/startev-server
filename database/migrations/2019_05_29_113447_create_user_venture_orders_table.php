@@ -18,9 +18,12 @@ class CreateUserVentureOrdersTable extends Migration
             $table->string('identifier');
             $table->integer('store_id');
             $table->integer('product_id');
+            $table->string('product_sku');
             $table->integer('buyer_id');
             $table->mediumInteger('quantity')->default(1);
             $table->double('amount');
+            $table->text('delivery_address')->nullable();
+            $table->string('transaction_ref')->nullable();
             $table->enum('status',[
                 'shipped',
                 'processing',

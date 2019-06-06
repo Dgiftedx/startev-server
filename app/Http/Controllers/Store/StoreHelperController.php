@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\Business\UserBusinessProduct;
 use App\Models\Business\UserBusinessOrder;
 use App\Models\Partnership;
+use App\Models\Store\UserCart;
 use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureCommission;
 use App\Models\Store\UserVentureOrder;
@@ -177,7 +178,7 @@ class StoreHelperController extends Controller
      */
     private static function getOrdersTotalAmount($storeId)
     {
-        $total = UserVentureOrder::where('store_id','=',$storeId)->pluck(['amount'])->toArray();
+        $total = UserVentureOrder::where('store_id','=',$storeId)->pluck('amount')->toArray();
         return array_sum($total);
     }
 
@@ -190,7 +191,7 @@ class StoreHelperController extends Controller
     private static function getOrdersDeliveredAmount($storeId)
     {
         $deliveredAmount = UserVentureOrder::where('store_id','=',$storeId)
-            ->where('status','=','delivered')->pluck(['amount'])->toArray();
+            ->where('status','=','delivered')->pluck('amount')->toArray();
         return array_sum($deliveredAmount);
     }
 
@@ -203,7 +204,7 @@ class StoreHelperController extends Controller
     private static function getTotalCommission($storeId, $userId)
     {
         $total = UserVentureCommission::where('store_id','=',$storeId)
-            ->where('user_id','=', $userId)->pluck(['commission'])->toArray();
+            ->where('user_id','=', $userId)->pluck('commission')->toArray();
         return array_sum($total);
     }
 
@@ -223,7 +224,7 @@ class StoreHelperController extends Controller
             ->get()
             ->mapToGroups( function($item) use (&$orders) {
 
-                $orders[] = [
+                $orders[$item->identifier][] = [
                     'name' => $item->buyer->name,
                     'order_id' => $item->identifier,
                     'image' => $item->product->images[0],
@@ -505,9 +506,16 @@ class StoreHelperController extends Controller
 
 
 
-    public static function getMainStoreProducts($query)
+    public static function getMainStoreProducts($query, $sort = 'desc')
     {
 
-        return UserVentureProduct::orderBy('id','desc')->byFilter($query)->get();
+        return UserVentureProduct::orderBy('id',"{$sort}")->byFilter($query)->get();
+    }
+
+
+    public static function getCartItems()
+    {
+        $user_id = auth()->user()->id;
+        return UserCart::with('product')->with('store')->where('user_id','=',$user_id)->get();
     }
 }
