@@ -6,6 +6,7 @@ use App\Http\Controllers\HelperController;
 use App\Models\Business;
 use App\Models\Business\UserBusinessProduct;
 use App\Models\Business\UserBusinessOrder;
+use App\Models\BusinessVenture;
 use App\Models\Partnership;
 use App\Models\Store\UserCart;
 use App\Models\Store\UserStore;
@@ -360,7 +361,7 @@ class StoreHelperController extends Controller
      */
     private static function getBusinessOrdersTotalAmount($userId)
     {
-        $total = UserBusinessOrder::where('business_id','=', Business::businessId($userId))->pluck(['amount'])->toArray();
+        $total = UserBusinessOrder::where('business_id','=', Business::businessId($userId))->pluck('amount')->toArray();
         return array_sum($total);
     }
 
@@ -374,16 +375,16 @@ class StoreHelperController extends Controller
         $orders = [];
 
         UserBusinessOrder::with('buyer')
-            ->with('product')
             ->byFilter($query)
             ->get()
             ->mapToGroups( function($item) use (&$orders) {
 
-                $orders[] = [
+                $orders[$item->identifier][] = [
                     'name' => $item->buyer->name,
+                    'product_sku' => $item->product_sku,
                     'order_id' => $item->identifier,
-                    'image' => $item->product->images[0],
-                    'product_name' => $item->product->product_name,
+                    'image' => self::singleBusinessProduct($item->product_sku)->images[0],
+                    'product_name' => self::singleBusinessProduct($item->product_sku)->product_name,
                     'amount' => $item->amount,
                     'quantity' => $item->quantity,
                     'date' => $item->created_at,
@@ -397,15 +398,23 @@ class StoreHelperController extends Controller
         return $orders;
     }
 
+
+
+
+    public static function singleBusinessProduct($product_sku)
+    {
+        return UserBusinessProduct::where('sku','=', $product_sku)->first();
+    }
+
     /**
-     * Get business amount of orders deleivered so far.
+     * Get business amount of orders delivered so far.
      * @param $userId
      * @return float|int
      */
     private static function getBusinessOrdersDeliveredAmount($userId)
     {
-        $deliveredAmount = UserVentureOrder::where('business_id','=', Business::businessId($userId))
-            ->where('status','=','delivered')->pluck(['amount'])->toArray();
+        $deliveredAmount = UserBusinessOrder::where('business_id','=', Business::businessId($userId))
+            ->where('status','=','delivered')->pluck('amount')->toArray();
         return array_sum($deliveredAmount);
     }
 
@@ -492,6 +501,13 @@ class StoreHelperController extends Controller
         return UserBusinessProduct::orderBy('id','desc')->byFilter($query)->get();
     }
 
+
+
+    public static function fetchBusinessId($venture_id)
+    {
+        $business = BusinessVenture::find($venture_id);
+        return $business->business_id;
+    }
 
 
 

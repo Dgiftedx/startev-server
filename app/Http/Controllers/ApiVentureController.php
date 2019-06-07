@@ -139,7 +139,7 @@ class ApiVentureController extends Controller
         $data = [];
         $role = HelperController::fetchRoleData($userId);
         $venture = BusinessVenture::where('id','=',$ventureId)->first();
-
+        $data['type'] = $role['role'];
         $data['user_id'] = $userId;
         $data['role_data_id'] = $role['data']->id;
         $data['venture_id'] = $ventureId;
@@ -159,8 +159,11 @@ class ApiVentureController extends Controller
         $record = Partnership::find($partnershipId);
 
         // Handle user store as partnership comes with automatic store activation.
+        //only and only if it's student
         // If this user doesn't has a store in place, create one.
-        StoreHelperController::CreateUserStore($userId);
+        if ($record->type === 'student') {
+            StoreHelperController::CreateUserStore($userId);
+        }
 
         //Update partnership data with referral link
         $record->update([

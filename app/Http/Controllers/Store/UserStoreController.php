@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\HelperController;
+use App\Models\Business\UserBusinessOrder;
 use App\Models\Partnership;
 use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureOrder;
@@ -125,6 +126,7 @@ class UserStoreController extends Controller
             'name' => $orders[0]->buyer->name,
             'delivery_address' => $orders[0]->delivery_address,
             'order_date' => $orders[0]->created_at,
+            'forwarded' => $orders[0]->forwarded,
             'orders' => $orders,
             'transaction_ref' => $orders[0]->transaction_ref
         ];
@@ -253,8 +255,10 @@ class UserStoreController extends Controller
                 // update only stock status of already imported products
                 $imported = UserVentureProduct::where('store_id','=',UserStore::storeId($userId))->where('sku','=',$product->sku)->first();
 
+                UserVentureProduct::find($imported->id)->update(['images' => null]);
                 UserVentureProduct::find($imported->id)->update([
-                    'stock_status' => $product->stock_status
+                    'stock_status' => $product->stock_status,
+                    'images' => $product->images
                 ]);
             }else{
 
@@ -318,7 +322,7 @@ class UserStoreController extends Controller
     {
 
         if(UserVentureOrder::where('store_id','=',UserStore::storeId($userId))->where('identifier','=',$orderId)->exists()){
-            $order = UserVentureOrder::with('buyer')->where('store_id','=',UserStore::storeId($userId))->where('identifier','=',$orderId)->first();
+            $order = UserVentureOrder::with('buyer')->with('store')->with('product')->where('store_id','=',UserStore::storeId($userId))->where('identifier','=',$orderId)->get();
             $message = "Order Found, See Details Below";
             return response()->json(['success' => true, 'message' => $message, 'order' => $order]);
         }
@@ -327,6 +331,38 @@ class UserStoreController extends Controller
         $message = "Order not found. Please check order ID to be sure it's valid.";
 
         return response()->json(['success' => false, 'message' => $message]);
+    }
+
+
+    public function forwardOrder( Request $request )
+    {
+        $data = $request->all();
+
+        $products = UserVentureOrder::with('product')->where('store_id','=',$data['store_id'])->where('identifier','=',$data['identifier'])
+            ->get();
+
+        foreach ($products as $product) {
+            $business = StoreHelperController::fetchBusinessId($product->product->venture_id);
+
+            UserBusinessOrder::create([
+                'store_id' => $product->store_id,
+                'buyer_id' => $product->buyer_id,
+                'amount' => $product->amount,
+                'created_at' => $product->created_at,
+                'delivery_address' => $product->delivery_address,
+                'identifier' => $product->identifier,
+                'product_sku' => $product->product_sku,
+                'quantity' => $product->quantity,
+                'business_id' => $business,
+                'status' => 'processing',
+                'transaction_ref' => $product->transaction_ref,
+                'updated_at' => $product->updated_at
+            ]);
+
+            UserVentureOrder::find($product->id)->update(['forwarded' => true , 'status' => 'processing']);
+        }
+
+        return response()->json('success');
     }
 
 }

@@ -38,7 +38,7 @@ class AddHelpTips01ToHelpTipsTable extends Migration
                 'title' => 'Do you know?',
                 'content' => 'You can earn up to 40% commission when a customer purchase product from your store',
                 'link_text' => 'Read more',
-                'link' => '/read-more',
+                'link' => '/help-center',
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at'=> \Carbon\Carbon::now()
             ],
@@ -47,7 +47,7 @@ class AddHelpTips01ToHelpTipsTable extends Migration
                 'title' => 'Get Trained',
                 'content' => 'You don\'t know how, get connected with leading mentors in the industry of your interest',
                 'link_text' => 'View Mentors List',
-                'link' => '/mentors',
+                'link' => '/industry',
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at'=> \Carbon\Carbon::now()
             ],

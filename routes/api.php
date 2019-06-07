@@ -122,6 +122,7 @@ Route::group([
     //////////////////////////////////////////////////////////////////////////////
     /// User store routes starts
     Route::get('get-reviews/{user}','Store\UserStoreController@reviews');
+    Route::post('forward-order','Store\UserStoreController@forwardOrder');
     Route::get('get-ventures/{user}','Store\UserStoreController@ventureList');
     Route::get('check-has-store/{user}','Store\UserStoreController@hasStore');
     Route::get('track-order/{Id}/{user}','Store\UserStoreController@trackOrder');
@@ -137,6 +138,7 @@ Route::group([
 
     //////////////////////////////////////////////////////////////////////////////
     /// Business store routes starts
+    Route::post('store-manager/order-action','Store\BusinessStoreController@orderAction');
     Route::post('store-manager/add-product/{userId}','Store\BusinessStoreController@addProduct');
     Route::get('store-manager/get-ventures/{userId}','Store\BusinessStoreController@getVentures');
     Route::post('store-manager/add-venture/{businessId}','Store\BusinessStoreController@addVenture');

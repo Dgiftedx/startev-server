@@ -18,9 +18,11 @@ class CreateUserBusinessOrdersTable extends Migration
             $table->string('identifier');
             $table->integer('store_id')->nullable();
             $table->integer('business_id')->nullable();
-            $table->integer('product_sku');
+            $table->string('product_sku');
             $table->integer('buyer_id');
             $table->mediumInteger('quantity')->default(1);
+            $table->text('delivery_address')->nullable();
+            $table->string('transaction_ref')->nullable();
             $table->double('amount');
             $table->enum('status',[
                 'shipped',

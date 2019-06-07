@@ -110,15 +110,42 @@ class MessagingController extends Controller
     {
         $data = $request->all();
 
-        $conversation = MessageConversation::create($data);
+
+        $pusher = [
+            'sender_id' => $data['sender_id'],
+            'receiver_id' => $data['receiver_id'],
+            'message' => $data['message'],
+            'type' => $data['type'],
+            'status' => 'unread',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ];
+
+        Pusher::trigger('messaging', 'new-message', $pusher);
+
+        $conversation = MessageConversation::create(['sender_id' => $data['sender_id'], 'receiver_id' => $data['receiver_id'], 'message' => $data['message']]);
 //        $data['last_read'] = Carbon::now()->toDateTimeString();
         $data['conversation_id'] = $conversation->id;
 
-        Message::create($data);
+        $inserted = Message::create($data);
 
-        $messages = $this->helperGetMessages($data['sender_id'], $data['receiver_id']);
+        $new = Message::find($inserted->id);
+        $pusher = [
+            'id' => $new->id,
+            'sender_id' => $new->sender_id,
+            'receiver_id' => $new->receiver_id,
+            'conversation_id' => $new->conversation_id,
+            'messaging_group_id' => $new->messaging_group_id,
+            'message' => $new->message,
+            'file' => $new->file,
+            'type' => $new->type,
+            'las_read' => $new->last_read,
+            'status' => $new->status,
+            'created_at' => $new->created_at,
+            'updated_at' => $new->updated_at
+        ];
 
-        return response()->json($messages);
+        return response()->json(['success' => true]);
     }
 
 }

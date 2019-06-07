@@ -8,6 +8,8 @@ use App\Models\Business;
 use App\Models\Business\UserBusinessOrder;
 use App\Models\Business\UserBusinessSetting;
 use App\Models\BusinessVenture;
+use App\Models\Store\UserInvoice;
+use App\Models\Store\UserVentureOrder;
 use App\Models\User;
 use App\Models\Business\UserBusinessProduct;
 use Illuminate\Http\Request;
@@ -50,7 +52,9 @@ class BusinessStoreController extends Controller
         // Gather data
         $data = [
             'orders_amount' => StoreHelperController::businessOrdersTotalAmount($userId),
+            'orders_amount_avg' => UserBusinessOrder::where('business_id','=', Business::businessId($userId))->avg('amount'),
             'delivered_orders' => StoreHelperController::businessOrdersDeliveredAmount($userId),
+            'delivered_orders_avg' => UserBusinessOrder::where('business_id','=', Business::businessId($userId))->where('status','=','delivered')->avg('amount'),
             'total_partners' => StoreHelperController::totalPartners($userId),
             'recent_orders' => StoreHelperController::recentBusinessOrders($userId)
         ];
@@ -174,9 +178,14 @@ class BusinessStoreController extends Controller
     {
 
         if(UserBusinessOrder::where('business_id','=',$businessId)->where('identifier','=',$orderId)->exists()){
-            $order = UserBusinessOrder::with('buyer')->where('business_id','=',$businessId)->where('identifier_id','=',$orderId)->first();
+            $orders = UserBusinessOrder::with('buyer')->with('store')->where('business_id','=',$businessId)->where('identifier','=',$orderId)->get();
+
+            foreach ($orders as $order) {
+                $order->product = StoreHelperController::singleBusinessProduct($order->product_sku);
+            }
+
             $message = "Order Found, See Details Below";
-            return response()->json(['success' => true, 'message' => $message, 'order' => $order]);
+            return response()->json(['success' => true, 'message' => $message, 'order' => $orders]);
         }
 
 
@@ -251,42 +260,58 @@ class BusinessStoreController extends Controller
     }
 
 
+    /**
+     * Edit product
+     * @param Request $request
+     * @param $productId
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function editProduct( Request $request, $productId, $userId )
     {
 
         //Grab all input
         $data = $request->all();
 
+        $data['sizes'] = json_decode($data['sizes']);
+        $data['colors'] = json_decode($data['colors']);
+
         // fetch single product
         $product = UserBusinessProduct::find($productId);
 
         //check if user uploaded replacement images
-        if (isset($data['images']) && count($data['images']) > 0) {
+        if (isset($data['images'])) {
 
-            $images = $product->images;
 
-            //Remove the old images
-            foreach ($images as $image) {
-                $image = str_replace($this->url, "", $image);
-                //Remove old image from storage if exists
-                if (Storage::disk('public')->exists($image)) {
-                    //remove
-                    Storage::disk('public')->delete($image);
+            if (count($data['images']) > 0) {
+
+                $product->update(['images' => null]);
+
+                $images = $product->images;
+
+                //Remove the old images
+                if (!is_null($images)) {
+                    foreach ($images as $image) {
+                        $image = str_replace($this->url.'/storage', "", $image);
+
+                        //Remove old image from storage if exists
+                        if (Storage::disk('public')->exists($image)) {
+                            //remove
+                            Storage::disk('public')->delete($image);
+                        }
+                    }
                 }
+
+                //process image upload
+                foreach ($data['images'] as $file) {
+                    $images[] = $this->url . '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
+
+                }
+
+                $data['images'] = $images;
             }
 
-            //process new image upload
-            foreach ($data['images'] as $file) {
-                $images[] = $this->url . '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
-
-            }
-
-            //update input array
-            $data['images'] = $images;
-        }else{
-            unset($data['images']);
         }
-
 
         // strip irrelevant html tags from product description
         $data['product_description'] = StoreHelperController::stripTextTags($data['product_description']);
@@ -314,6 +339,11 @@ class BusinessStoreController extends Controller
     }
 
 
+    /**
+     * Delete product
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteProduct( $id )
     {
         $product = UserBusinessProduct::find($id);
@@ -337,7 +367,12 @@ class BusinessStoreController extends Controller
 
     }
 
-
+    /**
+     * Attach product to venture
+     * @param Request $request
+     * @param $ventureId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function attachProductVenture( Request $request, $ventureId )
     {
         $products = json_decode($request->get('idArray'));
@@ -354,6 +389,12 @@ class BusinessStoreController extends Controller
         return response()->json('success');
     }
 
+
+    /**
+     * Detach product from venture
+     * @param $venture
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function detachProductVenture( $venture )
     {
         if (auth()->check()) {
@@ -368,6 +409,40 @@ class BusinessStoreController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => "You're not authorized to make the request"]);
+    }
+
+
+    public function orderAction( Request $request )
+    {
+        $data = $request->all();
+
+        $orders = UserBusinessOrder::where('identifier','=', $data['order_id'])->get();
+
+        foreach ($orders as $order){
+            //perform action both on business order and originating store
+            UserBusinessOrder::find($order->id)->update(['status' => $data['action']]);
+
+            $origin = UserVentureOrder::where('store_id', '=', $order->store_id)
+                ->where('product_sku','=',$order->product_sku)
+                ->where('identifier', '=', $data['order_id'])->first();
+
+            if ($origin) {
+                UserVentureOrder::find($origin->id)->update(['status' => $data['action']]);
+            }
+
+            //run specific action for order if being shipped or delivered
+
+        }
+
+
+        //update product invoices
+        $invoices = UserInvoice::where('order_id','=',$data['order_id'])->get();
+        foreach ($invoices as $invoice) {
+            UserInvoice::find($invoice->id)->update(['order_status' => $data['action']]);
+        }
+
+
+        return response()->json('success');
     }
 
 }
