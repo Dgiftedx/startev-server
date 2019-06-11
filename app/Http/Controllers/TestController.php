@@ -6,6 +6,8 @@ use App\Models\Feed;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use JD\Cloudder\Facades\Cloudder;
 
 class TestController extends Controller
 {
@@ -13,9 +15,12 @@ class TestController extends Controller
 
     protected $user;
 
+    protected $base_url;
+
     public function __construct(User $userModel)
     {
         $this->user = $userModel;
+        $this->base_url = url('/');
     }
 
     public function feeds()
@@ -25,6 +30,20 @@ class TestController extends Controller
             dump($feed->likers()->get());
         }
     }
+
+    public function remove()
+    {
+        $path = $this->base_url . "/storage/users/";
+
+        $path = str_replace($this->base_url."/storage", '', $path);
+
+        dd($path);
+        if(Storage::disk('public')->exists($path)){
+            //remove
+            Storage::disk('public')->delete($path);
+        }
+    }
+
 
     public function testCarbon()
     {

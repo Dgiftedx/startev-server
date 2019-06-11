@@ -165,7 +165,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Pusher\Laravel\PusherServiceProvider::class,
         Overtrue\LaravelFollow\FollowServiceProvider::class,
-
+        JD\Cloudder\CloudderServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -233,6 +233,7 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Pusher' => Pusher\Laravel\Facades\Pusher::class,
+        'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
     ],
 
 ];
