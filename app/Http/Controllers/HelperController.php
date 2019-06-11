@@ -22,10 +22,12 @@ class HelperController extends Controller
     {
         $user = User::with('mentor')->with('student')->with('business')->find($id);
 
-        if (count($user->student) > 0){
+
+        if (!is_null($user) && !is_null($user->student)){
+
 
             return ['data' => $user->student, 'role' => 'student'];
-        }else if(count($user->mentor) > 0) {
+        }else if(!is_null($user) &&  !is_null($user->mentor)) {
 
             return ['data' => $user->mentor, 'role' => 'mentor'];
         }else{
