@@ -12,6 +12,13 @@ use Intervention\Image\Facades\Image;
 
 class HelperController extends Controller
 {
+    public static $base_url;
+
+
+    public function __construct()
+    {
+        self::$base_url = url('/');
+    }
 
     /**
      * Fetch Role Data
@@ -226,6 +233,17 @@ class HelperController extends Controller
 
         return $contacts;
 
+    }
+
+
+    public static function removeImage($path)
+    {
+        $path = str_replace(self::$base_url."/storage", '', $path);
+
+        if(Storage::disk('public')->exists($path)){
+            //remove
+            Storage::disk('public')->delete($path);
+        }
     }
 
 

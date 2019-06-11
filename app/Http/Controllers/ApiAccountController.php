@@ -144,11 +144,6 @@ class ApiAccountController extends Controller
             $data['state'] = $state->name;
         }
 
-        if ($request->has('city') && !is_null($data['city'])){
-            $city = City::find($data['city']);
-            $data['city'] = $city->name;
-        }
-
         $data['dob'] = Carbon::parse($data['dob'])->toDateTimeString();
 
         $this->user->find($id)->update($data);

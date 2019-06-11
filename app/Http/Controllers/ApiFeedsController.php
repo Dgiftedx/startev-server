@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Feed;
 use App\Models\FeedComment;
 use App\Models\User;
+use App\Models\UserHiddenFeed;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use JD\Cloudder\Facades\Cloudder;
 use Pusher\Laravel\Facades\Pusher;
 
 class ApiFeedsController extends Controller
@@ -35,15 +37,18 @@ class ApiFeedsController extends Controller
     public function index()
     {
         $feeds = [];
+        $id = auth()->user()->id;
 
-        $this->feed->with('feedComments')->with('feedComments.user')->orderBy('id','desc')
+        $hiddenFeeds = UserHiddenFeed::where('user_id','=',$id)->pluck('feed_id')->toArray();
+
+        $this->feed->with('feedComments')->with('feedComments.user')->whereNotIn('id', $hiddenFeeds)->orderBy('id','desc')
             ->get()
             ->mapToGroups(function ($item) use (&$feeds) {
                 $feeds[] = [
                     'id' => $item->id,
                     'postType' => $item->post_type,
                     'roleData' => HelperController::fetchRoleData($item->user_id),
-                    'user' => $this->user->where('id','=',$item->user_id)->get(['id','name','avatar']),
+                    'user' => $this->user->where('id','=',$item->user_id)->first(['id','name','avatar']),
                     'hasLiked' => $item->hasLiked,
                     'title' => $item->title,
                     'likers' => $item->likers()->get(),
@@ -87,6 +92,14 @@ class ApiFeedsController extends Controller
             $path = $this->url. '/storage'. HelperController::processImageUpload($request->file('image'),$data['title'],'feeds',640,800);
             $feedData['image'] = $path;
             $databaseUpdate['image'] = $path;
+
+
+//            Cloudder::Upload($request->file('image'));
+//            $image = Cloudder::getPublicId();
+//
+//            $databaseUpdate['image'] = $image;
+//            $feedData['image'] = $image;
+
         }
 
         if ($request->has('video') && !is_null($data['video'])){
@@ -209,6 +222,57 @@ class ApiFeedsController extends Controller
         $feed = Feed::with('user')->with('feedComments')->with('feedComments.user')->find($feed_id);
         $likers = $feed->likers()->get();
         return response()->json(['likers' => $likers, 'feed' => $feed]);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function hideFeed( Request $request )
+    {
+        $data = $request->all();
+        //hide feed for user
+        UserHiddenFeed::create($data);
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteFeed( Request $request )
+    {
+
+        $data = $request->all();
+
+        $feed = $this->feed->find($data['feed_id']);
+
+        $hidden = UserHiddenFeed::where('user_id','=',$data['user_id'])->where('feed_id','=',$data['feed_id'])->first();
+
+        if (!is_null($hidden)) {
+            //remove feed from user hidden feeds
+            UserHiddenFeed::find($hidden->id)->delete();
+        }
+
+        //remove image from storage
+        if (!is_null($feed->image)) {
+            HelperController::removeImage($feed->image);
+        }
+
+
+        //remove comments if they exists on feed thread
+        $comments = FeedComment::where('feed_id','=', $data['feed_id'])->get();
+
+        if (count($comments) > 0) {
+            foreach ($comments as $comment) {
+                FeedComment::find($comment->id)->delete();
+            }
+        }
+
+        $feed->delete();
+
+        return response()->json(['success' => true]);
     }
 
 }
