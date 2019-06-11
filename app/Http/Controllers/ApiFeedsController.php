@@ -73,7 +73,7 @@ class ApiFeedsController extends Controller
         $feedData = [
             'postType' => $data['post_type'],
             'roleData' => HelperController::fetchRoleData($data['user_id']),
-            'user' => $this->user->where('id','=',$data['user_id'])->get(['id','name','avatar']),
+            'user' => $this->user->where('id','=',$data['user_id'])->first(['id','name','avatar']),
             'title' => $data['title'],
             'body' => $data['body'],
             'time' => Carbon::now()
