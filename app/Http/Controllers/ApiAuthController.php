@@ -52,7 +52,11 @@ class ApiAuthController extends Controller
         $data = $request->all();
         $data['slug'] = uniqid(rand(), true);
         $user = $this->user->create($data);
+
         $data['user_id'] = $user->id;
+
+        //send Welcome Mail
+        $this->sendWelcomeMail($data);
 
         if ($data['role'] === 'student') {
             // Log a new profile for student & login
@@ -82,6 +86,27 @@ class ApiAuthController extends Controller
     public function me()
     {
         return response()->json(auth()->user());
+    }
+
+
+    public function sendWelcomeMail($data)
+    {
+        $user = $this->user->find($data['user_id']);
+        $mailContents = [
+            'to' => $user->email,
+            'subject' => 'Welcome to Startev Africa',
+            'message' => "Welcome $user->name <br/> Your Username is $user->username"
+        ];
+
+        if ($data['role'] === 'student') {
+            return HelperController::sendMail($mailContents, 'student-welcome-mail');
+        }
+
+        if ($data['role'] === 'mentor') {
+            return HelperController::sendMail($mailContents, 'mentor-welcome-mail');
+        }
+
+        return HelperController::sendMail($mailContents, 'business-welcome-mail');
     }
 
     /**

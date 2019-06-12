@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Mailgun\Mailgun;
 
 class ApiPasswordResetController extends Controller
 {
@@ -29,9 +30,9 @@ class ApiPasswordResetController extends Controller
     }
 
 
-    private function getPasswordResetTableRow($request)
+    private function getPasswordResetTableRow($token)
     {
-        return DB::table('password_resets')->where('token','=',$request->get('resetToken'))->first();
+        return DB::table('password_resets')->where('token','=',$token)->first();
     }
 
 
@@ -53,9 +54,10 @@ class ApiPasswordResetController extends Controller
     }
 
 
-    public function changePassword( ChangePasswordRequest $request )
+    public function changePassword( Request $request )
     {
-        $verified = $this->getPasswordResetTableRow($request);
+
+        $verified = $this->getPasswordResetTableRow($request->get('resetToken'));
         if (is_null($verified)) {
             $message = "Invalid Token Supplied. Please resend password reset";
             return $this->failedResponse($message);
@@ -66,9 +68,18 @@ class ApiPasswordResetController extends Controller
 
         DB::table('password_resets')->where('token','=', $verified->token)->delete();
 
-        $message = "Password changed successfully. You can now log in with your new password";
+        $credentials = [
+            'email' => $verified->email,
+            'password' => $request->get('password')
+        ];
 
-        return $this->successResponse( $message );
+        //login user
+        auth()->attempt($credentials);
+
+        //return user instance with token
+        $cert =  (new ApiAuthController($this->user))->refresh();
+
+        return response()->json(['data' => $cert], Response::HTTP_OK);
     }
 
 
@@ -77,7 +88,8 @@ class ApiPasswordResetController extends Controller
         // Generate reset token
         $token = $this->createToken($email);
         //send email
-        Mail::to($email)->send(new ResetPasswordMail($token));
+//        Mail::to($email)->send(new ResetPasswordMail($token));
+        return HelperController::sendMail(['message' => $token, 'to' => $email,'subject' => 'Password Reset'], 'password-reset');
     }
 
     /**

@@ -31,17 +31,15 @@ class TestController extends Controller
         }
     }
 
-    public function remove()
+    public function sendMail()
     {
-        $path = $this->base_url . "/storage/users/";
+        $mailContents = [
+            'to' => 'olubunmivictor6@gmail.com',
+            'subject' => 'Welcome to Startev Africa',
+            'message' => "Welcome Olubunmi Tosin <br/> Your Username is <b>olubunmi708</b>"
+        ];
 
-        $path = str_replace($this->base_url."/storage", '', $path);
-
-        dd($path);
-        if(Storage::disk('public')->exists($path)){
-            //remove
-            Storage::disk('public')->delete($path);
-        }
+        return HelperController::sendMail($mailContents, 'student-welcome-mail');
     }
 
 

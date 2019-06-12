@@ -20,3 +20,4 @@ Route::get('/build-states', 'TestQueryController@buildStates');
 Route::get('/build-cities', 'TestQueryController@buildCities');
 
 Route::get('/remove','TestController@remove');
+Route::get('/send-mail','TestController@sendMail');

@@ -6,7 +6,11 @@ use App\Models\Business;
 use App\Models\Mentor;
 use App\Models\Trainee;
 use App\Models\User;
+use App\Repositories\Mailer;
+use Bogardo\Mailgun\Facades\Mailgun;
+use function Clue\StreamFilter\fun;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -235,7 +239,10 @@ class HelperController extends Controller
 
     }
 
-
+    /**
+     * Remove image from storage
+     * @param $path
+     */
     public static function removeImage($path)
     {
         $path = str_replace(self::$base_url."/storage", '', $path);
@@ -245,6 +252,126 @@ class HelperController extends Controller
             Storage::disk('public')->delete($path);
         }
     }
+
+
+    /**
+     * Build Mail Contents
+     * @param $content
+     * @param $title
+     * @return array
+     */
+    public static function buildMailer($content, $title)
+    {
+        return  ['content' => $content, 'subject' => $title,  'title' => $title];
+    }
+
+
+    /**
+     * Notification Mailer
+     * @param $data
+     * @param $template
+     */
+    public static function sendNotification($data, $template)
+    {
+        $data['sender'] = "Startev Africa";
+
+        if (!isset($data['subject'])) {
+            $data['subject'] = "Notification";
+        }
+
+        $emailData = [
+            'subject' => $data['subject'],
+            'to' => $data['to'],
+            'data' =>  self::buildMailer($data['message'], $data['subject'])
+        ];
+
+        $mailer = new Mailer();
+
+        try {
+           $lm = $mailer->authAndSend($emailData, $template);
+        } catch (\Exception $e) {
+            Log::info("$e ::From Mail sender");
+            //return response()->json(['error' => "$e ::From Mail sender"]);
+        }
+
+    }
+
+
+    /**
+     * @param $data
+     * @param $template
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public static function sendMail($data, $template)
+    {
+
+        $data['sender'] = "Startev Africa";
+        $content = $data['message'];
+        $receivers = $data['to'];
+
+        $title = $data['subject'];
+
+        $outgoing_email = $receivers;
+
+        $insertData = [
+            'sender' => $data['sender'],
+            'type' => 1,
+            'email_Subject' => $title,
+            'email_Content' => $content,
+            'email_recipients' => $receivers,
+        ];
+
+        $array = [];
+
+        if (isset($data['file']) && $data['file'] != null && $data['file']->isValid()) {
+            $file = $data['file'];
+
+            $savedName = '/files/mailbox' . time() . $file->getClientOriginalName();
+            $filePath = public_path('files/mailbox');
+            if (!is_dir($filePath))
+                @mkdir($filePath, 0775, true);
+
+            $collect = $file->move($filePath, $savedName);
+            $insertData['email_Attachment'] = $savedName;
+
+            $array = $collect;
+        }
+
+        $emailData = [
+            'subject' => $title,
+            'to' => $outgoing_email,
+            'data' =>  self::buildMailer($content, $title),
+            'files' => $array,
+        ];
+
+
+//        dd($emailData);
+
+        $mailer = new Mailer();
+
+
+        try {
+            $ml = $mailer->authAndSend($emailData,$template);
+
+            if (isset($ml['error']))
+                return response()->json(['error' => $ml]);
+            else {
+                $pl = $ml['success'];
+                $msgId = str_replace('>', '', str_replace('<', '', $pl->id));
+                //handle success
+            }
+        } catch (\Exception $e) {
+            Log::info("$e ::From Mail sender");
+            return response()->json(['error' => "$e ::From Mail sender"]);
+        }
+
+        return response()->json(['success' => "Email Successfully sent", 'mailer' => $ml]);
+
+
+    }
+
+
+
 
 
 

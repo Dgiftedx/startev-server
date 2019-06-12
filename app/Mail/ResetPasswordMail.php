@@ -16,6 +16,7 @@ class ResetPasswordMail extends Mailable
 
     /**
      * ResetPasswordMail constructor.
+     * @param $token
      */
     public function __construct($token)
     {
@@ -29,7 +30,7 @@ class ResetPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.password-reset')->with([
+        return $this->view('emails.password-reset')->with([
             'token' => $this->token
         ]);
     }
