@@ -262,7 +262,10 @@ class HelperController extends Controller
      */
     public static function buildMailer($content, $title)
     {
-        return  ['content' => $content, 'subject' => $title,  'title' => $title];
+
+        $base_url = 'http://startev.africa';
+
+        return  ['content' => $content, 'subject' => $title,  'title' => $title, 'base_url' => $base_url];
     }
 
 

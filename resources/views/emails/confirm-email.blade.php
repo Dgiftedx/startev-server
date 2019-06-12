@@ -618,7 +618,7 @@
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
                                     <div style="color:#4F4F4F;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
                                         <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #4F4F4F;">
-                                            <p style="font-size: 12px; line-height: 16px; text-align: center; margin: 0;"><span style="font-size: 14px;"><a href="http://support.startev.africa" rel="noopener" style="text-decoration: underline; color: #2190E3;" target="_blank"><strong>Support</strong></a>|  Customer - Care|  0827876366746</span></p>
+                                            <p style="font-size: 12px; line-height: 16px; text-align: center; margin: 0;"><span style="font-size: 14px;"><a href="{{ $base_url }}" rel="noopener" style="text-decoration: underline; color: #2190E3;" target="_blank"><strong>Support</strong></a>|  Customer - Care|  0827876366746</span></p>
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->

@@ -310,3 +310,67 @@
 #65 /var/www/html/startev-server/public/index.php(55): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #66 {main}
 "} 
+[2019-06-12 15:07:59] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:07:59] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:07:59] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:07:59] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:07:59] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:17] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:33] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:33] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:33] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:33] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:33] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:33] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:54] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:55] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:08:59] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 
+[2019-06-12 15:09:26] local.ERROR: Declaration of App\Models\User::getSearchResult() must be compatible with Spatie\Searchable\Searchable::getSearchResult(): Spatie\Searchable\SearchResult {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Declaration of App\\Models\\User::getSearchResult() must be compatible with Spatie\\Searchable\\Searchable::getSearchResult(): Spatie\\Searchable\\SearchResult at /var/www/html/startev-server/app/Models/User.php:17)
+[stacktrace]
+#0 {main}
+"} 

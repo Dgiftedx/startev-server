@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 use Illuminate\Database\Eloquent\Model;
 use Overtrue\LaravelFollow\Traits\CanBeLiked;
 
-class Feed extends Model
+class Feed extends Model implements Searchable
 {
     use CanBeLiked;
 
@@ -20,6 +22,20 @@ class Feed extends Model
         'hasLiked',
         'post_type'
     ];
+
+    /**
+     * @return \Spatie\Searchable\SearchResult
+     */
+    public function getSearchResult(): SearchResult
+    {
+        $url = "search-details/business/" .  $this->id;
+
+        return new SearchResult(
+            $this,
+            $this->title,
+            $url
+        );
+    }
 
     public function user()
     {

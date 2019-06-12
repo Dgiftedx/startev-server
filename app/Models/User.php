@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 use App\Models\Store\UserStore;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,7 +14,7 @@ use Overtrue\LaravelFollow\Traits\CanFollow;
 use Overtrue\LaravelFollow\Traits\CanLike;
 use Overtrue\LaravelFollow\Traits\CanBeFollowed;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, Searchable
 {
     use Notifiable, CanFollow, CanLike, CanBeFollowed;
 
@@ -62,7 +64,19 @@ class User extends Authenticatable implements JWTSubject
         'dob'
     ];
 
+    /**
+     * @return \Spatie\Searchable\SearchResult
+     */
+    public function getSearchResult(): SearchResult
+    {
+        $url = "search-details/business/" .  $this->id;
 
+        return new SearchResult(
+            $this,
+            $this->name,
+            $url
+        );
+    }
 
     // Rest omitted for brevity
 

@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 use Illuminate\Database\Eloquent\Model;
 
-class Business extends Model
+class Business extends Model implements Searchable
 {
     /**
      * Mass fillable
@@ -29,6 +31,20 @@ class Business extends Model
         'social_handle' => 'array'
     ];
 
+
+    /**
+     * @return \Spatie\Searchable\SearchResult
+     */
+    public function getSearchResult(): SearchResult
+    {
+        $url = "search-details/business/" .  $this->id;
+
+        return new SearchResult(
+            $this,
+            $this->name,
+            $url
+        );
+    }
 
     public function scopeBusinessId($query, $user)
     {
