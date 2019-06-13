@@ -131,7 +131,7 @@ class BusinessStoreController extends Controller
 
         // remove null fields
         foreach ($data as $key => $value ) {
-            if (is_null($data[$key]) || $data[$key] === 'null' || count($data[$key]) === 0) {
+            if (is_null($data[$key]) || $data[$key] === 'null') {
                 unset($data[$key]);
             }
         }
@@ -141,6 +141,8 @@ class BusinessStoreController extends Controller
         // update if already created
         if (UserBusinessSetting::where('business_id','=', $businessId)->exists()){
             $settings = UserBusinessSetting::where('business_id','=', $businessId)->first();
+
+            UserBusinessSetting::find($settings->id)->update(['working_days' => null ]);
 
             UserBusinessSetting::find($settings->id)->update($data);
 

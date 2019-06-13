@@ -147,7 +147,7 @@ class ApiFeedsController extends Controller
         $followings[] = $userId;
         $toFollow = array_diff($combined, $followings);
 
-        $people = $this->user->whereIn('id',$toFollow)->take(10)->get(['id','name','avatar']);
+        $people = $this->user->inRandomOrder()->whereIn('id',$toFollow)->take(6)->get(['id','name','avatar']);
 
         foreach ($people as $person) {
             $person->roleData = HelperController::fetchRoleData($person->id);
