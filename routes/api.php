@@ -97,6 +97,7 @@ Route::group([
     //Publication
     Route::get('get-publications','ApiPublicationController@index');
     Route::post('publish-publication','ApiPublicationController@store');
+    Route::get('delete-publication/{id}','ApiPublicationController@delete');
     Route::get('single-publication/{publication_id}','ApiPublicationController@show');
     Route::get('toggle-publication-like/{userId}/{publication}', 'ApiPublicationController@toggleLike');
 
@@ -112,6 +113,9 @@ Route::group([
     Route::post('send-typing-event','Chat\MessagingController@typingEvent');
     Route::get('/chat-get-contacts/{user}','Chat\MessagingController@getContacts');
     Route::get('/chat-get-messages/{user}','Chat\MessagingController@getMessages');
+
+    //Search
+    Route::post('get-search-results', '')
 });
 
 

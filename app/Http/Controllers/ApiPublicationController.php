@@ -62,7 +62,10 @@ class ApiPublicationController extends Controller
         return response()->json(['publications' => $publications, 'connections' => $userConnections]);
     }
 
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store( Request $request )
     {
         $data = $request->all();
@@ -84,7 +87,11 @@ class ApiPublicationController extends Controller
         return response()->json(['success' => true, 'message' => 'Publication Published to targeted audience, You can find this in Knowledge hub']);
     }
 
-
+    /**
+     * @param $userId
+     * @param $publicationID
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function toggleLike($userId, $publicationID)
     {
 
@@ -113,6 +120,10 @@ class ApiPublicationController extends Controller
     }
 
 
+    /**
+     * @param $publicationId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show( $publicationId )
     {
         $publication = $this->publication
@@ -129,5 +140,22 @@ class ApiPublicationController extends Controller
             $userConnections = Trainee::where('trainee_id','=',auth()->user()->id)->get();
         }
         return response()->json(['publication' => $publication,'likers' => $likers, 'connections' => $userConnections]);
+    }
+
+    /**
+     * @param $pub_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete($pub_id)
+    {
+        $publication = $this->publication->find($pub_id);
+
+        if (!is_null($publication->image) || $publication->image !== 'null') {
+            HelperController::removeImage($publication->image);
+        }
+
+        $publication->delete();
+
+        return response()->json('success');
     }
 }
