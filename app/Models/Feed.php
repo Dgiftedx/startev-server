@@ -28,7 +28,7 @@ class Feed extends Model implements Searchable
      */
     public function getSearchResult(): SearchResult
     {
-        $url = "search-details/business/" .  $this->id;
+        $url = "/feed/" .  $this->id;
 
         return new SearchResult(
             $this,

@@ -37,13 +37,19 @@ class Business extends Model implements Searchable
      */
     public function getSearchResult(): SearchResult
     {
-        $url = "search-details/business/" .  $this->id;
+        $url = "/general-profile/" .  $this->businessUser($this->user_id)->slug;
 
         return new SearchResult(
             $this,
             $this->name,
             $url
         );
+    }
+
+
+    public function businessUser($user_id)
+    {
+        return User::find($user_id);
     }
 
     public function scopeBusinessId($query, $user)

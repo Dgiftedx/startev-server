@@ -1,17 +1,23 @@
 <?php
 
-use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Migrations\Migration;
 
-class IndustriesTableSeeder extends Seeder
+class UpdateCareerFieldsValues extends Migration
 {
     /**
-     * Run the database seeds.
+     * Run the migrations.
      *
      * @return void
      */
-    public function run()
+    public function up()
     {
+        \App\Models\Industry::query()->truncate();
+        \Illuminate\Support\Facades\DB::table('user_industry')->truncate();
+
+
         $industries = [
             [
                 'slug' => uniqid(rand(), true),
@@ -117,5 +123,15 @@ class IndustriesTableSeeder extends Seeder
         }
 
         Model::reguard();
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
     }
 }

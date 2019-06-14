@@ -483,8 +483,8 @@
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
                                     <div style="color:#555555;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:150%;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
                                         <div style="font-size: 12px; line-height: 18px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #555555;">
-                                            <p style="font-size: 14px; line-height: 21px; text-align: center; margin: 0;">Startev Africa- An Online Community for African students to learn, connect,</p>
-                                            <p style="font-size: 14px; line-height: 21px; text-align: center; margin: 0;">and launch their entrepreneur journey.</p>
+                                            <p style="font-size: 14px; line-height: 21px; text-align: center; margin: 0;">Startev Africa - An online community for African students and young graduates to connect, learn, </p>
+                                            <p style="font-size: 14px; line-height: 21px; text-align: center; margin: 0;">exchange ideas and launch their entrepreneurial or professional journey.</p>
                                             <p style="font-size: 14px; line-height: 21px; text-align: center; margin: 0;">329 Slot 10, Ajayi Brown Ave, Victoria Island, Lagos, Nigeria 94118</p>
                                         </div>
                                     </div>

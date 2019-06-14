@@ -125,6 +125,14 @@ class ApiAccountController extends Controller
         return response()->json(['profileData' =>  $profileData]);
     }
 
+
+    public function generalProfile( $slug )
+    {
+        $user = $this->user->whereSlug($slug)->first();
+        $profileData = $this->prepareProfile($user->id);
+        return response()->json(['profileData' =>  $profileData]);
+    }
+
     /**
      * @param Request $request
      * @param $id

@@ -48,7 +48,7 @@ class ApiFeedsController extends Controller
                     'id' => $item->id,
                     'postType' => $item->post_type,
                     'roleData' => HelperController::fetchRoleData($item->user_id),
-                    'user' => $this->user->where('id','=',$item->user_id)->first(['id','name','avatar']),
+                    'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
                     'hasLiked' => $item->hasLiked,
                     'title' => $item->title,
                     'likers' => $item->likers()->get(),
@@ -73,7 +73,7 @@ class ApiFeedsController extends Controller
         $feedData = [
             'postType' => $data['post_type'],
             'roleData' => HelperController::fetchRoleData($data['user_id']),
-            'user' => $this->user->where('id','=',$data['user_id'])->first(['id','name','avatar']),
+            'user' => $this->user->where('id','=',$data['user_id'])->first(['id','slug','name','avatar']),
             'title' => $data['title'],
             'body' => $data['body'],
             'time' => Carbon::now()
@@ -141,13 +141,14 @@ class ApiFeedsController extends Controller
 
         //get already followed ids
         $followings = $this->followingIds($userId);
+        $followers = $this->followerIds($userId);
         //combine mentors and business ids
-        $combined = array_merge($mentors, $business);
+        $combined = array_merge($mentors, $business, $followers);
         //exclude already followed people, also the current user id from combined ids
         $followings[] = $userId;
         $toFollow = array_diff($combined, $followings);
 
-        $people = $this->user->inRandomOrder()->whereIn('id',$toFollow)->take(6)->get(['id','name','avatar']);
+        $people = $this->user->inRandomOrder()->whereIn('id',$toFollow)->whereNotNull('avatar')->take(7)->get(['id','slug','name','avatar']);
 
         foreach ($people as $person) {
             $person->roleData = HelperController::fetchRoleData($person->id);
@@ -160,6 +161,12 @@ class ApiFeedsController extends Controller
     {
         $user = $this->user->find($user_id);
         return $user->followings()->pluck('id')->toArray();
+    }
+
+    public function followerIds( $user_id )
+    {
+        $user = $this->user->find($user_id);
+        return $user->followers()->pluck('id')->toArray();
     }
 
 

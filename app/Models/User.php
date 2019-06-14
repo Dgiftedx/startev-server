@@ -69,7 +69,7 @@ class User extends Authenticatable implements JWTSubject, Searchable
      */
     public function getSearchResult(): SearchResult
     {
-        $url = "search-details/business/" .  $this->id;
+        $url = "/general-profile/" .  $this->slug;
 
         return new SearchResult(
             $this,

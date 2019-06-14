@@ -33,6 +33,7 @@ Route::group([
 ], function () {
     //Account
     Route::get('get-profile','ApiAccountController@profile');
+    Route::get('get-general-profile/{slug}','ApiAccountController@generalProfile');
     Route::post('update-user-avatar/{id}','ApiAccountController@updateAvatar');
     Route::post('update-user-data/{id}','ApiAccountController@updateProfile');
     Route::post('update-student-data/{id}','ApiAccountController@updateStudentData');
@@ -115,7 +116,11 @@ Route::group([
     Route::get('/chat-get-messages/{user}','Chat\MessagingController@getMessages');
 
     //Search
-    Route::post('get-search-results', '')
+    Route::post('get-search-results', 'ApiSearchController@search');
+
+
+    //Notification
+    Route::get('get-widget-notifications/{user}','ApiUserNotificationController@widgetNotifications');
 });
 
 
