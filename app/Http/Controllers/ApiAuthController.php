@@ -50,6 +50,14 @@ class ApiAuthController extends Controller
     public function register( Request $request )
     {
         $data = $request->all();
+
+
+
+        //check if use with thesame email exists
+        if ($this->user->where('email', '=', $data['email'])->exists()) {
+            return response()->json(['error' => 'User with same email already exists. Go to login page and click forgot password.'], '401');
+        }
+
         $data['slug'] = uniqid(rand(), true);
         $user = $this->user->create($data);
 
