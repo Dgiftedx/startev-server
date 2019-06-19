@@ -219,17 +219,24 @@ class StoreHelperController extends Controller
     {
         $orders = [];
 
+        $products = [];
+        UserVentureProduct::orderBy('id','asc')->get()->mapToGroups(function($item) use (&$products) {
+
+            $products[$item->sku] = $item;
+            return [];
+        });
+
         UserVentureOrder::with('buyer')
             ->with('product')
             ->byFilter($query)
             ->get()
-            ->mapToGroups( function($item) use (&$orders) {
+            ->mapToGroups( function($item) use (&$orders, $products) {
 
                 $orders[$item->identifier][] = [
                     'name' => $item->buyer->name,
                     'order_id' => $item->identifier,
-                    'image' => $item->product->images[0],
-                    'product_name' => $item->product->product_name,
+                    'image' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->images[0]:'',
+                    'product_name' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->product_name:'',
                     'amount' => $item->amount,
                     'quantity' => $item->quantity,
                     'date' => $item->created_at,
@@ -242,6 +249,12 @@ class StoreHelperController extends Controller
 
 
         return $orders;
+    }
+
+
+    private static function checkIsset($items, $index)
+    {
+        return isset($items[$index])?true:false;
     }
 
 
@@ -498,7 +511,9 @@ class StoreHelperController extends Controller
      */
     public static function getBusinessProducts($query)
     {
-        return UserBusinessProduct::orderBy('id','desc')->byFilter($query)->get();
+        return UserBusinessProduct::orderBy('id','desc')
+            ->where('venture_id', '=', $query['venture_id'])
+            ->where('business_id', '=', $query['business_id'])->get();
     }
 
 
@@ -521,10 +536,8 @@ class StoreHelperController extends Controller
     }
 
 
-
     public static function getMainStoreProducts($query, $sort = 'desc')
     {
-
         return UserVentureProduct::orderBy('id',"{$sort}")->byFilter($query)->get();
     }
 

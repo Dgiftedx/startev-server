@@ -3,10 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\Chat\Message;
+use App\Models\Chat\MessageConversation;
+use App\Models\Feed;
+use App\Models\FeedComment;
 use App\Models\Mentor;
+use App\Models\Partnership;
+use App\Models\Store\UserInvoice;
+use App\Models\Store\UserStore;
 use App\Models\Student;
+use App\Models\Trainee;
 use App\Models\User;
+use App\Models\UserHiddenFeed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApiAuthController extends Controller
 {
@@ -24,14 +34,13 @@ class ApiAuthController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
-     *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login( Request $request )
     {
         //Get login credentials from request
-        $credentials = request(['username', 'password']);
+        $credentials = $request->only(['username', 'password']);
 
         //if credentials does not match/exists
         if (! $token = auth()->attempt($credentials)) {
@@ -164,5 +173,98 @@ class ApiAuthController extends Controller
             'user' => auth()->user(),
             'accessData' => $userData
         ]);
+    }
+
+    public function removeAccount( Request $request )
+    {
+        $data = $request->all();
+
+        if (auth()->check()) {
+            $this->handleDeletion($data);
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => "You're not authorized to initiate this deletion" ]);
+    }
+
+
+    private function handleDeletion( $data )
+    {
+        $userID = $data['user_id'];
+
+        $roleData = HelperController::fetchRoleData($userID);
+
+        $feeds = Feed::where('user_id', '=', $userID)->get();
+
+        foreach ($feeds as $feed) {
+            if (!is_null($feed->image)) {
+                HelperController::removeImage($feed->image);
+            }
+
+
+            $feed->delete();
+        }
+
+        DB::table('feed_comments')->where('user_id', '=', $userID)->get();
+
+        DB::table('messages')->where('sender_id','=', $userID)->delete();
+
+        DB::table('message_conversations')->where('sender_id','=', $userID)->delete();
+
+        DB::table('partnerships')->where('user_id','=', $userID)->delete();
+
+        DB::table('trainees')->where('trainer_id', '=', $userID)->delete();
+
+        DB::table('user_hidden_feeds')->where('user_id','=',$userID)->delete();
+
+        DB::table('user_industry')->where('user_id','=', $userID)->delete();
+
+        if ($roleData['role'] === 'business') {
+            $business_id = Business::businessId($userID);
+
+            DB::table('user_business_products')->where('business_id','=', $business_id)->delete();
+
+            DB::table('user_business_settings')->where('business_id', '=', $business_id)->delete();
+
+            DB::table('business_ventures')->where('business_id','=', $business_id)->delete();
+
+            DB::table('businesses')->where('user_id','=', $userID)->delete();
+        }
+
+
+        if ($roleData['role'] === 'mentor') {
+            DB::table('mentors')->where('user_id','=', $userID)->delete();
+        }
+
+
+        if ($roleData['role'] === 'students') {
+            DB::table('students')->where('user_id', '=', $userID)->delete();
+
+            $store_id = UserStore::storeId($userID);
+
+            DB::table('user_venture_products')->where('store_id','=', $store_id)->delete();
+
+            DB::table('user_venture_reviews')->where('store_id', '=', $store_id)->delete();
+        }
+
+        DB::table('user_stores')->where('user_id','=', $userID)->delete();
+
+
+        DB::table('user_notifications')->where('user_id','=', $userID)->delete();
+
+
+        $user = User::find($userID);
+
+        if (!is_null($user->avatar)) {
+            HelperController::removeImage($user->avatar);
+        }
+
+        if (!is_null($user->bg_image)) {
+            HelperController::removeImage($user->bg_image);
+        }
+
+
+        $user->delete();
     }
 }

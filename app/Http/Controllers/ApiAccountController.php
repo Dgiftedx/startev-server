@@ -88,12 +88,19 @@ class ApiAccountController extends Controller
 
     /**
      * @param $id
+     * @param bool $general
      * @return array
      */
-    public function prepareProfile($id)
+    public function prepareProfile($id, $general = false)
     {
         $roleData = HelperController::fetchRoleData($id);
-        $user = $this->user->with('industries')->find($id);
+
+        if ($general) {
+            $user = $this->user->with('industries')->with('trainerPivot')->with('trainerPivot.loneTrainee')->find($id);
+        }else{
+            $user = $this->user->with('industries')->find($id);
+        }
+
         $followers = $user->followers()->get();
 
         foreach ($followers as $follower){
@@ -128,9 +135,10 @@ class ApiAccountController extends Controller
 
     public function generalProfile( $slug )
     {
+        $authUser = $this->user->find(auth()->user()->id);
         $user = $this->user->whereSlug($slug)->first();
-        $profileData = $this->prepareProfile($user->id);
-        return response()->json(['profileData' =>  $profileData]);
+        $profileData = $this->prepareProfile($user->id, true);
+        return response()->json(['profileData' =>  $profileData, 'myFollowers' => $authUser->followings()->get()]);
     }
 
     /**
@@ -340,6 +348,29 @@ class ApiAccountController extends Controller
 
         return response()->json(['user' => $user, 'url' => $this->url]);
 
+    }
+
+
+    public function removeBgImage($user_id)
+    {
+        $user = $this->user->find($user_id);
+
+        $oldImage = $user->bg_image;
+
+        if (strpos($oldImage, $this->url) !== false) {
+            $actualImageLink = str_replace($this->url,'',$oldImage);
+            //Remove old image from storage if exists
+            if(Storage::disk('public')->exists($actualImageLink)){
+                //remove
+                Storage::disk('public')->delete($actualImageLink);
+            }
+        }
+
+        $user->update(['bg_image' => null]);
+
+        $user = $this->user->find($user_id);
+
+        return response()->json($user);
     }
 
 

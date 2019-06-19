@@ -57,7 +57,12 @@ class ApiVentureController extends Controller
     {
         $ventures = $this->businessVentures($id);
         $partners = Partnership::where('business_id','=',$id)->with('venture')->with('user')->with('business')->get();
-        return response()->json(['ventures' => $ventures->ventures, 'partners' => $partners]);
+
+        if (isset($ventures->ventures)) {
+            return response()->json(['ventures' => $ventures->ventures, 'partners' => $partners]);
+        }
+
+        return response()->json(['ventures' => [], 'partners' => $partners]);
     }
 
 

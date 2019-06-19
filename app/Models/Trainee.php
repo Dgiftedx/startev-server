@@ -18,6 +18,11 @@ class Trainee extends Model
         return $this->hasMany(User::class, 'trainer_id');
     }
 
+    public function loneTrainee()
+    {
+        return $this->belongsTo(User::class, 'trainee_id', 'id', 'trainees');
+    }
+
 
     public function trainee()
     {

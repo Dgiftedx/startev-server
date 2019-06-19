@@ -24,7 +24,7 @@ Route::group([
     Route::post('logout', 'ApiAuthController@logout');
     Route::post('refresh', 'ApiAuthController@refresh');
     Route::post('me', 'ApiAuthController@me');
-
+    Route::post('remove-user-account', 'ApiAuthController@removeAccount');
 });
 
 
@@ -43,6 +43,7 @@ Route::group([
     Route::post('update-business-data/{id}','ApiAccountController@updateBusinessData');
     Route::post('reset-password','ApiPasswordResetController@sendEmail');
     Route::post('change-password','ApiPasswordResetController@changePassword');
+    Route::get('remove-header-image/{id}', 'ApiAccountController@removeBgImage');
     Route::post('update-user-header-image/{id}','ApiAccountController@updateHeaderImage');
 
     //Industries

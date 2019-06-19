@@ -10,14 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/', 'HomeController@index')->name('home');
 });
-
-Route::get('/build-countries', 'TestQueryController@buildCountries');
-Route::get('/build-states', 'TestQueryController@buildStates');
-Route::get('/build-cities', 'TestQueryController@buildCities');
-
-Route::get('/remove','TestController@remove');
-Route::get('/send-mail','TestController@sendMail');

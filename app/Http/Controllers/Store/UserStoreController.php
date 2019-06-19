@@ -84,7 +84,9 @@ class UserStoreController extends Controller
         $data = [
             'hasActiveStore' => StoreHelperController::hasActiveStore($userId),
             'orders_amount' => StoreHelperController::OrdersTotalAmount($userId),
+            'orders_amount_avg' => UserVentureOrder::where('store_id','=', UserStore::storeId($userId))->avg('amount'),
             'delivered_orders' => StoreHelperController::OrdersDeliveredAmount($userId),
+            'delivered_orders_avg' => UserVentureOrder::where('store_id','=', UserStore::storeId($userId))->where('status','=','delivered')->avg('amount'),
             'total_commission' => StoreHelperController::totalCommission($userId),
             'recent_orders' => StoreHelperController::recentOrders($userId)
         ];
@@ -178,11 +180,11 @@ class UserStoreController extends Controller
     public function importVentureProducts( $userId, $ventureId )
     {
         // get business id;
-        $partnership = Partnership::where('user_id','=',$userId)->first();
+        $partnership = Partnership::where('user_id','=',$userId)->where('venture_id','=',$ventureId)->first();
 
         $query = [
             'business_id' => $partnership->business_id,
-            'venture_id' => $partnership->venture_id
+            'venture_id' => $ventureId
         ];
 
         $products = StoreHelperController::getBusinessProducts($query);
@@ -192,7 +194,7 @@ class UserStoreController extends Controller
             $product->store_id = UserStore::storeId($userId);
 
             //check if this product already exists
-            if(UserVentureProduct::where('store_id','=',UserStore::storeId($userId))->where('sku','=',$product->sku)->exists()){
+            if(UserVentureProduct::where('store_id','=', $product->store_id)->where('sku','=',$product->sku)->exists()){
                 //only update
                 //but i don't think this is necessary as this might revert any changes made
                 // to user products before this import.
@@ -219,9 +221,13 @@ class UserStoreController extends Controller
 
 
         //then we need to set the imported_flag to avoid future import
-        Partnership::find($partnership->id)->update(['is_products_imported' => true ]);
 
-        return response()->json(['success' => true, 'message' => "Product importation completed"]);
+        if (UserVentureProduct::where('store_id', '=', UserStore::storeId($userId))->where('venture_id', '=', $ventureId)->count() > 0) {
+            Partnership::find($partnership->id)->update(['is_products_imported' => true ]);
+            return response()->json(['success' => true, 'message' => "Product importation completed"]);
+        }
+
+        return response()->json(['success' => true, 'message' => "Action Done, But venture has no product to import."]);
     }
 
 
@@ -234,7 +240,7 @@ class UserStoreController extends Controller
     public function syncVentureProducts( $userId, $ventureId )
     {
         // get business id;
-        $partnership = Partnership::where('user_id','=',$userId)->first();
+        $partnership = Partnership::where('user_id','=',$userId)->where('venture_id','=', $ventureId)->first();
 
         $query = [
             'business_id' => $partnership->business_id,
@@ -297,7 +303,7 @@ class UserStoreController extends Controller
     {
 
         // get business id;
-        $partnership = Partnership::where('user_id','=',$userId)->first();
+        $partnership = Partnership::where('user_id','=',$userId)->where('venture_id', '=', $ventureId)->first();
 
         $products = UserVentureProduct::where('store_id','=',UserStore::storeId($userId))->where('venture_id','=',$ventureId)->get();
 

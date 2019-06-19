@@ -19,9 +19,9 @@ class ApiOnlineStatus
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check()) {
-            $expiresAt = Carbon::now()->addMinutes(1);
-            Cache::put('user-is-online-'.Auth::user()->id, true, $expiresAt);
+        if (auth()->check()) {
+            $expiresAt = Carbon::now()->addSecond(20);
+            Cache::put('user-is-online-'.auth()->user()->id, true, $expiresAt);
         }
         return $next($request);
     }

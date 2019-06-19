@@ -49,7 +49,7 @@ class ApiPasswordResetController extends Controller
         }
 
         $this->send($request->get('email'));
-        $message = 'Password reset mail sent successfully. Please check your inbox';
+        $message = 'Password reset mail has been sent to your mailbox. Please check your inbox';
         return $this->successResponse($message);
     }
 
