@@ -92,6 +92,21 @@ class ApiPasswordResetController extends Controller
         return HelperController::sendMail(['message' => $token, 'to' => $email,'subject' => 'Password Reset'], 'password-reset');
     }
 
+
+
+    public function resendConfirmEmail( Request $request )
+    {
+        $data = $request->all();
+        $user = $this->user->whereSlug($data['slug'])->first();
+
+        $data['user_id'] = $user->id;
+
+        //send Welcome Mail
+        (new ApiAuthController($this->user))->sendVerificationMail($data);
+
+        return response()->json(['success' => true]);
+    }
+
     /**
      * Validate user email if it exists in database
      * @param $email

@@ -19,6 +19,7 @@ Route::group([
     'prefix' => 'auth'
 
 ], function () {
+    Route::post('verify','ApiAuthController@verify');
     Route::post('register','ApiAuthController@register');
     Route::post('login', 'ApiAuthController@login');
     Route::post('logout', 'ApiAuthController@logout');
@@ -32,6 +33,7 @@ Route::group([
     'middleware' => ['api']
 ], function () {
     //Account
+    Route::get('get-landing-stats', 'OpenApiController@landingStats');
     Route::get('get-profile','ApiAccountController@profile');
     Route::get('get-general-profile/{slug}','ApiAccountController@generalProfile');
     Route::post('update-user-avatar/{id}','ApiAccountController@updateAvatar');
@@ -42,6 +44,7 @@ Route::group([
     Route::post('update-industry-data/{id}','ApiAccountController@updateIndustryData');
     Route::post('update-business-data/{id}','ApiAccountController@updateBusinessData');
     Route::post('reset-password','ApiPasswordResetController@sendEmail');
+    Route::post('resend-email-confirmation','ApiPasswordResetController@ResendConfirmEmail');
     Route::post('change-password','ApiPasswordResetController@changePassword');
     Route::get('remove-header-image/{id}', 'ApiAccountController@removeBgImage');
     Route::post('update-user-header-image/{id}','ApiAccountController@updateHeaderImage');

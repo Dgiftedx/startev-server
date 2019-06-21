@@ -263,9 +263,14 @@ class HelperController extends Controller
     public static function buildMailer($content, $title)
     {
 
-        $base_url = 'http://startev.africa';
+        $base_url = 'http://app.startev.africa';
 
-        return  ['content' => $content, 'subject' => $title,  'title' => $title, 'base_url' => $base_url];
+        $toSend = ['content' => $content['message'],  'subject' => $title,  'title' => $title, 'base_url' => $base_url];
+
+        if (isset($content['token'])) {
+            $toSend['token'] = $content['token'];
+        }
+        return  $toSend;
     }
 
 
@@ -309,7 +314,7 @@ class HelperController extends Controller
     {
 
         $data['sender'] = "Startev Africa";
-        $content = $data['message'];
+
         $receivers = $data['to'];
 
         $title = $data['subject'];
@@ -320,9 +325,11 @@ class HelperController extends Controller
             'sender' => $data['sender'],
             'type' => 1,
             'email_Subject' => $title,
-            'email_Content' => $content,
+            'email_Content' => $data['message'],
             'email_recipients' => $receivers,
         ];
+
+
 
         $array = [];
 
@@ -343,7 +350,7 @@ class HelperController extends Controller
         $emailData = [
             'subject' => $title,
             'to' => $outgoing_email,
-            'data' =>  self::buildMailer($content, $title),
+            'data' =>  self::buildMailer($data, $title),
             'files' => $array,
         ];
 

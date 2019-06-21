@@ -10,6 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+//Route::get('send-mail','HelperController@sendVerificationMail');
 Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index')->name('home');

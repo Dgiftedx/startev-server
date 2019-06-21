@@ -15,6 +15,7 @@ use App\Models\Student;
 use App\Models\Trainee;
 use App\Models\User;
 use App\Models\UserHiddenFeed;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +31,7 @@ class ApiAuthController extends Controller
     public function __construct(User $userModel)
     {
         $this->user = $userModel;
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login','register','verify']]);
     }
 
     /**
@@ -60,8 +61,6 @@ class ApiAuthController extends Controller
     {
         $data = $request->all();
 
-
-
         //check if use with thesame email exists
         if ($this->user->where('email', '=', $data['email'])->exists()) {
             return response()->json(['error' => 'User with same email already exists. Go to login page and click forgot password.'], '401');
@@ -73,26 +72,52 @@ class ApiAuthController extends Controller
         $data['user_id'] = $user->id;
 
         //send Welcome Mail
-        $this->sendWelcomeMail($data);
+        $this->sendVerificationMail($data);
 
         if ($data['role'] === 'student') {
             // Log a new profile for student & login
             Student::create($data);
 
-            return $this->login($request);
+            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
         }
+
         else if ($data['role'] === 'mentor'){
             // If Mentor, log a new profile & login
             Mentor::create($data);
 
-            return $this->login($request);
+            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
         }else {
 
             //otherwise, it's a business body, Log & login
             Business::create(['user_id' => $user->id]);
 
-            return $this->login($request);
+            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+//            return $this->login($request);
         }
+    }
+
+    public function verify(Request $request)
+    {
+        $data = $request->all();
+
+        if (!$this->user->where('slug', '=', $data['slug'])->exists()) {
+            return response()->json(['error' => "Your Account couldn't be found. Please contact out support team"], 401);
+        }
+
+        $user = $this->user->whereSlug($data['slug'])->first();
+
+        if (!is_null($user->email_verified_at)) {
+            return response()->json(['message' => "Your email has already been verified"]);
+        }
+
+        $this->user->find($user->id)->update(['email_verified_at' => Carbon::now()->toDateTimeString()]);
+
+        auth()->login($user);
+
+        //return user instance with token
+        $cert =  $this->refresh();
+
+        return response()->json(['data' => $cert], 200);
     }
 
     /**
@@ -105,6 +130,19 @@ class ApiAuthController extends Controller
         return response()->json(auth()->user());
     }
 
+
+    public function sendVerificationMail($data)
+    {
+        $user = User::find($data['user_id']);
+        $mailContents = [
+            'to' => $user->email,
+            'subject' => 'Confirm Your Email Address :: Startev Africa',
+            'message' => "Welcome $user->name <br/> Please confirm your email address by clicking the button below. You might not be able to log in without email confirmation",
+            'token' => $user->slug
+        ];
+
+        return HelperController::sendMail($mailContents, 'confirm-email');
+    }
 
     public function sendWelcomeMail($data)
     {

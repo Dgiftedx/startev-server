@@ -23,7 +23,6 @@ class ApiCommonController extends Controller
         $this->middleware('auth:api');
     }
 
-
     public function industries()
     {
         $industries = $this->prepareFewIndustries();
