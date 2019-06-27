@@ -35,6 +35,10 @@ Route::group([
     //Account
     Route::get('get-landing-stats', 'OpenApiController@landingStats');
     Route::get('get-profile','ApiAccountController@profile');
+    Route::get('get-new-sign-ups','ApiAccountController@newSignUps');
+    Route::get('get-top-profiles','ApiAccountController@topProfiles');
+    Route::get('get-suggestions/{id}','ApiAccountController@suggestions');
+    Route::get('get-featured-mentors','ApiAccountController@featuredMentors');
     Route::get('get-general-profile/{slug}','ApiAccountController@generalProfile');
     Route::post('update-user-avatar/{id}','ApiAccountController@updateAvatar');
     Route::post('update-user-data/{id}','ApiAccountController@updateProfile');
