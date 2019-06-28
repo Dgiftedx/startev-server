@@ -86,26 +86,24 @@ class ApiPublicationController extends Controller
 
         if ( $request->has('images') && count($request->file('images')) > 0){
 
+            $data['images'] = [];
+
             foreach ($request->file('images') as $file) {
                 //upload image and add link to array
                 $data['images'][] = $this->url. '/storage'. HelperController::processImageUpload($file, $data['title'],'publication',640,800);
 
             }
 
-            $data['images'] = array_filter($data['images']);
-
         }
 
         if ( $request->has('files') && count($request->file('files')) > 0){
 
+            $data['files'] = [];
             foreach ($request->file('files') as $file) {
                 //upload image and add link to array
                 $data['files'][] = $this->url. HelperController::processFileUpload($file, $data['title']);
 
             }
-
-
-            $data['files'] = array_filter($data['files']);
 
         }
 

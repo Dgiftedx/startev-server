@@ -12,6 +12,8 @@
 */
 
 //Route::get('send-mail','HelperController@sendVerificationMail');
+
+Route::get('download-file', 'DownloadController@download');
 Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index')->name('home');

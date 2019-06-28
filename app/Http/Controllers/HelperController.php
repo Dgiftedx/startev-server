@@ -93,9 +93,10 @@ class HelperController extends Controller
 
     public static function processFileUpload( $file , $name)
     {
+
+        $name = str_replace(" ", "-", $name);
         //Process new file
         $fileName = '/uploads/' . $name . '.' . $file->getClientOriginalExtension();
-
         if(Storage::disk('public')->exists($fileName)){
             //remove
             Storage::disk('public')->delete($fileName);
