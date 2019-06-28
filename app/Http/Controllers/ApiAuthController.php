@@ -7,6 +7,7 @@ use App\Models\Chat\Message;
 use App\Models\Chat\MessageConversation;
 use App\Models\Feed;
 use App\Models\FeedComment;
+use App\Models\Graduate;
 use App\Models\Mentor;
 use App\Models\Partnership;
 use App\Models\Store\UserInvoice;
@@ -77,6 +78,13 @@ class ApiAuthController extends Controller
         if ($data['role'] === 'student') {
             // Log a new profile for student & login
             Student::create($data);
+
+            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+        }
+
+        if ($data['role'] === 'graduate') {
+            // Log a new profile for student & login
+            Graduate::create($data);
 
             return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
         }

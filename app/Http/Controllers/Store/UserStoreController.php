@@ -9,6 +9,7 @@ use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureOrder;
 use App\Models\Store\UserVentureProduct;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -58,6 +59,15 @@ class UserStoreController extends Controller
     public function saveStoreSettings( Request $request, $user_id )
     {
         $data = $request->all();
+
+        if (isset($data['auto_forward'])) {
+
+            if ($data['auto_forward'] === 'true') {
+                $data['auto_forward'] = 1;
+            }else{
+                $data['auto_forward'] = 0;
+            }
+        }
 
         if ($data['store_logo'] !== 'null' && $request->file('store_logo')->isValid()) {
             //upload store logo
@@ -127,7 +137,7 @@ class UserStoreController extends Controller
         $all = [
             'name' => $orders[0]->buyer->name,
             'delivery_address' => $orders[0]->delivery_address,
-            'order_date' => $orders[0]->created_at,
+            'order_date' => Carbon::parse($orders[0]->created_at)->toDateTimeString(),
             'forwarded' => $orders[0]->forwarded,
             'orders' => $orders,
             'transaction_ref' => $orders[0]->transaction_ref

@@ -31,16 +31,21 @@ class HelperController extends Controller
      */
     public static function fetchRoleData( $id )
     {
-        $user = User::with('mentor')->with('student')->with('business')->find($id);
+        $user = User::with('mentor')->with('student')->with('business')->with('graduate')->find($id);
 
 
         if (!is_null($user) && !is_null($user->student)){
 
-
             return ['data' => $user->student, 'role' => 'student'];
+
+        }else if(!is_null($user) &&  !is_null($user->graduate)) {
+
+            return ['data' => $user->graduate, 'role' => 'graduate'];
+
         }else if(!is_null($user) &&  !is_null($user->mentor)) {
 
             return ['data' => $user->mentor, 'role' => 'mentor'];
+
         }else{
 
             return ['data' => $user->business, 'role' => 'business'];

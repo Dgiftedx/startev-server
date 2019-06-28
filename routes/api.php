@@ -35,13 +35,16 @@ Route::group([
     //Account
     Route::get('get-landing-stats', 'OpenApiController@landingStats');
     Route::get('get-profile','ApiAccountController@profile');
+    Route::get('get-my-feeds/{id}','ApiFeedsController@myFeeds');
     Route::get('get-new-sign-ups','ApiAccountController@newSignUps');
     Route::get('get-top-profiles','ApiAccountController@topProfiles');
+    Route::get('get-my-partners/{id}','ApiAccountController@myPartners');
     Route::get('get-suggestions/{id}','ApiAccountController@suggestions');
     Route::get('get-featured-mentors','ApiAccountController@featuredMentors');
     Route::get('get-general-profile/{slug}','ApiAccountController@generalProfile');
     Route::post('update-user-avatar/{id}','ApiAccountController@updateAvatar');
     Route::post('update-user-data/{id}','ApiAccountController@updateProfile');
+    Route::get('get-business-partners/{id}','ApiAccountController@businessPartners');
     Route::post('update-student-data/{id}','ApiAccountController@updateStudentData');
     Route::post('update-mentor-data/{id}','ApiAccountController@updateMentorData');
     Route::post('update-password-data/{id}','ApiAccountController@updatePasswordData');
@@ -105,7 +108,11 @@ Route::group([
 
     //Publication
     Route::get('get-publications','ApiPublicationController@index');
+    Route::get('get-my-publications/{id}','ApiPublicationController@myPublications');
     Route::post('publish-publication','ApiPublicationController@store');
+    Route::post('update-publication/{id}','ApiPublicationController@updatePublication');
+    Route::get('get-hub-materials','ApiPublicationController@hubMaterials');
+    Route::get('get-pub-cat','ApiPublicationController@getPubCategories');
     Route::get('delete-publication/{id}','ApiPublicationController@delete');
     Route::get('single-publication/{publication_id}','ApiPublicationController@show');
     Route::get('toggle-publication-like/{userId}/{publication}', 'ApiPublicationController@toggleLike');

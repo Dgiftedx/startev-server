@@ -16,11 +16,17 @@ class Feed extends Model implements Searchable
         'title',
         'body',
         'image',
+        'images',
         'video',
         'link',
         'time',
         'hasLiked',
         'post_type'
+    ];
+
+
+    protected $casts = [
+        'images' => 'array'
     ];
 
     /**

@@ -7,6 +7,7 @@ use App\Models\CareerPath;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Mentor;
+use App\Models\Partnership;
 use App\Models\State;
 use App\Models\Student;
 use App\Models\Trainee;
@@ -45,6 +46,20 @@ class ApiAccountController extends Controller
     public function getCompletionProgress()
     {
         return response()->json(['progress' => $this->checkProfileProgress(auth()->user()->id)]);
+    }
+
+
+    public function myPartners( $user_id )
+    {
+        $partners = Partnership::where('user_id', '=', $user_id)->with('venture')->with('business')->get();
+        return response()->json($partners);
+    }
+
+
+    public function businessPartners( $user_id )
+    {
+        $partners = Partnership::where('business_id', '=', Business::businessId($user_id))->with('user')->with('venture')->get();
+        return response()->json($partners);
     }
 
     /**
@@ -137,7 +152,7 @@ class ApiAccountController extends Controller
                 }
 
                 if(count($suggestionsId) === 0 && !is_null($roleData['data']->current_job_position)) {
-                    $suggestionsId = Mentor::whereNot('user_id', '=', $user_id)
+                    $suggestionsId = Mentor::where('user_id', '!=', $user_id)
                         ->whereNotNull('current_job_position')
                         ->where('current_job_position', 'LIKE', $roleData['data']->current_job_position)
                         ->pluck('user_id')->toArray();
@@ -152,7 +167,7 @@ class ApiAccountController extends Controller
             case 'business':
 
                 if (!is_null($roleData['data']->services)) {
-                    $suggestionsId = Business::whereNot('user_id', '=', $user_id)->where('services', 'LIKE', $roleData['data']->services)->pluck('user_id')->toArray();
+                    $suggestionsId = Business::where('user_id', '!=', $user_id)->where('services', 'LIKE', $roleData['data']->services)->pluck('user_id')->toArray();
                 }
                 break;
 
@@ -161,6 +176,9 @@ class ApiAccountController extends Controller
 
         return $suggestionsId;
     }
+
+
+
 
 
     /**

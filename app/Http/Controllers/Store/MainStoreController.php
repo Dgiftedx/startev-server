@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\HelperController;
+use App\Models\Business\UserBusinessOrder;
 use App\Models\Store\UserCart;
 use App\Models\Store\UserInvoice;
 use App\Models\Store\UserStore;
@@ -163,6 +164,26 @@ class MainStoreController extends Controller
 
             //Place order
             $saved = UserVentureOrder::create($data);
+
+
+//            $business = StoreHelperController::fetchBusinessId($item->product->venture_id);
+//
+//            UserBusinessOrder::create([
+//                'store_id' => $item->product->store_id,
+//                'buyer_id' => $item->product->user_id,
+//                'amount' => $item->amount,
+//                'created_at' => $item->product->created_at,
+//                'delivery_address' => $product->delivery_address,
+//                'identifier' => $product->identifier,
+//                'product_sku' => $item->product->product_sku,
+//                'quantity' => $item->quantity,
+//                'business_id' => $business,
+//                'status' => 'processing',
+//                'transaction_ref' => $product->transaction_ref,
+//                'updated_at' => $product->updated_at
+//            ]);
+//
+//            UserVentureOrder::find($item->id)->update(['forwarded' => true , 'status' => 'processing']);
 
             $originalProduct = UserVentureProduct::find($item->product_id);
 

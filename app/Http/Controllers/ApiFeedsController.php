@@ -54,13 +54,51 @@ class ApiFeedsController extends Controller
                     'likers' => $item->likers()->get(),
                     'comments'=> $item->feedComments,
                     'image' => $item->image,
+                    'images' => $item->images,
                     'video' => $item->image,
                     'link' => $item->link,
                     'content' => $item->body,
-                    'createdAt' => $item->time
+                    'time' => $item->time
                 ];
                 return [];
         });
+
+
+        return response()->json($feeds);
+    }
+
+
+    public function myFeeds($user_id)
+    {
+        $feeds = [];
+
+        $hiddenFeeds = UserHiddenFeed::where('user_id','=',$user_id)->pluck('feed_id')->toArray();
+
+        $this->feed->with('feedComments')
+            ->with('feedComments.user')
+            ->whereNotIn('id', $hiddenFeeds)
+            ->where('user_id', '=', $user_id)
+            ->orderBy('id','desc')
+            ->get()
+            ->mapToGroups(function ($item) use (&$feeds) {
+                $feeds[] = [
+                    'id' => $item->id,
+                    'postType' => $item->post_type,
+                    'roleData' => HelperController::fetchRoleData($item->user_id),
+                    'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
+                    'hasLiked' => $item->hasLiked,
+                    'title' => $item->title,
+                    'likers' => $item->likers()->get(),
+                    'comments'=> $item->feedComments,
+                    'image' => $item->image,
+                    'images' => $item->images,
+                    'video' => $item->image,
+                    'link' => $item->link,
+                    'content' => $item->body,
+                    'time' => $item->time
+                ];
+                return [];
+            });
 
 
         return response()->json($feeds);
@@ -87,11 +125,15 @@ class ApiFeedsController extends Controller
             'time' => Carbon::now()
         ];
 
-        if (!is_null($request->file('image')) && $request->file('image')->isValid()){
-            //upload image and add link to array
-            $path = $this->url. '/storage'. HelperController::processImageUpload($request->file('image'),$data['title'],'feeds',640,800);
-            $feedData['image'] = $path;
-            $databaseUpdate['image'] = $path;
+        if (count($request->file('images'))){
+
+
+            foreach ($request->file('images') as $file) {
+                //upload image and add link to array
+                $path = $this->url. '/storage'. HelperController::processImageUpload($file, $data['title'],'feeds',640,800);
+                $feedData['images'][] = $path;
+                $databaseUpdate['images'][] = $path;
+            }
 
 
 //            Cloudder::Upload($request->file('image'));
@@ -100,15 +142,6 @@ class ApiFeedsController extends Controller
 //            $databaseUpdate['image'] = $image;
 //            $feedData['image'] = $image;
 
-        }
-
-        if ($request->has('video') && !is_null($data['video'])){
-            //upload video is it's a file and add link to array.
-            //if it's link add it to array without saving
-        }
-
-        if ($request->has('link') && !is_null($data['link'])){
-            //Crawl link information and save inside link in array
         }
 
         $update = $this->feed->create($databaseUpdate);
@@ -226,9 +259,34 @@ class ApiFeedsController extends Controller
 
     public function showSingle($feed_id)
     {
-        $feed = Feed::with('user')->with('feedComments')->with('feedComments.user')->find($feed_id);
-        $likers = $feed->likers()->get();
-        return response()->json(['likers' => $likers, 'feed' => $feed]);
+
+        $feed = [];
+
+        $this->feed->with('feedComments')
+            ->with('feedComments.user')
+            ->where('id', '=', $feed_id)
+            ->get()
+            ->mapToGroups(function ($item) use (&$feed) {
+                $feed = [
+                    'id' => $item->id,
+                    'postType' => $item->post_type,
+                    'roleData' => HelperController::fetchRoleData($item->user_id),
+                    'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
+                    'hasLiked' => $item->hasLiked,
+                    'title' => $item->title,
+                    'likers' => $item->likers()->get(),
+                    'comments'=> $item->feedComments,
+                    'image' => $item->image,
+                    'images' => $item->images,
+                    'video' => $item->image,
+                    'link' => $item->link,
+                    'content' => $item->body,
+                    'time' => $item->time
+                ];
+                return [];
+            });
+
+        return response()->json(['feed' => $feed]);
     }
 
 
@@ -267,6 +325,12 @@ class ApiFeedsController extends Controller
             HelperController::removeImage($feed->image);
         }
 
+
+        if (!is_null($feed->images) && count($feed->images) > 0) {
+            foreach ($feed->images as $image) {
+                HelperController::removeImage($image);
+            }
+        }
 
         //remove comments if they exists on feed thread
         $comments = FeedComment::where('feed_id','=', $data['feed_id'])->get();

@@ -230,10 +230,8 @@ class BusinessStoreController extends Controller
         $data['business_id'] = Business::businessId($userId);
         $data['slug'] = uniqid(rand(), true);
 
-        $data['sizes'] = json_decode($data['sizes']);
-        $data['colors'] = json_decode($data['colors']);
-
-        $data['product_description'] = StoreHelperController::stripTextTags($data['product_description']);
+//        $data['sizes'] = json_decode($data['sizes']);
+//        $data['colors'] = json_decode($data['colors']);
 
         if (count($data['images']) > 0) {
             //process image upload
@@ -275,8 +273,8 @@ class BusinessStoreController extends Controller
         //Grab all input
         $data = $request->all();
 
-        $data['sizes'] = json_decode($data['sizes']);
-        $data['colors'] = json_decode($data['colors']);
+//        $data['sizes'] = json_decode($data['sizes']);
+//        $data['colors'] = json_decode($data['colors']);
 
         // fetch single product
         $product = UserBusinessProduct::find($productId);
@@ -315,8 +313,6 @@ class BusinessStoreController extends Controller
 
         }
 
-        // strip irrelevant html tags from product description
-        $data['product_description'] = StoreHelperController::stripTextTags($data['product_description']);
 
         //Update record
         $product->update($data);

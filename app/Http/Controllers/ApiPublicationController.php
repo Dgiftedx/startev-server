@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Industry;
 use App\Models\Publication;
+use App\Models\PublicationCategory;
 use App\Models\Trainee;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -62,6 +64,13 @@ class ApiPublicationController extends Controller
         return response()->json(['publications' => $publications, 'connections' => $userConnections]);
     }
 
+
+    public function myPublications($user_id)
+    {
+        $publications = Publication::where('user_id','=',$user_id)->with('category')->orderBy('id','desc')->get();
+        return response()->json($publications);
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -70,13 +79,34 @@ class ApiPublicationController extends Controller
     {
         $data = $request->all();
 
-        if ($data['image'] !== null){
-            if(!is_null($request->file('image')) && $request->file('image')->isValid()){
-                $path = $this->url. '/storage'. HelperController::processImageUpload($request->file('image'),$data['title'],'feeds',640,800);
-                $data['image'] = $path;
+        $category = PublicationCategory::where('category_slug', '=', $data['category'])->first();
+        $data['category_id'] = $category->id;
+
+        unset($data['category']);
+
+        if ( $request->has('images') && count($request->file('images')) > 0){
+
+            foreach ($request->file('images') as $file) {
+                //upload image and add link to array
+                $data['images'][] = $this->url. '/storage'. HelperController::processImageUpload($file, $data['title'],'publication',640,800);
+
             }
-        }else{
-            unset($data['image']);
+
+            $data['images'] = array_filter($data['images']);
+
+        }
+
+        if ( $request->has('files') && count($request->file('files')) > 0){
+
+            foreach ($request->file('files') as $file) {
+                //upload image and add link to array
+                $data['files'][] = $this->url. HelperController::processFileUpload($file, $data['title']);
+
+            }
+
+
+            $data['files'] = array_filter($data['files']);
+
         }
 
         //strip off unwanted html tags
@@ -86,6 +116,26 @@ class ApiPublicationController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Publication Published to targeted audience, You can find this in Knowledge hub']);
     }
+
+
+
+    public function updatePublication( Request $request, $pub_id )
+    {
+        $data = $request->all();
+
+        $category = PublicationCategory::where('category_slug', '=', $data['category'])->first();
+        $data['category_id'] = $category->id;
+
+        unset($data['category']);
+
+        //strip off unwanted html tags
+        $data['content'] = strip_tags($data['content'], "<p><b><a><img><h1><h2><h3><h4><h5><h6>");
+
+        $this->publication->find($pub_id)->update($data);
+
+        return response()->json(['success']);
+    }
+
 
     /**
      * @param $userId
@@ -150,12 +200,69 @@ class ApiPublicationController extends Controller
     {
         $publication = $this->publication->find($pub_id);
 
-        if (!is_null($publication->image) || $publication->image !== 'null') {
-            HelperController::removeImage($publication->image);
-        }
+//        if (!is_null($publication->images)) {
+//            foreach ($publication->images as $image) {
+//                HelperController::removeImage($image);
+//            }
+//        }
 
         $publication->delete();
 
         return response()->json('success');
+    }
+
+
+    public function getPubCategories()
+    {
+        $categories = PublicationCategory::orderBy('id','asc')->get(['id','category_name','category_slug']);
+        $industries = Industry::orderBy('id','asc')->get(['id','alias', 'name']);
+        return response()->json(['categories' => $categories, 'industries' => $industries]);
+    }
+
+
+    public function hubMaterials(Request $request)
+    {
+        $query = $request->get('q');
+
+        $collection = [];
+
+        switch ($query) {
+            case 'all_career_fields':
+                $this->publication->whereNotNull('industry_id')
+                    ->with('industry')
+                    ->with('user')
+                    ->with('category')
+                    ->orderBy('id','desc')->get()
+                    ->mapToGroups( function($item) use (&$collection) {
+
+                       $collection[$item->industry->name][] = $item;
+                        return [];
+                    });
+
+                break;
+
+            case 'career_development':
+            case 'general_knowledge_areas':
+            case 'entrepreneurship_business_management':
+                $category = PublicationCategory::where('category_slug', '=', $query)->first();
+
+                $collection = $this->publication->where('category_id', '=', $category->id)->with('category')->with('user')
+                    ->orderBy('id','desc')->get();
+
+                break;
+        }
+
+
+        if ($query !== 'all_career_fields' || count($collection) === 0) {
+            return response()->json($collection);
+        }
+
+       //further processes
+        $result = [];
+
+        foreach ($collection as $industry => $item) {
+            $result[] = ['industry' => $industry, 'materials' => count($item), 'items' => $item];
+        }
+        return response()->json($result);
     }
 }

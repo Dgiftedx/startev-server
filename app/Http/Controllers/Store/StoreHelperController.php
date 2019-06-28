@@ -15,6 +15,7 @@ use App\Models\Store\UserVentureOrder;
 use App\Models\Store\UserVentureProduct;
 use App\Models\Store\UserVentureReview;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -387,20 +388,28 @@ class StoreHelperController extends Controller
     {
         $orders = [];
 
+        $products = [];
+        UserBusinessProduct::orderBy('id','asc')->get()->mapToGroups(function($item) use (&$products) {
+
+            $products[$item->sku] = $item;
+            return [];
+        });
+
+
         UserBusinessOrder::with('buyer')
             ->byFilter($query)
             ->get()
-            ->mapToGroups( function($item) use (&$orders) {
+            ->mapToGroups( function($item) use (&$orders, $products) {
 
                 $orders[$item->identifier][] = [
                     'name' => $item->buyer->name,
                     'product_sku' => $item->product_sku,
                     'order_id' => $item->identifier,
-                    'image' => self::singleBusinessProduct($item->product_sku)->images[0],
-                    'product_name' => self::singleBusinessProduct($item->product_sku)->product_name,
+                    'image' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->images[0]:'',
+                    'product_name' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->product_name:'',
                     'amount' => $item->amount,
                     'quantity' => $item->quantity,
-                    'date' => $item->created_at,
+                    'date' => Carbon::parse($item->created_at)->toDateTimeString(),
                     'status' => $item->status
                 ];
 

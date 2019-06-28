@@ -123,6 +123,14 @@ class User extends Authenticatable implements JWTSubject, Searchable
         return $this->hasOne(Student::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function graduate()
+    {
+        return $this->hasOne(Graduate::class);
+    }
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
