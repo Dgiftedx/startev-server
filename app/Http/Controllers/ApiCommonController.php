@@ -71,7 +71,7 @@ class ApiCommonController extends Controller
 
     public function prepareFewIndustries()
     {
-        return Industry::inRandomOrder()->with('mentors')->orderBy('name','asc')->get(['id','name','alias','slug'])->take(5);
+        return Industry::inRandomOrder()->with('mentors')->orderBy('name','asc')->get(['id','name','alias','slug'])->take(7);
     }
 
     public function prepareAllIndustries()

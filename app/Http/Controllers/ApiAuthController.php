@@ -42,7 +42,10 @@ class ApiAuthController extends Controller
     public function login( Request $request )
     {
         //Get login credentials from request
-        $credentials = $request->only(['username', 'password']);
+        $credentials = [
+            'email' => $request->get('email'),
+            'password' => $request->get('password')
+        ];
 
         //if credentials does not match/exists
         if (! $token = auth()->attempt($credentials)) {
@@ -89,12 +92,14 @@ class ApiAuthController extends Controller
             return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
         }
 
-        else if ($data['role'] === 'mentor'){
+        if ($data['role'] === 'mentor'){
             // If Mentor, log a new profile & login
             Mentor::create($data);
 
             return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
-        }else {
+        }
+
+        if ($data['role'] === 'business'){
 
             //otherwise, it's a business body, Log & login
             Business::create(['user_id' => $user->id]);
@@ -102,6 +107,8 @@ class ApiAuthController extends Controller
             return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
 //            return $this->login($request);
         }
+
+        return response()->json(['error' => "Your account cannot be created this time, Please contact support"], 401);
     }
 
     public function verify(Request $request)

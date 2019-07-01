@@ -17,10 +17,10 @@ class OpenApiController extends Controller
     {
         $result = [];
 
-        $result['mentors'] = count(HelperController::mentors());
+        $result['mentors'] = count(HelperController::realMentorsId());
         $result['professionals'] = count(array_unique(array_merge(HelperController::realMentorsId(), HelperController::realBusinessId())));
         $result['students'] = count(Student::get(['id']));
-        $result['businesses'] = count(HelperController::realBusinessId());
+        $result['businesses'] = count(HelperController::businessIds());
 
         return $result;
     }

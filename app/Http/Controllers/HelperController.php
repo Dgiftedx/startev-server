@@ -64,9 +64,16 @@ class HelperController extends Controller
 
     public static function mentors()
     {
-        $mentorsId = self::realMentorsId();
 
+        $mentorsId = Mentor::orderBy('id','desc')->pluck('user_id')->toArray();
         return User::whereIn('id',$mentorsId)->with('mentor')->get();
+    }
+
+
+    public static function businessIds()
+    {
+        return Business::orderBy('id','desc')->pluck('user_id')->toArray();
+
     }
 
     /**
@@ -96,12 +103,13 @@ class HelperController extends Controller
 
         $name = str_replace(" ", "-", $name);
         //Process new file
-        $fileName = '/uploads/' . $name . '.' . $file->getClientOriginalExtension();
+        $base_name = $name . uniqid(rand()) . '.' . $file->getClientOriginalExtension();
+        $fileName = '/uploads/'  . $base_name;
         if(Storage::disk('public')->exists($fileName)){
             //remove
             Storage::disk('public')->delete($fileName);
         }
-        Storage::disk('public')->putFileAs('uploads', $file, $name . '.' . $file->getClientOriginalExtension());
+        Storage::disk('public')->putFileAs('uploads', $file, $base_name);
 
         return $fileName;
     }

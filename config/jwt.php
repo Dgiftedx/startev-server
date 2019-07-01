@@ -27,6 +27,20 @@ return [
 
     'secret' => env('JWT_SECRET'),
 
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | User identifier
+    |--------------------------------------------------------------------------
+    |
+    | Specify a unique property of the user that will be added as the 'sub'
+    | claim of the token payload.
+    |
+    */
+
+    'identifier' => 'mail',
+
     /*
     |--------------------------------------------------------------------------
     | JWT Authentication Keys
