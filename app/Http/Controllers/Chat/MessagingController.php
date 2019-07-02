@@ -76,6 +76,8 @@ class MessagingController extends Controller
             ->orderBy('created_at','desc')->get();
 
         foreach ($received as $item) {
+
+            $item->created_at = Carbon::parse($item->created_at)->toDateTimeString();
             $messages[] = $item;
         }
 
@@ -117,7 +119,7 @@ class MessagingController extends Controller
             'message' => $data['message'],
             'type' => $data['type'],
             'status' => 'unread',
-            'created_at' => Carbon::now(),
+            'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()
         ];
 

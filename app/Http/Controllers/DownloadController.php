@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DownloadController extends Controller
 {
@@ -19,15 +20,21 @@ class DownloadController extends Controller
         $query = $request->all();
 
         if (isset($query['file'])) {
-            $path = public_path() . "/storage/uploads/" .  str_replace("-"," ", $query['file']);
-
+            $path = public_path() . "/storage/uploads/" . $query['file'];
             $headers = array();
-            return response()->download( $path, $query['file'], $headers);
+
+            if (Storage::disk('public')->exists("/uploads/" . $query['file'])) {
+                return response()->download( $path, $query['file'], $headers);
+            }
+
+            return response("File has been removed or not found");
         }
 
+        $path = public_path() . "/storage/publication/header/" . $query['image'];
 
-        $path = str_replace($this->url, "", $query['image']);
-        $headers = [];
-        return response()->download( $path, $query['image'], $headers);
+        if (Storage::disk('public')->exists("/publication/header/". $query['image'])) {
+            return response()->download( $path );
+        }
+        return response("File has been removed or not found");
     }
 }

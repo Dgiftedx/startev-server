@@ -144,8 +144,7 @@ class ApiAccountController extends Controller
 
             case 'mentor':
                 if (!is_null($roleData['data']->workExperience)) {
-                    $suggestionsId = Mentor::whereNot('id', '=', $user_id)
-                        ->where('user_id', '!=' ,$user_id)
+                    $suggestionsId = Mentor::where('user_id', '!=' ,$user_id)
                         ->whereNotNull('workExperience')
                         ->where('workExperience', 'LIKE', $roleData['data']->workExperience[0]['company'])
                         ->pluck('user_id')->toArray();

@@ -14,7 +14,8 @@ class Mentor extends Model
         'current_job_position',
         'workExperience',
         'education',
-        'employmentStatus'
+        'employmentStatus',
+        'total_trainee'
     ];
 
     /**
