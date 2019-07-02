@@ -27,7 +27,7 @@ class DownloadController extends Controller
                 return response()->download( $path, $query['file'], $headers);
             }
 
-            return response("File has been removed or not found");
+            return view('errors.404');
         }
 
         $path = public_path() . "/storage/publication/header/" . $query['image'];
@@ -35,6 +35,6 @@ class DownloadController extends Controller
         if (Storage::disk('public')->exists("/publication/header/". $query['image'])) {
             return response()->download( $path );
         }
-        return response("File has been removed or not found");
+        return view('errors.404');
     }
 }
