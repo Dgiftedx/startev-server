@@ -6,15 +6,15 @@
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <section id="wrapper">
-        <div class="login-register" style="background-image:url(/core-assets/images/startev-pg2.jpg);">
+        <div class="login-register" style="background-image:url(/core-assets/images/startev-pg3.jpg);">
             <div class="login-box card">
                 <div class="card-body">
-                    <div class="text-center bg-secondary">
+                    <div class="text-center bg-secondary mb-2">
                         <img src="{{ asset('/core-assets/logo/logo_small.png') }}" width="170"/>
                     </div>
                     <form class="form-horizontal form-material" id="loginform" action="{{ route('login') }}">
                         @csrf
-                        <h3 class="box-title text-center m-b-20">Sign In</h3>
+                        <h3 class="box-title text-center mb-3">Admin Login In</h3>
                         <div class="form-group ">
                             <div class="col-xs-12">
                                 <input class="form-control @error('email') is-invalid @enderror" type="email"  name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Username">

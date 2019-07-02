@@ -130,11 +130,10 @@ class ApiFeedsController extends Controller
 
             foreach ($request->file('images') as $file) {
                 //upload image and add link to array
-                $path = $this->url. '/storage'. HelperController::processImageUpload($file, $data['title'],'feeds',640,800);
+                $path = $this->url. '/storage'. HelperController::processImageUpload($file, "homeFeed",'feeds',640,800);
                 $feedData['images'][] = $path;
                 $databaseUpdate['images'][] = $path;
             }
-
 
 //            Cloudder::Upload($request->file('image'));
 //            $image = Cloudder::getPublicId();
