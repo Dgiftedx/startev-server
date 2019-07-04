@@ -19,4 +19,33 @@ Route::get('download-file', 'DownloadController@download');
 Auth::routes();
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/', 'HomeController@index')->name('home');
+
+
+    //Dashboard Routes
+    Route::group(['prefix' => 'dashboard'], function() {
+//        Route::get('get-stats', '');
+    });
+
+    //Users managements route
+    Route::group(['prefix' => 'users'], function() {
+
+    });
+
+
+    //Feeds Routes
+    Route::group(['prefix' => 'feeds'], function() {
+
+    });
+
+
+    //Verifications
+    Route::group(['prefix' => 'verification'], function() {
+
+    });
+
+
+    //account
+    Route::group(['prefix' => 'account'], function() {
+
+    });
 });

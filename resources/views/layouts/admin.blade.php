@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="MainApp">
 
 <head>
     <meta charset="utf-8">
@@ -79,5 +79,38 @@
 <script src="{{ asset('/core-assets/plugins/c3-master/c3.min.js') }}"></script>
 <!-- Chart JS -->
 <script src="{{ asset('/core-assets/js/dashboard3.js') }}"></script>
+
+<script src="{{ asset('/core-assets/lib/printThis.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/chart/Chart.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/dataTables.bootstrap4.min.js') }}"></script>
+
+<!-- ======================== Angular Files : Not made compulsory in the system ========================= -->
+<script src="{{ asset('/core-assets/lib/angular/angular.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/angular/angular-animate.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/angular/angular-sanitize.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/lodash/dist/lodash.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/chart/highChart.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/ADM-dateTimePicker.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/angular-button-spinner.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/moment.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/angular-tag.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/angular-moment.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/angular-datatables.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/lodash/dist/lodash.core.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/angular-bootstrap-toggle.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/ng-lodash/build/ng-lodash.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/coderty-loader.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/select.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/selectize.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/ng-ckeditor.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/sweetalert.min.js') }}"></script>
+
+
+<!-- global AngularJS App to tap to -->
+<script src="{{ asset('/core-assets/scripts/main.js') }}"></script>
+<script src="{{ asset('/core-assets/scripts/services/adminService.js') }}"></script>
+@yield('footerScript')
 </body>
 </html>

@@ -1,3 +1,5 @@
+<?php $route = \Request()->route()->getName(); ?>
+
 <!-- ============================================================== -->
 <!-- Left Sidebar - style you can find in sidebar.scss  -->
 <!-- ============================================================== -->
@@ -8,7 +10,7 @@
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
                 <li class="nav-small-cap">Main</li>
-                <li> <a class="waves-effect waves-dark" href="#"><i class="mdi mdi-gauge"></i>Dashboard </a></li>
+                <li class="{{ $route === 'home' ? 'active' : '' }}"> <a class="waves-effect waves-dark" href="{{ route('home') }}"><i class="mdi mdi-gauge"></i>Dashboard </a></li>
                 {{--<li> <a class="has-arrow waves-effect waves-dark" href="index3.html#" aria-expanded="false"><i class="mdi mdi-bullseye"></i><span class="hide-menu">Apps</span></a>--}}
                     {{--<ul aria-expanded="false" class="collapse">--}}
                         {{--<li><a href="app-calendar.html">Calendar</a></li>--}}
