@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\Graduate;
 use App\Models\Mentor;
 use App\Models\Trainee;
 use App\Models\User;
@@ -73,7 +74,11 @@ class HelperController extends Controller
     public static function businessIds()
     {
         return Business::orderBy('id','desc')->pluck('user_id')->toArray();
+    }
 
+    public static function graduatesId()
+    {
+        return Graduate::orderBy('id','desc')->pluck('user_id')->toArray();
     }
 
     /**

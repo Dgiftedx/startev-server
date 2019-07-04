@@ -1,12 +1,6 @@
 /*
-Template Name: Admin Pro Admin
-Author: Wrappixel
-Email: niravjoshi87@gmail.com
-File: scss
-*/
-/*
-Template Name: Admin Pro Admin
-Author: Wrappixel
+Template Name: Startev Africa Admin
+Author: Educare
 Email: niravjoshi87@gmail.com
 File: scss
 */
@@ -19,19 +13,24 @@ File: scss
 /*Top bar
 *******************/
 .topbar {
-  background: #fff; }
-  .topbar .top-navbar .navbar-header .navbar-brand .light-logo {
-    display: none; }
-  .topbar .top-navbar .navbar-nav > .nav-item > span {
-    color: #398bf7; }
-  .topbar .navbar-light .navbar-nav .nav-item > a.nav-link {
-    color: #a6b7bf; }
-    .topbar .navbar-light .navbar-nav .nav-item > a.nav-link:hover, .topbar .navbar-light .navbar-nav .nav-item > a.nav-link:focus {
-      color: #242a33 !important; }
+  background: #1e88e5; }
+.topbar .top-navbar .navbar-header .navbar-brand .dark-logo {
+  display: none; }
+.topbar .top-navbar .navbar-header .navbar-brand .light-logo {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.8); }
+.topbar .navbar-nav .nav-item > a.nav-link {
+  color: rgba(255, 255, 255, 0.8); }
+.topbar .navbar-nav .nav-item > a.nav-link:hover, .topbar .navbar-nav .nav-item > a.nav-link:focus {
+  color: #ffffff !important; }
+.topbar .top-navbar .navbar-nav > .nav-item > span {
+  color: #ffffff; }
+.topbar .navbar-header {
+  background: #272c33;
+  }
 
 .logo-center .topbar .navbar-header {
-  text-align: center;
-  padding-left: 0px;
+  background: transparent;
   -webkit-box-shadow: none;
   box-shadow: none; }
 
@@ -46,13 +45,13 @@ File: scss
 /*General Elements
 *******************/
 a {
-  color: #398bf7; }
+  color: #1e88e5; }
 
 a.link:hover, a.link:focus {
-  color: #398bf7 !important; }
+  color: #1e88e5 !important; }
 
 .bg-theme {
-  background-color: #398bf7 !important; }
+  background-color: #1e88e5 !important; }
 
 .pagination > .active > a,
 .pagination > .active > span,
@@ -60,44 +59,44 @@ a.link:hover, a.link:focus {
 .pagination > .active > span:hover,
 .pagination > .active > a:focus,
 .pagination > .active > span:focus {
-  background-color: #398bf7;
-  border-color: #398bf7; }
+  background-color: #1e88e5;
+  border-color: #1e88e5; }
 
 .right-sidebar .rpanel-title {
-  background: #398bf7; }
+  background: #1e88e5; }
 
 .stylish-table tbody tr:hover, .stylish-table tbody tr.active {
-  border-left: 4px solid #398bf7; }
+  border-left: 4px solid #1e88e5; }
 
 .text-themecolor {
-  color: #398bf7 !important; }
+  color: #1e88e5 !important; }
 
 .profile-tab li a.nav-link.active,
 .customtab li a.nav-link.active {
-  border-bottom: 2px solid #398bf7;
-  color: #398bf7; }
+  border-bottom: 2px solid #1e88e5;
+  color: #1e88e5; }
 
 .profile-tab li a.nav-link:hover,
 .customtab li a.nav-link:hover {
-  color: #398bf7; }
+  color: #1e88e5; }
 
 /*******************
 /*Buttons
 *******************/
 .btn-themecolor,
 .btn-themecolor.disabled {
-  background: #398bf7;
+  background: #1e88e5;
   color: #ffffff;
-  border: 1px solid #398bf7; }
-  .btn-themecolor:hover,
-  .btn-themecolor.disabled:hover {
-    background: #398bf7;
-    opacity: 0.7;
-    border: 1px solid #398bf7; }
-  .btn-themecolor.active, .btn-themecolor:focus,
-  .btn-themecolor.disabled.active,
-  .btn-themecolor.disabled:focus {
-    background: #028ee1; }
+  border: 1px solid #1e88e5; }
+.btn-themecolor:hover,
+.btn-themecolor.disabled:hover {
+  background: #1e88e5;
+  opacity: 0.7;
+  border: 1px solid #1e88e5; }
+.btn-themecolor.active, .btn-themecolor:focus,
+.btn-themecolor.disabled.active,
+.btn-themecolor.disabled:focus {
+  background: #028ee1; }
 
 /*******************
 /*sidebar navigation
@@ -123,18 +122,18 @@ a.link:hover, a.link:focus {
   background: #1c2128; }
 
 .label-themecolor {
-  background: #398bf7; }
+  background: #1e88e5; }
 
 .sidebar-nav > ul > li.active > a {
   color: #ffffff;
-  border-color: #398bf7; }
-  .sidebar-nav > ul > li.active > a i {
-    color: #ffffff; }
+  border-color: #1e88e5; }
+.sidebar-nav > ul > li.active > a i {
+  color: #ffffff; }
 
 .sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
   color: #ffffff; }
-  .sidebar-nav ul li a.active i, .sidebar-nav ul li a:hover i {
-    color: #ffffff; }
+.sidebar-nav ul li a.active i, .sidebar-nav ul li a:hover i {
+  color: #ffffff; }
 
 .sidebar-nav ul li.nav-small-cap {
   color: #687384; }

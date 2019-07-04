@@ -13,8 +13,10 @@
     <title>@yield('title')</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{ asset('/core-assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/plugins/perfect-scrollbar/dist/css/perfect-scrollbar.min.css') }}" rel="stylesheet">
     <!-- page css -->
-    <link href="{{ asset('/core-assets/css/pages/login-register-lock.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/plugins/c3-master/c3.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/css/pages/dashboard3.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{ asset('/core-assets/css/style.css') }}" rel="stylesheet">
 
@@ -25,10 +27,9 @@
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+    <![endif]-->
 </head>
-<body class="card-no-border">
-<!-- ============================================================== -->
+<body class=" fix-header fix-sidebar card-no-border">
 <!-- Preloader - style you can find in spinners.css -->
 <!-- ============================================================== -->
 <div class="preloader">
@@ -38,38 +39,45 @@
     </div>
 </div>
 
-@yield('content')
+<div id="main-wrapper">
 
-<!-- ============================================================== -->
-<!-- End Wrapper -->
-<!-- ============================================================== -->
+    <!-- header -->
+    @include('sections.admin.header')
+
+    @include('sections.admin.sidebar')
+
+    <div class="page-wrapper">
+        @yield('content')
+    </div>
+</div>
+
 <!-- ============================================================== -->
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <script src="{{ asset('/core-assets/plugins/jquery/jquery.min.js') }}"></script>
-<!-- Bootstrap tether Core JavaScript -->
+<!-- Bootstrap popper Core JavaScript -->
 <script src="{{ asset('/core-assets/plugins/bootstrap/js/popper.min.js') }}"></script>
 <script src="{{ asset('/core-assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="{{ asset('/core-assets/js/perfect-scrollbar.jquery.min.js') }}"></script>
+<!--Wave Effects -->
+<script src="{{ asset('/core-assets/js/waves.js') }}"></script>
+<!--Menu sidebar -->
+<script src="{{ asset('/core-assets/js/sidebarmenu.js') }}"></script>
 <!--Custom JavaScript -->
-<script type="text/javascript">
-    $(function() {
-        $(".preloader").fadeOut();
-    });
-    $(function() {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
-    // ==============================================================
-    // Login and Recover Password
-    // ==============================================================
-    $('#to-recover').on("click", function() {
-        $("#loginform").slideUp();
-        $("#recoverform").fadeIn();
-    });
-
-    $('#to-loginform').on("click", function() {
-        $("#recoverform").slideUp();
-        $("#loginform").fadeIn();
-    });
-</script>
+<script src="{{ asset('/core-assets/js/custom.min.js') }}"></script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--sparkline JavaScript -->
+<script src="{{ asset('/core-assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
+<!--morris JavaScript -->
+<script src="{{ asset('/core-assets/plugins/chartist-js/dist/chartist.min.js') }}"></script>
+<script src="{{ asset('/core-assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js') }}"></script>
+<!--c3 JavaScript -->
+<script src="{{ asset('/core-assets/plugins/d3/d3.min.js') }}"></script>
+<script src="{{ asset('/core-assets/plugins/c3-master/c3.min.js') }}"></script>
+<!-- Chart JS -->
+<script src="{{ asset('/core-assets/js/dashboard3.js') }}"></script>
 </body>
 </html>

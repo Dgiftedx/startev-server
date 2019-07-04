@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -27,10 +28,34 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
+    public function login( Request $request )
+    {
+        $this->validateLogin($request);
+
+        if (auth()->guard('admin')->attempt($this->credentials($request), $request->filled('remember'))) {
+
+            $request->session()->regenerate();
+
+            $this->clearLoginAttempts($request);
+
+            return $this->authenticated($request, auth()->guard('admin')->user()) ?: redirect()->intended($this->redirectPath());
+        }
+
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
+
+    public function logout(Request $request)
+    {
+        auth()->guard('admin')->logout();
+        $request->session()->invalidate();
+
+        return $this->loggedOut($request) ?: redirect('/');
+    }
+
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * LoginController constructor.
      */
     public function __construct()
     {
