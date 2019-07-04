@@ -21,9 +21,32 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         });
     }
 
+    function sendImageData(url, data, onSuccess, onError) {
+        $http.post(url, data,
+            {
+                headers: { 'Content-Type': undefined},
+                //prevents serializing payload.  don't do it.
+                transformRequest: angular.identity
+            }
+        ).then(function (response) {
+            //console.log
+            if (response.data && response.data.success) {
+                onSuccess(response);
+            }
+            else {
+                onError(response);
+            }
+
+        }, function (response) {
+
+            onError(response);
+
+        });
+    }
+
 
     function sendNormalData(url, data, onSuccess, onError) {
-        $http.get(url, data
+        $http.post(url, data
         ).then(function (response) {
             //console.log
             if (response.data && response.data.success) {
@@ -73,6 +96,7 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
     return {
         fetchData : fetchData,
         sendNormalData : sendNormalData,
+        sendImageData : sendImageData,
         sendFormDataObjects : sendFormDataObjects
     };
 }]);

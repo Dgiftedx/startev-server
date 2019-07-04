@@ -119,6 +119,23 @@ class HelperController extends Controller
         return $fileName;
     }
 
+
+    public static function processAvatarUpload( $image, $name = 'user', $dir = 'user', $height = 250, $width = 250 )
+    {
+        if (!file_exists(storage_path('app/public/'.$dir))) {
+            mkdir(storage_path('app/public/'.$dir), 0777, true);
+        }
+        //Process new image
+        $imageName = preg_replace('/\s+/', '', $name);
+        $user_image = '/'.$dir . uniqid(rand()) . $imageName . '.' . $image->getClientOriginalExtension();
+
+        $imageR = Image::make($image);
+        $imageR = $imageR->resize($width, $height); //width height
+
+        Storage::disk('public')->put($user_image, (string)$imageR->encode());
+        return $user_image;
+    }
+
     public static function processImageUpload( $image, $name = 'user', $dir = 'user', $height = 350, $width = 1200 )
     {
         if (!file_exists(storage_path('app/public/'.$dir))) {

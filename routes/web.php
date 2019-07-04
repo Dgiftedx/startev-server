@@ -19,11 +19,14 @@ Route::get('download-file', 'DownloadController@download');
 Auth::routes();
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/', 'HomeController@index')->name('home');
-
+    Route::get('/profile', 'HomeController@profile')->name('profile');
+    Route::post('/update-profile/{id}', 'HomeController@updateProfile');
+    Route::post('/update-profile-avatar/{id}', 'HomeController@updateProfileAvatar');
+    Route::get('/get-user-profile', 'HomeController@getProfile');
 
     //Dashboard Routes
     Route::group(['prefix' => 'dashboard'], function() {
-//        Route::get('get-stats', '');
+        Route::get('get-stats', 'Admin\DashboardController@getStats');
     });
 
     //Users managements route

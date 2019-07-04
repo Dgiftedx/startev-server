@@ -119,15 +119,15 @@
                 <!-- Profile -->
                 <!-- ============================================================== -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ asset('/core-assets/defaults/avatar.jpg') }}" alt="user" class="profile-pic" /></a>
+                    <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ auth()->guard('admin')->user()->avatar ? asset(auth()->guard('admin')->user()->avatar) : asset('/core-assets/defaults/avatar.jpg') }}" alt="user" class="profile-pic" /></a>
                     <div class="dropdown-menu dropdown-menu-right animated flipInY">
                         <ul class="dropdown-user">
                             <li>
                                 <div class="dw-user-box">
-                                    <div class="u-img"><img src="{{ asset('/core-assets/defaults/avatar.jpg') }}" alt="user"></div>
+                                    <div class="u-img"><img src="{{ auth()->guard('admin')->user()->avatar ? asset(auth()->guard('admin')->user()->avatar) : asset('/core-assets/defaults/avatar.jpg') }}" alt="user"></div>
                                     <div class="u-text">
                                         <h4>{{ auth()->guard('admin')->user()->name }}</h4>
-                                        <p class="text-muted">{{ auth()->guard('admin')->user()->email }}</p><a href="#" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+                                        <p class="text-muted">{{ auth()->guard('admin')->user()->email }}</p><a href="{{ route('profile') }}" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
