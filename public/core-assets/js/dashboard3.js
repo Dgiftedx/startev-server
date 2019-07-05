@@ -6,4 +6,8 @@ File: js
 */
 $(function () {
     "use strict";
+
+    if (document.getElementsByClassName("highcharts-container ")) {
+        // $("#highcharts-u64uhlf-0").attr("style","");
+    }
 });

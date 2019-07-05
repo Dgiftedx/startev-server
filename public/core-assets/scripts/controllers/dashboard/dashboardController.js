@@ -9,7 +9,7 @@ mainApp.controller('dashboardController', ['$rootScope','lodash','$scope','$loca
                 function (resp) {
                     $scope.model.stats = resp.data.result;
                     //prepare chart Data
-                    // $scope.model.prepareBarChart(resp.data.result.chartData);
+                    $scope.model.prepareBarChart(resp.data.result.chartData);
                 })
         };
 
@@ -28,28 +28,19 @@ mainApp.controller('dashboardController', ['$rootScope','lodash','$scope','$loca
             angular.copy([], $scope.model.statisticsData);
             angular.copy([], $scope.model.statisticschildData);
 
-            var datas = {};
+            var datas = [];
             var datasChild = [];
             datas.name = 'statistics';
-            datas.data = [];
 
-            var yearsGroup = [];
+            datasChild = data.index;
 
-            angular.forEach(data, function (item, key) {
-                datasChild.push(key);
-                yearsGroup.push({index: key, values: []});
-
-                angular.forEach(item, function (value, index) {
-                    yearsGroup[index].values.push(value);
-                    // datas.data.push({name: index, data : value});
-                })
+            angular.forEach(data.data, function (item) {
+                datas.push(item);
             });
-
-            console.log(datasChild, yearsGroup);
 
             if(datas){
                 $timeout(function () {
-                    angular.copy([datas], $scope.model.statisticsData);
+                    angular.copy(datas, $scope.model.statisticsData);
                     angular.copy(datasChild, $scope.model.statisticschildData);
                     $scope.model.statisticsChart = true;
                 },0)

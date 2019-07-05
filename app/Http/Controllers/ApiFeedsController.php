@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\MailController;
 use App\Models\Feed;
 use App\Models\FeedComment;
 use App\Models\User;
@@ -148,6 +149,11 @@ class ApiFeedsController extends Controller
         $feedData['id'] = $update->id;
 
         Pusher::trigger('my-channel', 'my-event', $feedData);
+
+        $message = "Your Post, <strong>{$update->title}</strong>, has been published successfully. Login to see user reactions.";
+        $user = User::find($data['user_id']);
+
+        MailController::sendNoticeMail($message, $user->email);
 
         return response()->json(['success' => true, 'message' => 'Post published successfully']);
     }
@@ -339,6 +345,11 @@ class ApiFeedsController extends Controller
                 FeedComment::find($comment->id)->delete();
             }
         }
+
+        $message = "You have deleted <b>{$feed->title} </b> successfully. <br/> Note that users' comments on this post and any other related actions has been removed as well.";
+        $user = User::find($data['user_id']);
+
+        MailController::sendNoticeMail($message, $user->email);
 
         $feed->delete();
 

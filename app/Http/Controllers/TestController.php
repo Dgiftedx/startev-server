@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\MailController;
+use App\Mail\MailNotify;
 use App\Models\Feed;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use JD\Cloudder\Facades\Cloudder;
+use Mailgun\Exception;
 
 class TestController extends Controller
 {
@@ -35,11 +39,11 @@ class TestController extends Controller
     {
         $mailContents = [
             'to' => 'olubunmivictor6@gmail.com',
-            'subject' => 'Welcome to Startev Africa',
-            'message' => "Welcome Olubunmi Tosin <br/> Your Username is <b>olubunmi708</b>"
+            'message' => "Welcome Olubunmi Tosin <br/> Your Username is <b>olubunmi708</b> <br/><br/>"
         ];
 
-        return HelperController::sendMail($mailContents, 'student-welcome-mail');
+        MailController::sendNoticeMail($mailContents['message'], $mailContents['to']);
+        return response("mail sent successfully");
     }
 
 

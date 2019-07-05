@@ -20,7 +20,7 @@ class DashboardController extends Controller
     public function getStats()
     {
 
-        $chartData = HelperController::prepareChartData();
+        $chartData = HelperController::getChartData();
 
         $result = [
             'students' => HelperController::getStudentIds(),

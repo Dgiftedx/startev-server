@@ -606,6 +606,22 @@ html body .bg-white {
     border-radius: 100%
 }
 
+.chart{
+    display: block;
+    width: 100%;
+}
+#chart {
+    position: absolute;
+    width:100%;
+}
+
+.holder {
+    position: relative;
+    max-width: 100%;
+    height: 480px;
+    border: 1px solid #eee;
+    margin: 25px auto 0 auto;
+}
 .round-lg {
     line-height: 65px;
     width: 60px;
@@ -6944,6 +6960,10 @@ screen and (-ms-high-contrast:active) {
     .hidden-xs-down {
         display: none!important
     }
+
+    .holder {
+        max-width: 100%;
+    }
 }
 
 @media (min-width:576px) {
@@ -6955,6 +6975,9 @@ screen and (-ms-high-contrast:active) {
 @media (max-width:767px) {
     .hidden-sm-down {
         display: none!important
+    }
+    .holder {
+        max-width: 100%;
     }
 }
 

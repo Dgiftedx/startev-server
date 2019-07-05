@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\MailController;
 use App\Models\Industry;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
@@ -110,7 +111,12 @@ class ApiPublicationController extends Controller
         //strip off unwanted html tags
         $data['content'] = strip_tags($data['content'], "<p><b><a><img><h1><h2><h3><h4><h5><h6>");
 
-        $this->publication->create($data);
+        $pub = $this->publication->create($data);
+
+        $user = User::find($pub->user_id);
+        $message = "You just published <strong>{$pub->title}</strong> to Startev Knowledge Hub. Should there be any mistake, feel free to edit. <br/> Thanks for impacting lives";
+
+        MailController::sendNoticeMail($message, $user->email);
 
         return response()->json(['success' => true, 'message' => 'Publication Published to targeted audience, You can find this in Knowledge hub']);
     }

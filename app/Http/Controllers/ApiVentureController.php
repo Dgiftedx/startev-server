@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Store\StoreHelperController;
 use App\Models\Business;
 use App\Models\BusinessVenture;
@@ -151,8 +152,11 @@ class ApiVentureController extends Controller
         $data['business_id'] = $venture->business_id;
 
         $id = Partnership::create($data);
-
         $update = Partnership::find($id);
+
+        $message = "Your partnership request with <strong>{$venture->venture_name}</strong> has been submitted. You'll be notified upon approval.";
+        $user = User::find($userId);
+        MailController::sendNoticeMail($message, $user->email);
 
         return response()->json($update[0]);
     }
@@ -166,8 +170,11 @@ class ApiVentureController extends Controller
         // Handle user store as partnership comes with automatic store activation.
         //only and only if it's student
         // If this user doesn't has a store in place, create one.
+        $messageAppend = "";
         if ($record->type === 'student') {
             StoreHelperController::CreateUserStore($userId);
+
+            $messageAppend = "<br/>In case you don't have a store, a store has been created for you. Login now to activate by updating your store details";
         }
 
         //Update partnership data with referral link
@@ -177,6 +184,12 @@ class ApiVentureController extends Controller
         ]);
 
         $partners = Partnership::where('business_id','=',$record->business_id)->with('venture')->with('user')->get();
+
+        $venture = BusinessVenture::where('id','=', $record->venture_id)->first();
+        $message = "Your partnership request with <strong>{$venture->venture_name}</strong> has been <b style=\"color: #1d643b\">Approved</b>. {$messageAppend}";
+
+        //send mail notification
+        MailController::sendNoticeMail($message, $user->email, "New Partnership Approval");
 
         return response()->json($partners);
     }

@@ -68,6 +68,8 @@
             </div>
         </div>
 
+
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -77,11 +79,13 @@
                         </div>
 
                         <!-- comprehensive statistics -->
-                        <st-bar-chart ng-if="model.statisticsChart"
-                                title="Registration Statistics"
-                                child="model.statisticschildData"
-                                data="model.statisticsData">
-                        </st-bar-chart>
+                        <div class="holder" style="width: 100%;">
+                            <st-bar-chart id="chart" ng-if="model.statisticsChart"
+                                          title="Registration Statistics"
+                                          child="model.statisticschildData"
+                                          data="model.statisticsData">
+                            </st-bar-chart>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -132,6 +132,11 @@ class ApiAuthController extends Controller
         //return user instance with token
         $cert =  $this->refresh();
 
+        $data['user_id'] = $user->id;
+
+        //send mail
+        $this->sendWelcomeMail($data);
+
         return response()->json(['data' => $cert], 200);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\MailController;
 use App\Models\Feed;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -46,6 +47,7 @@ class ApiFollowController extends Controller
 
         if ($user->isFollowing($target)){
             $message = "You are now following {$targetUser->name}. You'll now receive updates from this user";
+            MailController::sendNoticeMail($message, $user->email, "New Follow Activity");
         }else{
             $message = "You've stopped following {$targetUser->name}. You'll no longer receive updates from this user";
         }

@@ -36,6 +36,67 @@ class HelperController extends Controller
         return Business::orderBy('id','asc')->count();
     }
 
+
+    public static function getChartData()
+    {
+        $chartData = self::prepareChartData();
+
+        $indexes = [];
+        $students = [];
+        $graduates = [];
+        $mentors = [];
+        $businesses = [];
+
+
+        foreach ($chartData as $date => $data) {
+
+            $indexes[] = $date;
+
+            foreach ($chartData[$date] as $key => $item) {
+                if ($key === 'students') {
+                    $students[] = $item;
+                }
+
+                if ($key === 'graduates') {
+                    $graduates[] = $item;
+                }
+
+                if ($key === 'mentors') {
+                    $mentors[] = $item;
+                }
+
+                if ($key === 'businesses') {
+                    $businesses[] = $item;
+                }
+            }
+
+
+        }
+
+        $result["index"] = $indexes;
+        $result["data"] = [
+            [
+                'name' => 'students',
+                'data' => $students
+            ],
+            [
+                'name' => 'graduates',
+                'data' => $graduates
+            ],
+            [
+                'name' => 'mentor',
+                'data' => $mentors
+            ],
+            [
+                'name' => 'businesses',
+                'data' => $businesses
+            ]
+
+        ];
+
+        return $result;
+    }
+
     public static function prepareChartData()
     {
         $bar_chart_data = [];
@@ -51,7 +112,10 @@ class HelperController extends Controller
             $bar_chart_data[$date]['graduates'] = self::sortRoles($chart_datum, 'graduate');
             $bar_chart_data[$date]['mentors'] = self::sortRoles($chart_datum, 'mentor');
             $bar_chart_data[$date]['businesses'] = self::sortRoles($chart_datum, 'business');
+        }
 
+
+        foreach ($bar_chart_data as $date => $bar_chart_datum) {
             //remove every index that are not a string.
             $bar_chart_data[$date] = array_filter($bar_chart_data[$date], 'is_string', ARRAY_FILTER_USE_KEY);
         }
@@ -67,6 +131,7 @@ class HelperController extends Controller
           case 'student':
               $studentIds = Student::orderBy('id','asc')->pluck('user_id')->toArray();
 
+//              dd($collection, $studentIds);
               foreach ($collection as $item) {
 
 //                  dd($item, $studentIds);

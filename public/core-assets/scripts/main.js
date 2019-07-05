@@ -83,6 +83,7 @@ mainApp.directive('datePicker', function(){
 });
 
 
+// Load the fonts
 Highcharts.createElement('link', {
     href: 'https://fonts.googleapis.com/css?family=Signika:400,700',
     rel: 'stylesheet',
@@ -198,6 +199,13 @@ mainApp.directive('stBarChart', function() {
                 chart: {
                     type: 'column'
                 },
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth : 900
+                        }
+                    }]
+                },
                 title: {
                     text: scope.title
                 },
@@ -207,13 +215,13 @@ mainApp.directive('stBarChart', function() {
                 },yAxis: {
                     min: 0,
                     title: {
-                        text: 'Total count'
+                        text: 'Registration Count'
                     }
                 },
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true

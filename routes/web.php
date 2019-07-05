@@ -13,7 +13,7 @@
 
 //Route::get('send-mail','HelperController@sendVerificationMail');
 Route::get('download-file', 'DownloadController@download');
-
+Route::get('send-mail', 'TestController@sendMail');
 
 
 Auth::routes();
