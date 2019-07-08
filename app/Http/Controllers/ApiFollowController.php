@@ -45,15 +45,15 @@ class ApiFollowController extends Controller
         $user->toggleFollow($target);
 
         $targetUser = $this->user->find($target);
+        $message = "You've stopped following {$targetUser->name}. You'll no longer receive updates from this user";
 
         if ($user->isFollowing($target)){
-            $mailContent['message'] = "You are now following {$targetUser->name}. You'll now receive updates from this user";
+            $message = "You are now following {$targetUser->name}. You'll now receive updates from this user";
+            $mailContent['message'] = $message;
             $mailContent['to'] = $user->email;
             $mailContent['subject'] = "New Follow Activity";
             dispatch(new SendEmailNotification($mailContent));
 
-        }else{
-            $message = "You've stopped following {$targetUser->name}. You'll no longer receive updates from this user";
         }
         return response([
             'message' => $message,
