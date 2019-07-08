@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Store\StoreHelperController;
+use App\Jobs\SendEmailNotification;
 use App\Models\Business;
 use App\Models\BusinessVenture;
 use App\Models\Partnership;
@@ -154,9 +155,12 @@ class ApiVentureController extends Controller
         $id = Partnership::create($data);
         $update = Partnership::find($id);
 
-        $message = "Your partnership request with <strong>{$venture->venture_name}</strong> has been submitted. You'll be notified upon approval.";
+        $mailContent['message'] = "Your partnership request with <strong>{$venture->venture_name}</strong> has been submitted. You'll be notified upon approval.";
         $user = User::find($userId);
-        MailController::sendNoticeMail($message, $user->email);
+        $mailContent['to'] = $user->email;
+        $mailContent['subject'] = "Partnership Update";
+
+        dispatch(new SendEmailNotification($mailContent));
 
         return response()->json($update[0]);
     }
@@ -186,10 +190,12 @@ class ApiVentureController extends Controller
         $partners = Partnership::where('business_id','=',$record->business_id)->with('venture')->with('user')->get();
 
         $venture = BusinessVenture::where('id','=', $record->venture_id)->first();
-        $message = "Your partnership request with <strong>{$venture->venture_name}</strong> has been <b style=\"color: #1d643b\">Approved</b>. {$messageAppend}";
+        $mailContent['message'] = "Your partnership request with <strong>{$venture->venture_name}</strong> has been <b style=\"color: #1d643b\">Approved</b>. {$messageAppend}";
+        $mailContent['to'] = $user->email;
+        $mailContent['subject'] = "New Partnership Approval";
 
         //send mail notification
-        MailController::sendNoticeMail($message, $user->email, "New Partnership Approval");
+        dispatch(new SendEmailNotification($mailContent));
 
         return response()->json($partners);
     }

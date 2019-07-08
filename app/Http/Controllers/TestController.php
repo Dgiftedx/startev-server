@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\MailController;
+use App\Jobs\SendEmailNotification;
 use App\Mail\MailNotify;
 use App\Models\Feed;
 use App\Models\User;
@@ -42,7 +43,7 @@ class TestController extends Controller
             'message' => "Welcome Olubunmi Tosin <br/> Your Username is <b>olubunmi708</b> <br/><br/>"
         ];
 
-        MailController::sendNoticeMail($mailContents['message'], $mailContents['to']);
+        dispatch(new SendEmailNotification($mailContents));
         return response("mail sent successfully");
     }
 

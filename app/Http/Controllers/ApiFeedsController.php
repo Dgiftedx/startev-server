@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\MailController;
+use App\Jobs\SendEmailNotification;
 use App\Models\Feed;
 use App\Models\FeedComment;
 use App\Models\User;
@@ -37,32 +38,45 @@ class ApiFeedsController extends Controller
 
     public function index()
     {
-        $feeds = [];
+//        $feeds = [];
         $id = auth()->user()->id;
 
         $hiddenFeeds = UserHiddenFeed::where('user_id','=',$id)->pluck('feed_id')->toArray();
 
-        $this->feed->with('feedComments')->with('feedComments.user')->whereNotIn('id', $hiddenFeeds)->orderBy('id','desc')
-            ->get()
-            ->mapToGroups(function ($item) use (&$feeds) {
-                $feeds[] = [
-                    'id' => $item->id,
-                    'postType' => $item->post_type,
-                    'roleData' => HelperController::fetchRoleData($item->user_id),
-                    'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
-                    'hasLiked' => $item->hasLiked,
-                    'title' => $item->title,
-                    'likers' => $item->likers()->get(),
-                    'comments'=> $item->feedComments,
-                    'image' => $item->image,
-                    'images' => $item->images,
-                    'video' => $item->image,
-                    'link' => $item->link,
-                    'content' => $item->body,
-                    'time' => $item->time
-                ];
-                return [];
-        });
+//        $this->feed->with('feedComments')->with('feedComments.user')->whereNotIn('id', $hiddenFeeds)->orderBy('id','desc')
+//            ->get()
+//            ->mapToGroups(function ($item) use (&$feeds) {
+//                $feeds[] = [
+//                    'id' => $item->id,
+//                    'postType' => $item->post_type,
+//                    'roleData' => HelperController::fetchRoleData($item->user_id),
+//                    'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
+//                    'hasLiked' => $item->hasLiked,
+//                    'title' => $item->title,
+//                    'likers' => $item->likers()->get(),
+//                    'comments'=> $item->feedComments,
+//                    'image' => $item->image,
+//                    'images' => $item->images,
+//                    'video' => $item->image,
+//                    'link' => $item->link,
+//                    'content' => $item->body,
+//                    'time' => $item->time
+//                ];
+//                return [];
+//        });
+
+
+        $feeds = $this->feed->with('feedComments')->with('feedComments.user')->whereNotIn('id', $hiddenFeeds)->orderBy('id','desc')
+            ->paginate(10);
+
+        foreach ($feeds as $feed ) {
+            $feed->postType = $feed->post_type;
+            $feed->roleData = HelperController::fetchRoleData($feed->user_id);
+            $feed->user = $this->user->where('id','=',$feed->user_id)->first(['id','slug','name','avatar']);
+            $feed->likers = $feed->likers()->get();
+            $feed->comments = $feed->feedComments;
+            $feed->content = $feed->body;
+        }
 
 
         return response()->json($feeds);
@@ -108,6 +122,7 @@ class ApiFeedsController extends Controller
     public function post( Request $request )
     {
         $data = $request->all();
+        $mailContent = [];
 
         $feedData = [
             'postType' => $data['post_type'],
@@ -150,10 +165,14 @@ class ApiFeedsController extends Controller
 
         Pusher::trigger('my-channel', 'my-event', $feedData);
 
-        $message = "Your Post, <strong>{$update->title}</strong>, has been published successfully. Login to see user reactions.";
-        $user = User::find($data['user_id']);
 
-        MailController::sendNoticeMail($message, $user->email);
+
+        $user = User::find($data['user_id']);
+        $mailContent['message'] = "Your Post, <strong>{$update->title}</strong>, has been published successfully. Login to see user reactions.";
+        $mailContent['to'] = $user->email;
+
+        //send notification mail
+        dispatch(new SendEmailNotification($mailContent));
 
         return response()->json(['success' => true, 'message' => 'Post published successfully']);
     }
@@ -346,10 +365,14 @@ class ApiFeedsController extends Controller
             }
         }
 
-        $message = "You have deleted <b>{$feed->title} </b> successfully. <br/> Note that users' comments on this post and any other related actions has been removed as well.";
-        $user = User::find($data['user_id']);
 
-        MailController::sendNoticeMail($message, $user->email);
+
+
+        $user = User::find($data['user_id']);
+        $mailContent['message'] = "You have deleted <b>{$feed->title} </b> successfully. <br/> Note that users' comments on this post and any other related actions has been removed as well.";
+        $mailContent['to'] = $user->email;
+
+        dispatch(new SendEmailNotification($mailContent));
 
         $feed->delete();
 

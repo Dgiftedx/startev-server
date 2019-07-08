@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\MailController;
+use App\Jobs\SendEmailNotification;
 use App\Models\Industry;
 use App\Models\Publication;
 use App\Models\PublicationCategory;
@@ -114,9 +115,10 @@ class ApiPublicationController extends Controller
         $pub = $this->publication->create($data);
 
         $user = User::find($pub->user_id);
-        $message = "You just published <strong>{$pub->title}</strong> to Startev Knowledge Hub. Should there be any mistake, feel free to edit. <br/> Thanks for impacting lives";
+        $mailContent['message'] = "You just published <strong>{$pub->title}</strong> to Startev Knowledge Hub. Should there be any mistake, feel free to edit. <br/> Thanks for impacting lives";
+        $mailContent['to'] = $user->email;
 
-        MailController::sendNoticeMail($message, $user->email);
+        dispatch(new SendEmailNotification($mailContent));
 
         return response()->json(['success' => true, 'message' => 'Publication Published to targeted audience, You can find this in Knowledge hub']);
     }

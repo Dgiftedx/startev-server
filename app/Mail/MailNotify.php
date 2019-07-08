@@ -11,7 +11,6 @@ class MailNotify extends Mailable
 {
     use Queueable, SerializesModels;
 
-
     public $mailContent;
 
     /**
