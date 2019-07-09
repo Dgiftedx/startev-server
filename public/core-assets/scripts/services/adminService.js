@@ -67,6 +67,45 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         });
     }
 
+
+
+    function addStudentAccount(dt, url, onSuccess, onError) {
+        var formData = new FormData();
+        //append form data
+        formData.append('name', dt.name);
+        formData.append('email', dt.email);
+        formData.append('password', dt.password);
+        formData.append('institution', dt.institution);
+        formData.append('avatar', dt.avatar);
+        formData.append('careerPath', dt.careerPath.name);
+
+        if (dt.address){
+            formData.append('address', dt.address);
+        }
+
+        $http.post(url,formData,
+            {
+                headers: { 'Content-Type': undefined},
+                //prevents serializing payload.  don't do it.
+                transformRequest: angular.identity
+            }
+        ).then(function (response) {
+            //console.log
+            if (response.data && response.data.success) {
+                onSuccess(response);
+            }
+            else {
+                onError(response);
+            }
+
+        }, function (response) {
+
+            onError(response);
+
+        });
+    }
+
+
     function addAdminUser(dt, url, onSuccess, onError) {
         var formData = new FormData();
         //append form data
@@ -113,6 +152,7 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         fetchData : fetchData,
         addAdminUser : addAdminUser,
         sendNormalData : sendNormalData,
-        sendImageData : sendImageData
+        sendImageData : sendImageData,
+        addStudentAccount : addStudentAccount
     };
 }]);

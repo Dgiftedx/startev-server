@@ -17,14 +17,14 @@
 
                     </ul>
                 </li>
-                {{--<li> <a class="has-arrow waves-effect waves-dark" href="javascript:;" aria-expanded="false"><i class="mdi mdi-account-multiple"></i><span class="hide-menu">Platform Users</span></a>--}}
-                    {{--<ul aria-expanded="false" class="collapse">--}}
+                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:;" aria-expanded="false"><i class="mdi mdi-account-multiple"></i><span class="hide-menu">Platform Users</span></a>
+                    <ul aria-expanded="false" class="collapse">
                         {{--<li><a href="{{ route('platform mentors') }}">Mentors</a></li>--}}
-                        {{--<li><a href="{{ route('platform students') }}">Students</a></li>--}}
-                        {{--<li><a href="{{ route('platform graduates') }}">Graduates</a></li>--}}
+                        <li><a href="{{ route('platform students') }}">Students</a></li>
+                        <li><a href="{{ route('platform graduates') }}">Graduates</a></li>
                         {{--<li><a href="{{ route('platform businesses') }}">Businesses</a></li>--}}
-                    {{--</ul>--}}
-                {{--</li>--}}
+                    </ul>
+                </li>
 
             </ul>
         </nav>

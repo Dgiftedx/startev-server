@@ -101,9 +101,6 @@ mainApp.controller('adminUserViewController', ['$rootScope','lodash','$scope','$
             }
 
             $scope.model.sendingUser = true;
-
-            console.log($scope.model.formUrl);
-
             adminService.addAdminUser($scope.model.userData,$scope.model.formUrl,
             function (resp) {
                 adminService.alert(resp.data.message, "success");

@@ -1,12 +1,12 @@
-mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$location','$window','$timeout','SweetAlert','moment','adminService',
+mainApp.controller('graduatesViewController', ['$rootScope','lodash','$scope','$location','$window','$timeout','SweetAlert','moment','adminService',
     function ($rootScope,lodash, $scope, $location, $window, $timeout,SweetAlert,moment, adminService) {
 
         $scope.model = {};
-        $scope.model.studentData = {};
+        $scope.model.graduateData = {};
         $scope.model.roles = [];
         $scope.model.buttonText = '';
         $scope.model.formTitle = '';
-        $scope.model.formUrl = '/platform-create-student';
+        $scope.model.formUrl = '/platform-create-graduate';
         $scope.model.showMainList = true;
         $scope.model.showUserForm = false;
         $scope.model.sendingUser = false;
@@ -25,14 +25,14 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
         }
 
         //===================== Get users list ====================//
-        $scope.model.getPlatformStudents = function () {
-            adminService.fetchData('get-platform-students', function (resp) {
-                $scope.model.users = resp.data.students;
+        $scope.model.getPlatformGraduates = function () {
+            adminService.fetchData('get-platform-graduates', function (resp) {
+                $scope.model.users = resp.data.graduates;
                 $scope.model.fields = resp.data.fields;
             });
         };
 
-        $scope.model.getPlatformStudents();
+        $scope.model.getPlatformGraduates();
 
 
 
@@ -41,11 +41,11 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
             var userList = $('#main-list'), userForm = $('#user-form');
 
             if (type === 'add') {
-                $scope.model.buttonText = 'Create Student Account';
-                $scope.model.formTitle = 'Add New Student';
+                $scope.model.buttonText = 'Create Graduate Account';
+                $scope.model.formTitle = 'Add New Graduate';
             }else{
-                $scope.model.buttonText = 'Update Student Account';
-                $scope.model.formTitle = 'Edit student account';
+                $scope.model.buttonText = 'Update Graduate Account';
+                $scope.model.formTitle = 'Edit graduate account';
             }
             userList.toggle(400);
             userForm.toggle(500);
@@ -56,14 +56,14 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
             readURL(this);
             //upload to server
             var file = $(this).prop("files");
-            $scope.model.studentData.avatar = file[0];
+            $scope.model.graduateData.avatar = file[0];
         });
 
 
         $scope.model.closeForm = function () {
-            $scope.model.studentData = {};
-            $scope.model.formUrl = '/platform-create-student';
-            $scope.model.getPlatformStudents();
+            $scope.model.graduateData = {};
+            $scope.model.formUrl = '/platform-create-graduate';
+            $scope.model.getPlatformGraduates();
             $scope.model.triggerUserForm();
             $('#avatar_preview').attr('src', '/core-assets/defaults/avatar.jpg');
             $('#avatar_upload').val("");
@@ -72,37 +72,37 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
 
         $scope.model.saveStudentData = function () {
 
-            if (lodash.size($scope.model.studentData.name) === 0) {
+            if (lodash.size($scope.model.graduateData.name) === 0) {
                 adminService.alert("Full name is required", "warning");
                 return false;
             }
 
 
-            if (lodash.size($scope.model.studentData.email) === 0) {
+            if (lodash.size($scope.model.graduateData.email) === 0) {
                 adminService.alert("Email is required","warning");
                 return false;
             }
 
-            if (lodash.size($scope.model.studentData.institution) === 0) {
-                adminService.alert("Student institute is required","warning");
+            if (lodash.size($scope.model.graduateData.institution) === 0) {
+                adminService.alert("User institute is required","warning");
                 return false;
             }
 
-            if (!$scope.model.studentData.id) {
-                if (lodash.size($scope.model.studentData.password) === 0) {
+            if (!$scope.model.graduateData.id) {
+                if (lodash.size($scope.model.graduateData.password) === 0) {
                     adminService.alert("You must enter a valid password for this user", "danger");
                     return false;
                 }
             }
 
-            if (lodash.size($scope.model.studentData.careerPath) === 0) {
-                adminService.alert("You must set student's career field", "danger");
+            if (lodash.size($scope.model.graduateData.careerPath) === 0) {
+                adminService.alert("You must set user's career field", "danger");
                 return false;
             }
 
             $scope.model.sendingUser = true;
 
-            adminService.addStudentAccount($scope.model.studentData,$scope.model.formUrl,
+            adminService.addStudentAccount($scope.model.graduateData,$scope.model.formUrl,
             function (resp) {
                 adminService.alert(resp.data.message, "success");
                 $scope.model.sendingUser = false;
@@ -114,15 +114,15 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
         };
 
 
-        $scope.model.editStudent = function (user) {
-            $scope.model.studentData = {};
-            $scope.model.formUrl = '/platform-update-student/'+user.id;
-            $scope.model.studentData.id = user.id;
-            $scope.model.studentData.name = user.name;
-            $scope.model.studentData.email = user.email;
-            $scope.model.studentData.address = user.address;
-            $scope.model.studentData.institution = user.roleData.data.institution;
-            $scope.model.studentData.careerPath = lodash.findLast($scope.model.fields, ['name', user.roleData.data.careerPath]);
+        $scope.model.editGraduate = function (user) {
+            $scope.model.graduateData = {};
+            $scope.model.formUrl = '/platform-update-graduate/'+user.id;
+            $scope.model.graduateData.id = user.id;
+            $scope.model.graduateData.name = user.name;
+            $scope.model.graduateData.email = user.email;
+            $scope.model.graduateData.address = user.address;
+            $scope.model.graduateData.institution = user.roleData.data.institution;
+            $scope.model.graduateData.careerPath = lodash.findLast($scope.model.fields, ['name', user.roleData.data.careerPath]);
 
             if (lodash.size(user.avatar) > 0) {
                 $('#avatar_preview').attr('src', user.avatar);
@@ -132,7 +132,7 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
 
         };
 
-        $scope.model.deleteStudentAccount = function (user) {
+        $scope.model.deleteGraduateAccount = function (user) {
             SweetAlert.show({
                 title: "Are you sure?",
                 text: "You will not be able to retrieve this user data",
@@ -149,14 +149,14 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
                         '/platform-delete-student/'+user.id,
                         function (resp) {
                             SweetAlert.show("Success", resp.data.message, "success");
-                            $scope.model.getPlatformStudents();
+                            $scope.model.getPlatformGraduates();
                         },
                         function (resp) {
-                            adminService.alert("Error removing student account from system","error");
+                            adminService.alert("Error removing graduate account from system","error");
                         }
                     )
                 }else{
-                    SweetAlert.show("Operation Cancelled", "Student account is safe", "error");
+                    SweetAlert.show("Operation Cancelled", "Graduate user account is safe", "error");
                 }
             });
         };

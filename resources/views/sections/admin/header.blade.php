@@ -130,8 +130,8 @@
                                         <p class="text-muted">{{ auth()->guard('admin')->user()->email }}</p><a href="{{ route('profile') }}" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
                                 </div>
                             </li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>
+                            {{--<li role="separator" class="divider"></li>--}}
+                            {{--<li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>--}}
                             <li role="separator" class="divider"></li>
                             <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Logout</a>

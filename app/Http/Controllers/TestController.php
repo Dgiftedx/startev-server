@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\MailController;
+use App\Jobs\SendConfirmationMail;
 use App\Jobs\SendEmailNotification;
+use App\Mail\ConfirmationMail;
 use App\Mail\MailNotify;
 use App\Models\Feed;
 use App\Models\User;
@@ -32,18 +34,22 @@ class TestController extends Controller
     {
         $feeds = Feed::orderBy('id','desc')->get();
         foreach ($feeds as $feed) {
-            dump($feed->likers()->get());
+            //
         }
     }
 
     public function sendMail()
     {
         $mailContents = [
-            'to' => 'olubunmivictor6@gmail.com',
-            'message' => "Welcome Olubunmi Tosin <br/> Your Username is <b>olubunmi708</b> <br/><br/>"
+            'to' => "olubunmivictor6@gmail.com",
+            'subject' => 'Confirm Your Email Address :: Startev Africa',
+            'message' => "Welcome Victor <br/> Please confirm your email address by clicking the button below. You might not be able to log in without email confirmation",
+            'token' => HelperController::generateIdentifier(20),
+            'base_url' => 'https://startev.africa'
         ];
 
-        dispatch(new SendEmailNotification($mailContents));
+//        Mail::to($mailContents['to'])->send(new ConfirmationMail($mailContents));
+        dispatch(new SendConfirmationMail($mailContents));
         return response("mail sent successfully");
     }
 

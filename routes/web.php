@@ -42,8 +42,16 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('platform-graduates', 'Admin\ViewsController@platformGraduates')->name('platform graduates');
     Route::get('platform-businesses', 'Admin\ViewsController@platformBusinesses')->name('platform businesses');
 
+
     Route::get('get-platform-students', 'Admin\PlatformUsersController@platformStudents');
+    Route::post('platform-create-student', 'Admin\PlatformUsersController@platformCreateStudent');
+    Route::post('platform-update-student/{id}', 'Admin\PlatformUsersController@platformUpdateStudent');
     Route::get('platform-delete-student/{id}', 'Admin\PlatformUsersController@deleteStudentAccount');
+
+    Route::get('get-platform-graduates', 'Admin\PlatformUsersController@platformGraduates');
+    Route::post('platform-create-graduate', 'Admin\PlatformUsersController@platformCreateGraduate');
+    Route::post('platform-update-graduate/{id}', 'Admin\PlatformUsersController@platformUpdateGraduate');
+    Route::get('platform-delete-graduate/{id}', 'Admin\PlatformUsersController@deleteGraduateAccount');
 
     //Verifications
     Route::group(['prefix' => 'verification'], function() {

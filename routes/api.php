@@ -45,7 +45,7 @@ Route::group([
     Route::post('update-user-avatar/{id}','ApiAccountController@updateAvatar');
     Route::post('update-user-data/{id}','ApiAccountController@updateProfile');
     Route::get('get-business-partners/{id}','ApiAccountController@businessPartners');
-    Route::post('update-student-data/{id}','ApiAccountController@updateStudentData');
+    Route::post('update-student-data/{type}/{id}','ApiAccountController@updateStudentData');
     Route::post('update-mentor-data/{id}','ApiAccountController@updateMentorData');
     Route::post('update-password-data/{id}','ApiAccountController@updatePasswordData');
     Route::post('update-industry-data/{id}','ApiAccountController@updateIndustryData');

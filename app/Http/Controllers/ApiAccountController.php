@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\CareerPath;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Graduate;
 use App\Models\Mentor;
 use App\Models\Partnership;
 use App\Models\State;
@@ -271,7 +272,7 @@ class ApiAccountController extends Controller
     {
         $users = $this->user
             ->inRandomOrder()
-            ->whereBetween('created_at', [Carbon::now()->subWeek()->toDateTimeString(), Carbon::now()->toDateTimeString()])
+            ->whereBetween('created_at', [Carbon::now()->subDays(3)->toDateTimeString(), Carbon::now()->toDateTimeString()])
             ->take(10)
             ->get(['id','avatar','name','slug']);
 
@@ -369,6 +370,14 @@ class ApiAccountController extends Controller
     {
         $data = $request->all();
 
+        $search = User::where('email','=',$data['email'])->first();
+
+        if (!is_null($search)) {
+            if ($search->id !== (int) $id) {
+                return response()->json(['error' => "please enter a valid email address"], 401);
+            }
+        }
+
         if ($request->has('country') && !is_null($data['country'])){
             $country = Country::find($data['country']);
             $data['country'] = $country->name;
@@ -402,7 +411,7 @@ class ApiAccountController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateStudentData( Request $request, $id )
+    public function updateStudentData( Request $request, $type, $id )
     {
         $data = $request->all();
 
@@ -416,11 +425,15 @@ class ApiAccountController extends Controller
             $data['secondaryCP'] = $career->name;
         }
 
-        $student = Student::where('user_id','=',$id)->first();
-
-        Student::find($student->id)->update($data);
-
-        $update = Student::find($student->id);
+        if ($type === 'student') {
+            $student = Student::where('user_id','=',$id)->first();
+            Student::find($student->id)->update($data);
+            $update = Student::find($student->id);
+        }else{
+            $student = Graduate::where('user_id','=',$id)->first();
+            Graduate::find($student->id)->update($data);
+            $update = Graduate::find($student->id);
+        }
 
         $progress = $this->checkProfileProgress($id);
 

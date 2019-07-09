@@ -175,9 +175,8 @@ class ApiVentureController extends Controller
         //only and only if it's student
         // If this user doesn't has a store in place, create one.
         $messageAppend = "";
-        if ($record->type === 'student') {
+        if (($record->type === 'student') || ($record->type === 'graduate')) {
             StoreHelperController::CreateUserStore($userId);
-
             $messageAppend = "<br/>In case you don't have a store, a store has been created for you. Login now to activate by updating your store details";
         }
 

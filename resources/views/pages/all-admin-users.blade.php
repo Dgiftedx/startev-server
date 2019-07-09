@@ -26,7 +26,7 @@
                         <h6 class="card-subtitle">You can manage users and also assign roles. This does not include super administrators</h6>
 
                         <div class="float-right mb-5">
-                            <button ng-click="model.triggerUserForm('add')" type="button" class="btn waves-effect waves-light btn-rounded btn-outline-success">Add New User</button>
+                            <button ng-click="model.triggerUserForm('add')" type="button" class="btn waves-effect waves-light btn-rounded btn-success">Add New User</button>
                         </div>
 
 

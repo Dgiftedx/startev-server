@@ -43,29 +43,6 @@ class ApiFeedsController extends Controller
 
         $hiddenFeeds = UserHiddenFeed::where('user_id','=',$id)->pluck('feed_id')->toArray();
 
-//        $this->feed->with('feedComments')->with('feedComments.user')->whereNotIn('id', $hiddenFeeds)->orderBy('id','desc')
-//            ->get()
-//            ->mapToGroups(function ($item) use (&$feeds) {
-//                $feeds[] = [
-//                    'id' => $item->id,
-//                    'postType' => $item->post_type,
-//                    'roleData' => HelperController::fetchRoleData($item->user_id),
-//                    'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
-//                    'hasLiked' => $item->hasLiked,
-//                    'title' => $item->title,
-//                    'likers' => $item->likers()->get(),
-//                    'comments'=> $item->feedComments,
-//                    'image' => $item->image,
-//                    'images' => $item->images,
-//                    'video' => $item->image,
-//                    'link' => $item->link,
-//                    'content' => $item->body,
-//                    'time' => $item->time
-//                ];
-//                return [];
-//        });
-
-
         $feeds = $this->feed->with('feedComments')->with('feedComments.user')->whereNotIn('id', $hiddenFeeds)->orderBy('id','desc')
             ->paginate(10);
 

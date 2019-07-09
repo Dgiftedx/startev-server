@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendConfirmationMail;
 use App\Jobs\SendEmailNotification;
 use App\Models\Business;
 use App\Models\Graduate;
@@ -44,7 +45,7 @@ class ApiAuthController extends Controller
         //if credentials does not match/exists
         if (! $token = auth()->attempt($credentials)) {
             //return error message
-            return response()->json(['error' => 'Invalid username & Password'], '401');
+            return response()->json(['error' => 'Invalid email address or Password'], '401');
         }
 
         //return user instance with token
@@ -82,7 +83,6 @@ class ApiAuthController extends Controller
         if ($data['role'] === 'graduate') {
             // Log a new profile for student & login
             Graduate::create($data);
-
             return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
         }
 
@@ -110,7 +110,7 @@ class ApiAuthController extends Controller
         $data = $request->all();
 
         if (!$this->user->where('slug', '=', $data['slug'])->exists()) {
-            return response()->json(['error' => "Your Account couldn't be found. Please contact out support team"], 401);
+            return response()->json(['error' => "Your Account couldn't be found or Invalid Token. Please contact out support team"], 401);
         }
 
         $user = $this->user->whereSlug($data['slug'])->first();
@@ -150,12 +150,13 @@ class ApiAuthController extends Controller
         $user = User::find($data['user_id']);
         $mailContents = [
             'to' => $user->email,
-            'subject' => 'Confirm Your Email Address :: Startev Africa',
-            'message' => "Welcome $user->name <br/> Please confirm your email address by clicking the button below. You might not be able to log in without email confirmation",
-            'token' => $user->slug
+            'subject' => 'Confirm Your Email Address',
+            'message' => "Welcome $user->name <br/><br/> Please confirm your email address by clicking the button below. You might not be able to log in without email confirmation",
+            'token' => $user->slug,
+            'base_url' => 'https://startev.africa'
         ];
 
-        return HelperController::sendMail($mailContents, 'confirm-email');
+        dispatch(new SendConfirmationMail($mailContents));
     }
 
     public function sendWelcomeMail($data)

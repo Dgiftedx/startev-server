@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Manage Platform Students</h4>
                         <div class="float-right mb-5">
-                            <button ng-click="model.triggerUserForm('add')" type="button" class="btn waves-effect waves-light btn-rounded btn-outline-success">Add New Student Account</button>
+                            <button ng-click="model.triggerUserForm('add')" type="button" class="btn waves-effect waves-light btn-rounded btn-success">Add New Student Account</button>
                         </div>
 
                         <div class="">
@@ -35,7 +35,6 @@
                                         <th>Avatar</th>
                                         <th>Full Name</th>
                                         <th>email</th>
-                                        <th>Phone</th>
                                         <th class="text-nowrap">Action</th>
                                     </tr>
                                     </thead>
@@ -46,14 +45,10 @@
                                         </td>
                                         <td>
                                             @{{ user.name }}<br/>
-                                            <small class="text-muted">username: @{{ user.username }}</small>
                                         </td>
                                         <td>@{{ user.email }}</td>
-                                        <td>
-                                            @{{ user.phone }}
-                                        </td>
                                         <td class="text-nowrap">
-                                            <button type="button" ng-click="model.editStudentAccount(user)" class="btn btn-circle btn-info"><i class="fa fa-edit"></i></button>
+                                            <button type="button" ng-click="model.editStudent(user)" class="btn btn-circle btn-info"><i class="fa fa-edit"></i></button>
                                             @role('super')
                                             <button ng-click="model.deleteStudentAccount(user)" type="button" class="btn btn-circle btn-danger"><i class="fa fa-trash"></i></button>
                                             @endrole
@@ -95,26 +90,20 @@
                                                 <div class="form-group m-t-40 row">
                                                     <label for="full_name" class="col-3 col-form-label">Full Name</label>
                                                     <div class="col-9">
-                                                        <input ng-model="model.userData.name" id="full_name" class="form-control" type="text" placeholder="Full Name">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label for="username" class="col-3 col-form-label">Username</label>
-                                                    <div class="col-9">
-                                                        <input ng-model="model.userData.username" id="username" class="form-control" type="text" placeholder="Username">
+                                                        <input ng-model="model.studentData.name" id="full_name" class="form-control" type="text" placeholder="Full Name">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="email" class="col-3 col-form-label">Email</label>
                                                     <div class="col-9">
-                                                        <input ng-model="model.userData.email" id="email" class="form-control" type="email" placeholder="Email Address">
+                                                        <input ng-model="model.studentData.email" id="email" class="form-control" type="email" placeholder="Email Address">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
-                                                    <label for="official_phone" class="col-3 col-form-label">Official Phone</label>
+                                                    <label for="institution" class="col-3 col-form-label">Institution</label>
                                                     <div class="col-9">
-                                                        <input ng-model="model.userData.official_phone" id="official_phone" class="form-control" type="tel" placeholder="Official Phone">
+                                                        <input ng-model="model.studentData.institution" id="institution" class="form-control" type="text" placeholder="Institution">
                                                     </div>
                                                 </div>
 
@@ -122,32 +111,30 @@
                                                 <div class="form-group row">
                                                     <label class="col-3 col-form-label">Password</label>
                                                     <div class="col-9">
-                                                        <input ng-model="model.userData.password" class="form-control" type="password" placeholder="password">
+                                                        <input ng-model="model.studentData.password" class="form-control" type="password" placeholder="password">
                                                     </div>
                                                 </div>
                                                 @endhasanyrole
                                                 <div class="form-group row">
                                                     <label for="address" class="col-3 col-form-label">Address</label>
                                                     <div class="col-9">
-                                                        <textarea ng-model="model.userData.address" class="form-control" placeholder="Residential Address"></textarea>
+                                                        <textarea ng-model="model.studentData.address" class="form-control" placeholder="Residential Address"></textarea>
                                                     </div>
                                                 </div>
 
-                                                @role('super')
                                                 <div class="form-group row">
-                                                    <label for="roles" class="col-3 col-form-label">Select user roles</label>
+                                                    <label for="roles" class="col-3 col-form-label">Select user career field</label>
                                                     <div class="col-9">
-                                                        <ui-select ng-model="model.userData.roles" width="100%" title="Choose user roles">
-                                                            <ui-select-match placeholder="Select user roles">@{{ $select.selected.name }}</ui-select-match>
-                                                            <ui-select-choices repeat="role in model.roles | filter: $select.search">
-                                                                <div ng-bind-html="role.name| highlight: $select.search"></div>
+                                                        <ui-select ng-model="model.studentData.careerPath" width="100%" title="Choose career path">
+                                                            <ui-select-match placeholder="Select student career field">@{{ $select.selected.name }}</ui-select-match>
+                                                            <ui-select-choices repeat="field in model.fields | filter: $select.search">
+                                                                <div ng-bind-html="field.name| highlight: $select.search"></div>
                                                             </ui-select-choices>
                                                         </ui-select>
                                                     </div>
                                                 </div>
-                                                @endrole
 
-                                                <button type="button" button-spinner="model.sendingUser" ng-click="model.saveUserData()" class="btn btn-success waves-effect waves-light">@{{ model.buttonText }}</button>
+                                                <button type="button" button-spinner="model.sendingUser" ng-click="model.saveStudentData()" class="btn btn-success waves-effect waves-light">@{{ model.buttonText }}</button>
                                                 <button ng-click="model.closeForm()" type="button" class="btn btn-warning waves-light waves-effect">Cancel</button>
 
                                             </form>
