@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Business;
 use App\Models\Graduate;
 use App\Models\Mentor;
+use App\Models\Student;
 use App\Models\Trainee;
 use App\Models\User;
 use App\Repositories\Mailer;
@@ -68,6 +69,12 @@ class HelperController extends Controller
 
         $mentorsId = Mentor::orderBy('id','desc')->pluck('user_id')->toArray();
         return User::whereIn('id',$mentorsId)->with('mentor')->get();
+    }
+
+
+    public static function getStudentIds()
+    {
+        return Student::orderBy('id','desc')->pluck('user_id')->toArray();
     }
 
 

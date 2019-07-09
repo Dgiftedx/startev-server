@@ -22,6 +22,7 @@ class Admin extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'slug',
         'username',
         'state',
         'country',
@@ -31,6 +32,7 @@ class Admin extends Authenticatable
         'email',
         'address',
         'avatar',
+        'password',
         'account_lock'
     ];
 

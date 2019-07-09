@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Jobs\SendEmailNotification;
 use App\Models\Business;
+use App\Models\Feed;
 use App\Models\Graduate;
 use App\Models\Mentor;
+use App\Models\Store\UserStore;
 use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\HelperController as MainHelperController;
+use Illuminate\Support\Facades\DB;
 
 class HelperController extends Controller
 {
@@ -34,6 +39,91 @@ class HelperController extends Controller
     public static function getBusinessesIds()
     {
         return Business::orderBy('id','asc')->count();
+    }
+
+
+    public static function handleDeletion( $data )
+    {
+        $userID = $data['user_id'];
+
+        $roleData = MainHelperController::fetchRoleData($userID);
+
+        $feeds = Feed::where('user_id', '=', $userID)->get();
+
+        foreach ($feeds as $feed) {
+            if (!is_null($feed->image)) {
+                MainHelperController::removeImage($feed->image);
+            }
+
+
+            $feed->delete();
+        }
+
+        DB::table('feed_comments')->where('user_id', '=', $userID)->get();
+
+        DB::table('messages')->where('sender_id','=', $userID)->delete();
+
+        DB::table('message_conversations')->where('sender_id','=', $userID)->delete();
+
+        DB::table('partnerships')->where('user_id','=', $userID)->delete();
+
+        DB::table('trainees')->where('trainer_id', '=', $userID)->delete();
+
+        DB::table('user_hidden_feeds')->where('user_id','=',$userID)->delete();
+
+        DB::table('user_industry')->where('user_id','=', $userID)->delete();
+
+        if ($roleData['role'] === 'business') {
+            $business_id = Business::businessId($userID);
+
+            DB::table('user_business_products')->where('business_id','=', $business_id)->delete();
+
+            DB::table('user_business_settings')->where('business_id', '=', $business_id)->delete();
+
+            DB::table('business_ventures')->where('business_id','=', $business_id)->delete();
+
+            DB::table('businesses')->where('user_id','=', $userID)->delete();
+        }
+
+
+        if ($roleData['role'] === 'mentor') {
+            DB::table('mentors')->where('user_id','=', $userID)->delete();
+        }
+
+
+        if ($roleData['role'] === 'students') {
+            DB::table('students')->where('user_id', '=', $userID)->delete();
+
+            $store_id = UserStore::storeId($userID);
+
+            DB::table('user_venture_products')->where('store_id','=', $store_id)->delete();
+
+            DB::table('user_venture_reviews')->where('store_id', '=', $store_id)->delete();
+        }
+
+        DB::table('user_stores')->where('user_id','=', $userID)->delete();
+
+
+        DB::table('user_notifications')->where('user_id','=', $userID)->delete();
+
+
+        $user = User::find($userID);
+
+        if (!is_null($user->avatar)) {
+            MainHelperController::removeImage($user->avatar);
+        }
+
+        if (!is_null($user->bg_image)) {
+            MainHelperController::removeImage($user->bg_image);
+        }
+
+        $mailContent['message'] = "Dear {$user->name}, <br/><br/>Sorry to see you go. <br> Should Startev objective and aim cross your mind again, you are always welcome.";
+        $mailContent['to'] = $user->email;
+        $mailContent['subject'] = "Account Deletion Successful";
+
+        dispatch(new SendEmailNotification($mailContent));
+
+        $user->delete();
     }
 
 

@@ -3,6 +3,10 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
     /////////////////////////////////////////////
     //START
 
+    function alert($message, $type) {
+        return new Toast({message : $message, type: $type});
+    }
+
     function fetchData(url, onSuccess, onError) {
         $http.get(url
         ).then(function (response) {
@@ -63,11 +67,22 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         });
     }
 
-    function sendFormDataObjects(dt, url, onSuccess, onError) {
+    function addAdminUser(dt, url, onSuccess, onError) {
         var formData = new FormData();
         //append form data
-        for (var i = 0; i < dt.length ; i++) {
-            formData.append(dt[i].field, dt[i].value);
+        formData.append('name', dt.name);
+        formData.append('username', dt.username);
+        formData.append('email', dt.email);
+        formData.append('password', dt.password);
+        formData.append('avatar', dt.avatar);
+        formData.append('role', dt.roles.name);
+
+        if (dt.official_phone) {
+            formData.append('official_phone', dt.official_phone)
+        }
+
+        if (dt.address){
+            formData.append('address', dt.address);
         }
 
         $http.post(url,formData,
@@ -94,9 +109,10 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
 
 
     return {
+        alert : alert,
         fetchData : fetchData,
+        addAdminUser : addAdminUser,
         sendNormalData : sendNormalData,
-        sendImageData : sendImageData,
-        sendFormDataObjects : sendFormDataObjects
+        sendImageData : sendImageData
     };
 }]);

@@ -19,7 +19,10 @@
     <link href="{{ asset('/core-assets/css/pages/dashboard3.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{ asset('/core-assets/css/style.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('/core-assets/lib/select.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/lib/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/lib/toast.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/lib/selectize.default.css') }}" rel="stylesheet">
     <!-- You can change the theme colors from here -->
     <link href="{{ asset('/core-assets/css/colors/default-dark.css') }}" id="theme" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -79,8 +82,9 @@
 <script src="{{ asset('/core-assets/plugins/c3-master/c3.min.js') }}"></script>
 <!-- Chart JS -->
 <script src="{{ asset('/core-assets/js/dashboard3.js') }}"></script>
-
+<script src="{{ asset('/core-assets/lib/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('/core-assets/lib/printThis.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/toast.min.js') }}"></script>
 <script src="{{ asset('/core-assets/lib/ckeditor/ckeditor.js') }}"></script>
 <script src="{{ asset('/core-assets/lib/chart/Chart.min.js') }}"></script>
 <script src="{{ asset('/core-assets/lib/jquery.dataTables.min.js') }}"></script>
