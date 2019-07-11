@@ -41,4 +41,9 @@ class ViewsController extends Controller
     {
         return view('pages.platform.businesses');
     }
+
+    public function verificationRequests()
+    {
+        return view('pages.verification.requests');
+    }
 }

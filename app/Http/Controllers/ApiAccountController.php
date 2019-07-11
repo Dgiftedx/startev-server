@@ -13,6 +13,7 @@ use App\Models\State;
 use App\Models\Student;
 use App\Models\Trainee;
 use App\Models\User;
+use App\Models\VerificationRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,44 @@ class ApiAccountController extends Controller
         $this->user = $userModel;
         $this->middleware('auth:api');
         $this->url = url('/');
+    }
+
+
+
+    public function submitVerification( Request $request )
+    {
+
+        $user_id = $request->get('user_id');
+        if (VerificationRequest::where('user_id', '=', $user_id)->exists()) {
+            return response()->json(['error' => "verification documents has already been submitted"], 401);
+        }
+
+
+        $documentType = $request->get('document_type');
+        $filePath = HelperController::processFileUpload($request->file('document_file'), $documentType);
+
+        $data = [
+            'user_id' => $user_id,
+            'document_type' => $documentType,
+            'document' => $filePath
+        ];
+
+        $role = $request->get('role');
+
+        if ($role === 'mentor') {
+            $mentor = Mentor::where('user_id','=', $user_id)->first();
+            Mentor::find($mentor->id)->update(['verification_status' => 'pending']);
+        }else{
+            $business = Business::where('user_id','=',$user_id)->first();
+            Business::find($business->id)->update(['verification_status' => 'pending']);
+        }
+
+        $update = HelperController::fetchRoleData($user_id);
+
+        VerificationRequest::create($data);
+
+        return response()->json(['success' => true, 'message' => "Verification Documents Submitted", 'roleData' => $update]);
+
     }
 
     /**
@@ -445,55 +484,10 @@ class ApiAccountController extends Controller
     public function updateMentorData( Request $request, $id )
     {
         $data = $request->all();
-        $workExperience = $data['workExperience'];
-        $education = $data['education'];
-
-
-        /**
-         * if fist and second item in the array is not empty, format the date field,
-         * else remove entire field from array to be saved
-         */
-        if (!is_null($workExperience[0]['company']) && !is_null($workExperience[0]['position'])){
-            foreach ($data['workExperience'] as $index => $experience) {
-
-                if (!is_null($data['workExperience'][$index]['from_date'])) {
-                    $data['workExperience'][$index]['from_date'] = Carbon::parse($data['workExperience'][$index]['from_date'])->toDateTimeString();
-                }
-
-                if (!is_null($data['workExperience'][$index]['to_date'])) {
-                    $data['workExperience'][$index]['to_date'] = Carbon::parse($data['workExperience'][$index]['to_date'])->toDateTimeString();
-                }
-            }
-        }else{
-            unset($data['workExperience']);
-        }
-
-        /**
-         * if fist and second item in the array is not empty, format the date field,
-         * else remove entire field from array to be saved
-         */
-        if (!is_null($education[0]['institution']) && !is_null($education[0]['program'])){
-            foreach ($data['education'] as $index => $edu) {
-
-                if (!is_null($data['education'][$index]['from_date'])) {
-                    $data['education'][$index]['from_date'] = Carbon::parse($data['education'][$index]['from_date'])->toDateTimeString();
-                }
-
-                if (!is_null($data['education'][$index]['to_date'])) {
-                    $data['education'][$index]['to_date'] = Carbon::parse($data['education'][$index]['to_date'])->toDateTimeString();
-                }
-            }
-        }else{
-            unset($data['education']);
-        }
-
-
         $mentor = Mentor::where('user_id','=',$id)->first();
         Mentor::find($mentor->id)->update($data);
         $update = Mentor::find($mentor->id);
-
         $progress = $this->checkProfileProgress($id);
-
         return response()->json(['success' => true, 'roleData' => $update, 'progress' => $progress]);
     }
 

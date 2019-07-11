@@ -109,6 +109,7 @@ mainApp.controller('graduatesViewController', ['$rootScope','lodash','$scope','$
                $scope.model.closeForm();
 
             }, function (resp) {
+                $scope.model.sendingUser = false;
                 adminService.alert(resp.data.error, "danger");
             })
         };

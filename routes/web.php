@@ -53,9 +53,23 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('platform-update-graduate/{id}', 'Admin\PlatformUsersController@platformUpdateGraduate');
     Route::get('platform-delete-graduate/{id}', 'Admin\PlatformUsersController@deleteGraduateAccount');
 
-    //Verifications
-    Route::group(['prefix' => 'verification'], function() {
 
-    });
+    Route::get('get-platform-mentors', 'Admin\PlatformUsersController@platformMentors');
+    Route::post('platform-create-mentor', 'Admin\PlatformUsersController@platformCreateMentor');
+    Route::post('platform-update-mentor/{id}', 'Admin\PlatformUsersController@platformUpdateMentor');
+    Route::get('platform-delete-mentor/{id}', 'Admin\PlatformUsersController@deleteMentorAccount');
+
+
+    Route::get('get-platform-businesses', 'Admin\PlatformUsersController@platformBusinesses');
+    Route::post('platform-create-business', 'Admin\PlatformUsersController@platformCreateBusiness');
+    Route::post('platform-update-business/{id}', 'Admin\PlatformUsersController@platformUpdateBusiness');
+    Route::get('platform-delete-business/{id}', 'Admin\PlatformUsersController@deleteBusinessAccount');
+
+    //Verifications
+    Route::get('verification/get-requests','Admin\VerificationController@allRequests');
+    Route::get('account-verification/verify/{request_id}','Admin\VerificationController@verify');
+    Route::get('account-verification/reject/{request_id}','Admin\VerificationController@reject');
+    Route::get('/download-verification-file/{file}', 'Admin\VerificationController@downloadDocument');
+    Route::get('verification/requests', 'Admin\ViewsController@verificationRequests')->name('verification requests');
 
 });

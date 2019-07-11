@@ -55,6 +55,7 @@ Route::group([
     Route::post('change-password','ApiPasswordResetController@changePassword');
     Route::get('remove-header-image/{id}', 'ApiAccountController@removeBgImage');
     Route::post('update-user-header-image/{id}','ApiAccountController@updateHeaderImage');
+    Route::post('submit-verification','ApiAccountController@submitVerification');
 
     //Industries
     Route::get('industries','ApiCommonController@industries');

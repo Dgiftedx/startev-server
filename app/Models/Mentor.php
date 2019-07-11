@@ -12,10 +12,10 @@ class Mentor extends Model
     protected $fillable = [
         'user_id',
         'current_job_position',
-        'workExperience',
-        'education',
-        'employmentStatus',
-        'total_trainee'
+        'organization',
+        'total_trainee',
+        'verified',
+        'verification_status'
     ];
 
     /**
