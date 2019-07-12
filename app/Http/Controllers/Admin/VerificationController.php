@@ -46,9 +46,9 @@ class VerificationController extends Controller
         $id = $roleData['data']['id'];
 
         if ($roleData['role'] == 'business') {
-            Business::find($id)->update(['verification_status' => 'accepted']);
+            Business::find($id)->update(['verification_status' => 'accepted', 'verified' => 1]);
         }else{
-            Mentor::find($id)->update(['verification_status' => 'accepted']);
+            Mentor::find($id)->update(['verification_status' => 'accepted', 'verified' => 1]);
         }
 
         return response()->json(['success' => true]);
