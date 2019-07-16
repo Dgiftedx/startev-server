@@ -454,6 +454,12 @@ class ApiAccountController extends Controller
     {
         $data = $request->all();
 
+        if (isset($data['bio'])) {
+            $bio = $data['bio'];
+            $this->user->find($id)->update(['bio' => $bio]);
+            unset($data['bio']);
+        }
+
         if ($request->has('careerPath') && !is_null($data['careerPath'])) {
             $career = CareerPath::find($data['careerPath']);
             $data['careerPath'] = $career->name;
@@ -484,6 +490,13 @@ class ApiAccountController extends Controller
     public function updateMentorData( Request $request, $id )
     {
         $data = $request->all();
+
+        if (isset($data['bio'])) {
+            $bio = $data['bio'];
+            $this->user->find($id)->update(['bio' => $bio]);
+            unset($data['bio']);
+        }
+        
         $mentor = Mentor::where('user_id','=',$id)->first();
         Mentor::find($mentor->id)->update($data);
         $update = Mentor::find($mentor->id);
