@@ -50,4 +50,14 @@ class ApiUserNotificationController extends Controller
             ->where('status', '=','unread')->take(6)->get();
     }
 
+    public function markAsRead($id)
+    {
+        $unreadNoty = $this->unreadNoty($id);
+        foreach ($unreadNoty as $item) {
+            $this->notification->find($item->id)->update(['status' => 'read']);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 }

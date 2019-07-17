@@ -138,6 +138,7 @@ Route::group([
 
 
     //Notification
+    Route::get('mark-all-as-read/{id}', 'ApiUserNotificationController@markAsRead');
     Route::get('get-widget-notifications/{user}','ApiUserNotificationController@widgetNotifications');
 });
 
