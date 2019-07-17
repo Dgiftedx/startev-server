@@ -8,6 +8,7 @@ use App\Models\Feed;
 use App\Models\FeedComment;
 use App\Models\User;
 use App\Models\UserHiddenFeed;
+use App\Models\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
@@ -142,7 +143,7 @@ class ApiFeedsController extends Controller
 
         Pusher::trigger('my-channel', 'my-event', $feedData);
 
-
+        UserNotification::create(['user_id' => $data['user_id'], 'content' => "You just published {$data['title']} to news feed"]);
 
         $user = User::find($data['user_id']);
         $mailContent['message'] = "Your Post, <strong>{$update->title}</strong>, has been published successfully. Login to see user reactions.";
@@ -221,6 +222,10 @@ class ApiFeedsController extends Controller
 
         if ($user->hasLiked($targetFeed)){
             $message = "You Liked {$targetFeed->title}.";
+
+            //send notification
+            UserNotification::create(['user_id' => $user->id, 'content' => "You Liked {$targetFeed->title}."]);
+
             $targetFeed->update(['hasLiked' => true]);
         }else{
             $targetFeed->update(['hasLiked' => false]);
@@ -243,6 +248,10 @@ class ApiFeedsController extends Controller
         $comment['user_id'] = $userId;
         $comment['feed_id'] = $comment['feedId'];
         $comment['comment'] = $comment['text'];
+
+        $feed = Feed::find($comment['feed_id']);
+
+        UserNotification::create(['user_id' => $comment['user_id'], 'content' => "You commented on {$feed->title}."]);
 
         unset($comment['feedId']);
         unset($comment['text']);
@@ -313,6 +322,8 @@ class ApiFeedsController extends Controller
         $data = $request->all();
 
         $feed = $this->feed->find($data['feed_id']);
+
+        UserNotification::create(['user_id' => $data['user_id'], 'content' => "You've deleted ({$feed->title}) from your feed list"]);
 
         $hidden = UserHiddenFeed::where('user_id','=',$data['user_id'])->where('feed_id','=',$data['feed_id'])->first();
 

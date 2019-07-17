@@ -44,7 +44,10 @@ class ApiUserNotificationController extends Controller
 
     public function unreadNoty($user_id)
     {
-        return $this->notification->with('user')->where('user_id','=',$user_id)->where('status', '=','unread')->take(6)->get();
+        return $this->notification->with('user')
+            ->orderBy('id','desc')
+            ->where('user_id','=',$user_id)
+            ->where('status', '=','unread')->take(6)->get();
     }
 
 }
