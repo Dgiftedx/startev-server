@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\HelperController;
 use App\Models\Business\UserBusinessOrder;
+use App\Models\Buyer;
 use App\Models\Store\UserCart;
 use App\Models\Store\UserInvoice;
 use App\Models\Store\UserStore;

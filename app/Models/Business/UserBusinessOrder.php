@@ -2,6 +2,7 @@
 
 namespace App\Models\Business;
 
+use App\Models\Buyer;
 use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureProduct;
 use App\Models\User;
@@ -21,6 +22,11 @@ class UserBusinessOrder extends Model
     public function buyer()
     {
         return $this->belongsTo(User::class, 'buyer_id');
+    }
+
+    public function realBuyer()
+    {
+        return $this->belongsTo(Buyer::class, 'buyer_id');
     }
 
     public function store()

@@ -57,6 +57,8 @@ Route::group([
     Route::post('update-user-header-image/{id}','ApiAccountController@updateHeaderImage');
     Route::post('submit-verification','ApiAccountController@submitVerification');
 
+    Route::post('generate-code', 'ApiAccountController@generateCode');
+
     //Industries
     Route::get('industries','ApiCommonController@industries');
     Route::get('all-industries','ApiCommonController@allIndustries');
@@ -196,4 +198,7 @@ Route::group([
     Route::get('main-store-remove-from-cart/{item_id}', 'Store\MainStoreController@removeFromCart');
     Route::get('main-store-get-single-product/{product}', 'Store\MainStoreController@singleProduct');
     Route::get('main-store-get-products-with-query/{identifier}', 'Store\MainStoreController@byFilter');
+
+    Route::post('validate-referral-code', 'Store\FrontController@validateCode');
+    Route::post('place-new-order', 'Store\FrontController@newMainStorePlaceOrder');
 });

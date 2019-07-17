@@ -613,6 +613,13 @@ class ApiAccountController extends Controller
     }
 
 
+    public function generateCode( Request $request )
+    {
+        $data = $request->all();
+        $code = HelperController::generateIdentifier(4) . $data['store_id'];
+        return response()->json($code);
+    }
+
     public function toggleConnection( $user, $mentor )
     {
         $connections = HelperController::toggleConnection($user, $mentor);
