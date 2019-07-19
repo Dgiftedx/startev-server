@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feed;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class OpenApiController extends Controller
@@ -25,4 +27,39 @@ class OpenApiController extends Controller
         return $result;
     }
 
+    public function getSingleFeed( $id )
+    {
+        $feed = [];
+
+        $recent = Feed::orderBy('id','desc')->take(7)->get();
+        foreach ($recent as $item) {
+            $item->user = User::where('id','=',$item->user_id)->first(['id','slug','name','avatar']);
+        }
+
+        Feed::with('feedComments')
+            ->with('feedComments.user')
+            ->where('id', '=', $id)
+            ->get()
+            ->mapToGroups(function ($item) use (&$feed) {
+                $feed = [
+                    'id' => $item->id,
+                    'postType' => $item->post_type,
+                    'roleData' => HelperController::fetchRoleData($item->user_id),
+                    'user' => User::where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
+                    'hasLiked' => $item->hasLiked,
+                    'title' => $item->title,
+                    'likers' => $item->likers()->get(),
+                    'comments'=> $item->feedComments,
+                    'image' => $item->image,
+                    'images' => $item->images,
+                    'video' => $item->image,
+                    'link' => $item->link,
+                    'content' => $item->body,
+                    'time' => $item->time
+                ];
+                return [];
+            });
+
+        return response()->json(['feed' => $feed, 'recent' => $recent]);
+    }
 }
