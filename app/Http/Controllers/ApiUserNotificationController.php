@@ -31,7 +31,7 @@ class ApiUserNotificationController extends Controller
 
     public function index()
     {
-        $notifications = $this->notification->where('user_id', '=', auth()->user()->id)->with('user')->get();
+        $notifications = $this->notification->where('target_id', '=', auth()->user()->id)->with('user')->get();
         return response()->json($notifications);
     }
 
@@ -46,7 +46,7 @@ class ApiUserNotificationController extends Controller
     {
         return $this->notification->with('user')
             ->orderBy('id','desc')
-            ->where('user_id','=',$user_id)
+            ->where('target_id','=',$user_id)
             ->where('status', '=','unread')->take(6)->get();
     }
 

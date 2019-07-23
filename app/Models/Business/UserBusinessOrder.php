@@ -11,7 +11,20 @@ use Illuminate\Database\Eloquent\Model;
 class UserBusinessOrder extends Model
 {
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'identifier',
+        'store_id',
+        'business',
+        'business_id',
+        'product_sku',
+        'buyer_id',
+        'quantity',
+        'delivery_address',
+        'transaction_ref',
+        'amount',
+        'status',
+        'notes'
+    ];
 
 
     public function scopeHasOrders($query, $businessId)

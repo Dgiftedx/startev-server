@@ -9,6 +9,7 @@ use App\Models\Business;
 use App\Models\BusinessVenture;
 use App\Models\Partnership;
 use App\Models\User;
+use Spatie\Searchable\Search;
 use Illuminate\Http\Request;
 
 class ApiVentureController extends Controller
@@ -197,5 +198,28 @@ class ApiVentureController extends Controller
         dispatch(new SendEmailNotification($mailContent));
 
         return response()->json($partners);
+    }
+
+
+    public function searchVenture( Request $request )
+    {
+        $searchTerms = $request->get('query');
+        $searchIds = [];
+
+        $ventures = [];
+
+        $searchResults = (new Search())
+            ->registerModel(BusinessVenture::class, 'venture_name')
+            ->perform($searchTerms);
+
+        foreach ($searchResults as $result) {
+            $searchIds[] = $result->searchable->id;
+        }
+
+        if (count($searchIds) > 0) {
+            $ventures = BusinessVenture::with('business')->with('business.user')->whereIn('id', $searchIds)->get();
+        }
+
+        return response()->json($ventures);
     }
 }

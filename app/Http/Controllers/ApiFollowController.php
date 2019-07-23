@@ -35,6 +35,12 @@ class ApiFollowController extends Controller
     {
         $user = $this->user->find($userId);
         $user->follow($target);
+        $targetUser = $this->user->find($target);
+
+        $notyTitle = "You have a new follower";
+        $notyContent = "{$targetUser->name} is following you.";
+        UserNotification::create(['user_id' => $userId, 'target_id' => $target, 'title' => $notyTitle, 'content' => $notyContent]);
+
         $people = (new ApiFeedsController($this->user, $this->feed))->gatherPeopleToFollow($userId);
         return response()->json(['success' => true, 'people' => $people]);
     }
@@ -46,14 +52,19 @@ class ApiFollowController extends Controller
         $user->toggleFollow($target);
 
         $targetUser = $this->user->find($target);
-        $message = "You've stopped following {$targetUser->name}. You'll no longer receive updates from this user";
+        $message = "{$user->name} just stopped following you. You'll no longer receive updates from this user";
 
         if ($user->isFollowing($target)){
-            UserNotification::create(['user_id' => $user->id, 'content' => "You are now following ({$targetUser->name})."]);
-            $message = "You are now following {$targetUser->name}. You'll now receive updates from this user";
+            $notyTitle = "You have a new follower";
+            $notyContent = "{$user->name} is following you.";
+
+            UserNotification::create(['user_id' => $userId, 'target_id' => $target, 'title' => $notyTitle, 'content' => $notyContent]);
+
+            $message = "{$user->name} is now following you. You'll now receive updates from this user";
+
             $mailContent['message'] = $message;
-            $mailContent['to'] = $user->email;
-            $mailContent['subject'] = "New Follow Activity";
+            $mailContent['to'] = $targetUser->email;
+            $mailContent['subject'] = "You have a new follower";
             dispatch(new SendEmailNotification($mailContent));
 
         }

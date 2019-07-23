@@ -98,6 +98,7 @@ Route::group([
     Route::post('new-venture','ApiVentureController@store');
     Route::get('/all-business','ApiVentureController@allBusiness');
     Route::post('update-venture/{id}','ApiVentureController@update');
+    Route::post('search-ventures','ApiVentureController@searchVenture');
     Route::get('business-ventures/{id}', 'ApiVentureController@ventureByBusiness');
     Route::get('venture-by-business/{id}', 'ApiVentureController@ventureBusiness');
     Route::get('remove-venture/{business_id}/{id}', 'ApiVentureController@removeVenture');
@@ -126,23 +127,29 @@ Route::group([
     //Help Tips
     Route::get('get-help-tips/{userId}','ApiHelpTipsController@index');
 
-
     //Messaging
     Route::post('send-message','Chat\MessagingController@sendMessage');
     Route::post('send-typing-event','Chat\MessagingController@typingEvent');
     Route::get('/chat-get-contacts/{user}','Chat\MessagingController@getContacts');
     Route::get('/chat-get-messages/{user}','Chat\MessagingController@getMessages');
+    Route::post('mark-messages-as-read', 'Chat\MessagingController@markAllAsRead');
 
     //Search
     Route::post('get-search-results', 'ApiSearchController@search');
 
 
     //Notification
-    Route::get('mark-all-as-read/{id}', 'ApiUserNotificationController@markAsRead');
+    Route::get('mark-all-notifications-as-read/{id}', 'ApiUserNotificationController@markAsRead');
     Route::get('get-widget-notifications/{user}','ApiUserNotificationController@widgetNotifications');
 
     //Get open Api Feeds
     Route::get('open-api-get-feed/{id}', 'OpenApiController@getSingleFeed');
+
+
+    //Contact List
+    Route::get('get-user-contact-list/{id}', 'ContactListController@index');
+    Route::post('add-to-contact-list', 'ContactListController@addToContact');
+    Route::post('remove-from-contact-list', 'ContactListController@removeFromContact');
 });
 
 
@@ -167,7 +174,10 @@ Route::group([
     Route::get('sync-venture-products/{user}/{venture}','Store\UserStoreController@syncVentureProducts');
     Route::get('import-venture-products/{user}/{venture}','Store\UserStoreController@importVentureProducts');
     Route::get('detach-venture-products/{user}/{venture}','Store\UserStoreController@detachVentureProducts');
-
+    Route::get('get-single-product/{Id}','Store\UserStoreController@singleProduct');
+    Route::post('edit-product/{product}/{userId}','Store\UserStoreController@editProduct');
+    Route::get('get-store-products/{userId}','Store\UserStoreController@storeProducts');
+    Route::get('delete-single-product/{Id}','Store\UserStoreController@deleteProduct');
 
     //////////////////////////////////////////////////////////////////////////////
     /// Business store routes starts

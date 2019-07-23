@@ -11,6 +11,7 @@ use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureOrder;
 use App\Models\Store\UserVentureProduct;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -157,39 +158,29 @@ class MainStoreController extends Controller
         foreach ($items as $item) {
 
             $store = UserVentureProduct::find($item->product_id);
+            $business = StoreHelperController::fetchBusinessId($store->venture_id);
+
             $data['product_id'] = $item->product_id;
+            $data['business_id'] = $business;
             $data['store_id'] = $store->store_id;
             $data['quantity'] = $item->quantity;
             $data['amount'] = $item->amount;
             $data['product_sku'] = $item->product_sku;
+            $data['status'] = 'processing';
+            $data['forwarded'] = 1;
 
-            //Place order
-            $saved = UserVentureOrder::create($data);
+            //Forward orders to business
+            $saved = UserBusinessOrder::create($data);
 
+            //Log order to user venture Hub
+            UserVentureOrder::create($data);
 
-//            $business = StoreHelperController::fetchBusinessId($item->product->venture_id);
-//
-//            UserBusinessOrder::create([
-//                'store_id' => $item->product->store_id,
-//                'buyer_id' => $item->product->user_id,
-//                'amount' => $item->amount,
-//                'created_at' => $item->product->created_at,
-//                'delivery_address' => $product->delivery_address,
-//                'identifier' => $product->identifier,
-//                'product_sku' => $item->product->product_sku,
-//                'quantity' => $item->quantity,
-//                'business_id' => $business,
-//                'status' => 'processing',
-//                'transaction_ref' => $product->transaction_ref,
-//                'updated_at' => $product->updated_at
-//            ]);
-//
-//            UserVentureOrder::find($item->id)->update(['forwarded' => true , 'status' => 'processing']);
-
+            //fetch original product
             $originalProduct = UserVentureProduct::find($item->product_id);
 
+            //set invoice data
             $invoice['order_id'] = $saved->identifier;
-            $invoice['order_date'] = $saved->created_at;
+            $invoice['order_date'] = Carbon::now();
             $invoice['order_status'] = 'paid';
 
             $subTotal += $item->amount;

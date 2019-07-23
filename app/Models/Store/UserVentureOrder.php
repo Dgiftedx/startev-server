@@ -7,7 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserVentureOrder extends Model
 {
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'identifier',
+        'store_id',
+        'product_id',
+        'product_sku',
+        'buyer_id',
+        'quantity',
+        'amount',
+        'delivery_address',
+        'transaction_ref',
+        'forwarded',
+        'status'
+    ];
 
 
     public function scopeHasOrders($query, $store)

@@ -12,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class UserStoreController extends Controller
 {
@@ -379,6 +380,126 @@ class UserStoreController extends Controller
         }
 
         return response()->json('success');
+    }
+
+
+
+
+    /**
+     * Get store products
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeProducts( $userId )
+    {
+        $query = [
+            'store_id' => UserStore::storeId($userId)
+        ];
+
+        $products = StoreHelperController::ventureProducts($query);
+
+        return response()->json($products);
+    }
+
+
+    /**
+     * Fetch single product
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function singleProduct( $id )
+    {
+        $result = UserVentureProduct::find($id);
+        return response()->json($result);
+    }
+
+
+    /**
+     * Edit product
+     * @param Request $request
+     * @param $productId
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function editProduct( Request $request, $productId, $userId )
+    {
+
+        //Grab all input
+        $data = $request->all();
+
+        // fetch single product
+        $product = UserVentureProduct::find($productId);
+
+        //check if user uploaded replacement images
+        if (isset($data['images'])) {
+
+
+            if (count($data['images']) > 0) {
+
+                $product->update(['images' => null]);
+
+                $images = $product->images;
+
+                //Remove the old images
+                if (!is_null($images)) {
+                    foreach ($images as $image) {
+                        $image = str_replace($this->url.'/storage', "", $image);
+
+                        //Remove old image from storage if exists
+                        if (Storage::disk('public')->exists($image)) {
+                            //remove
+                            Storage::disk('public')->delete($image);
+                        }
+                    }
+                }
+
+                //process image upload
+                foreach ($data['images'] as $file) {
+                    $images[] = $this->url . '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
+
+                }
+
+                $data['images'] = $images;
+            }
+
+        }
+
+
+        $data['highlight'] = strip_tags($data['highlight'], '<a><b><p><table><div><br><aside><h1><h2><h3><h4><h5><h6>');
+
+        //Update record
+        $product->update($data);
+
+        return response()->json('success');
+    }
+
+
+    /**
+     * Delete product
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteProduct( $id )
+    {
+        $product = UserVentureProduct::find($id);
+        //TODO: implement softDelete to prevent fatal error should in case order has been placed on product
+
+        //remove images
+        $images = $product->images;
+
+        foreach ($images as $image) {
+            $image = str_replace($this->url, "", $image);
+            //Remove old image from storage if exists
+            if(Storage::disk('public')->exists($image)){
+                //remove
+                Storage::disk('public')->delete($image);
+            }
+        }
+
+        $product->delete();
+
+        return response()->json('success');
+
     }
 
 }

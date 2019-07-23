@@ -154,13 +154,40 @@ class StoreHelperController extends Controller
      */
     public static function recentOrders($userId)
     {
-        //Build query array
-        $query = [
-            'store_id' => UserStore::storeId($userId),
-            'status' => 'pending'
-        ];
+        $orders = [];
 
-        return self::getOrders($query);
+        $products = [];
+        UserVentureProduct::orderBy('id','asc')->get()->mapToGroups(function($item) use (&$products) {
+            $products[$item->sku] = $item;
+            return [];
+        });
+
+        $sortable = ['pending','processing'];
+
+        UserVentureOrder::with('buyer')
+            ->with('product')
+            ->where('store_id', '=', UserStore::storeId($userId))
+            ->whereIn('status',   $sortable)
+            ->get()
+            ->mapToGroups( function($item) use (&$orders, $products) {
+
+                $orders[$item->identifier][] = [
+                    'name' => $item->buyer->name,
+                    'order_id' => $item->identifier,
+                    'image' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->images[0]:'',
+                    'product_name' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->product_name:'',
+                    'amount' => $item->amount,
+                    'quantity' => $item->quantity,
+                    'date' => $item->created_at,
+                    'status' => $item->status
+                ];
+
+
+                return [];
+            });
+
+
+        return $orders;
     }
 
 
@@ -222,7 +249,6 @@ class StoreHelperController extends Controller
 
         $products = [];
         UserVentureProduct::orderBy('id','asc')->get()->mapToGroups(function($item) use (&$products) {
-
             $products[$item->sku] = $item;
             return [];
         });
@@ -271,6 +297,7 @@ class StoreHelperController extends Controller
             ->with('venture')
             ->with('business')
             ->with('business.user')
+            ->where('status','=', 'accepted')
             ->orderBy('id','asc')
             ->get();
     }
@@ -323,11 +350,41 @@ class StoreHelperController extends Controller
     {
         //Build query array
         $query = [
-            'business_id' => Business::businessId($userId),
-            'status' => 'pending'
+            'business_id' => Business::businessId($userId)
         ];
 
-        return self::businessGetOrders($query);
+        $orders = [];
+        $sortable = ['pending','processing'];
+
+        $products = [];
+        UserBusinessProduct::orderBy('id','asc')->get()->mapToGroups(function($item) use (&$products) {
+            $products[$item->sku] = $item;
+            return [];
+        });
+
+
+        UserBusinessOrder::with('buyer')
+            ->byFilter($query)
+            ->whereIn('status', $sortable)
+            ->get()
+            ->mapToGroups( function($item) use (&$orders, $products) {
+
+                $orders[$item->identifier][] = [
+                    'name' => $item->buyer->name,
+                    'product_sku' => $item->product_sku,
+                    'order_id' => $item->identifier,
+                    'image' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->images[0]:'',
+                    'product_name' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->product_name:'',
+                    'amount' => $item->amount,
+                    'quantity' => $item->quantity,
+                    'date' => Carbon::parse($item->created_at)->toDateTimeString(),
+                    'status' => $item->status
+                ];
+
+                return [];
+            });
+
+        return $orders;
     }
 
 
@@ -455,6 +512,29 @@ class StoreHelperController extends Controller
     {
         $products = [];
         UserBusinessProduct::orderBy('id','desc')
+            ->byFilter($query)
+            ->get()
+            ->mapToGroups(function($item) use (&$products) {
+                $products[] = [
+                    'image' => $item->images? $item->images[0]: null,
+                    'name' => $item->product_name,
+                    'sku' => $item->sku,
+                    'amount' => $item->product_price,
+                    'status' => $item->stock_status,
+                    'id' => $item->id,
+                ];
+
+                return [];
+            });
+
+        return $products;
+    }
+
+
+    public static function ventureProducts($query)
+    {
+        $products = [];
+        UserVentureProduct::orderBy('id','desc')
             ->byFilter($query)
             ->get()
             ->mapToGroups(function($item) use (&$products) {

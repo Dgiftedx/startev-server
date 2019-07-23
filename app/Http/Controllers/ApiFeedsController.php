@@ -79,7 +79,7 @@ class ApiFeedsController extends Controller
                     'postType' => $item->post_type,
                     'roleData' => HelperController::fetchRoleData($item->user_id),
                     'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
-                    'hasLiked' => $item->hasLiked,
+                    'hasLiked' => $this->user->where('id','=',$item->user_id)->first()->hasLiked($item), //$item->hasLiked,
                     'title' => $item->title,
                     'likers' => $item->likers()->get(),
                     'comments'=> $item->feedComments,
@@ -108,6 +108,7 @@ class ApiFeedsController extends Controller
             'user' => $this->user->where('id','=',$data['user_id'])->first(['id','slug','name','avatar']),
             'title' => $data['title'],
             'body' => $data['body'],
+            'hasLiked' => 0,
             'time' => Carbon::now()
         ];
 
@@ -116,6 +117,7 @@ class ApiFeedsController extends Controller
             'title' => $data['title'],
             'body' => $data['body'],
             'post_type' => $data['post_type'],
+            'hasLiked' => 0,
             'time' => Carbon::now()
         ];
 
@@ -142,10 +144,9 @@ class ApiFeedsController extends Controller
         $feedData['id'] = $update->id;
 
         Pusher::trigger('my-channel', 'my-event', $feedData);
-
-        UserNotification::create(['user_id' => $data['user_id'], 'content' => "You just published {$data['title']} to news feed"]);
-
         $user = User::find($data['user_id']);
+
+        UserNotification::create(['user_id' => $data['user_id'], 'target_id' => 0, 'title' => "New feed has been published", 'content' => "{$user->name} published  {$data['title']} to news feed."]);
         $mailContent['message'] = "Your Post, <strong>{$update->title}</strong>, has been published successfully. Login to see user reactions.";
         $mailContent['to'] = $user->email;
 
@@ -222,10 +223,6 @@ class ApiFeedsController extends Controller
 
         if ($user->hasLiked($targetFeed)){
             $message = "You Liked {$targetFeed->title}.";
-
-            //send notification
-            UserNotification::create(['user_id' => $user->id, 'content' => "You Liked {$targetFeed->title}."]);
-
             $targetFeed->update(['hasLiked' => true]);
         }else{
             $targetFeed->update(['hasLiked' => false]);
@@ -250,8 +247,9 @@ class ApiFeedsController extends Controller
         $comment['comment'] = $comment['text'];
 
         $feed = Feed::find($comment['feed_id']);
+        $commentUser = User::find($comment['user_id']);
 
-        UserNotification::create(['user_id' => $comment['user_id'], 'content' => "You commented on {$feed->title}."]);
+        UserNotification::create(['user_id' => $comment['user_id'], 'target_id'=> $feed->user_id, 'title' => 'Commented on Your Post', 'content' => "{$commentUser->name} commented on your post ({$feed->title})- ."]);
 
         unset($comment['feedId']);
         unset($comment['text']);
@@ -323,8 +321,6 @@ class ApiFeedsController extends Controller
 
         $feed = $this->feed->find($data['feed_id']);
 
-        UserNotification::create(['user_id' => $data['user_id'], 'content' => "You've deleted ({$feed->title}) from your feed list"]);
-
         $hidden = UserHiddenFeed::where('user_id','=',$data['user_id'])->where('feed_id','=',$data['feed_id'])->first();
 
         if (!is_null($hidden)) {
@@ -352,8 +348,6 @@ class ApiFeedsController extends Controller
                 FeedComment::find($comment->id)->delete();
             }
         }
-
-
 
 
         $user = User::find($data['user_id']);

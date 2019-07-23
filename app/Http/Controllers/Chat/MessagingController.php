@@ -6,6 +6,7 @@ use App\Http\Controllers\HelperController;
 use App\Models\Chat\Message;
 use App\Models\Chat\MessageConversation;
 use App\Models\User;
+use App\Models\UserContact;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -85,14 +86,21 @@ class MessagingController extends Controller
 
     }
 
+    private function grabContactList($id)
+    {
+        return UserContact::where('user_id', '=', $id)->first();
+    }
 
     public function getContacts( $user_id )
     {
-        $contactIds = HelperController::pullContacts($user_id);
+        $contacts = [];
 
-        $contacts = User::whereIn('id',$contactIds)->get(['id','avatar','name','username','state','country','status']);
-        foreach ($contacts as $contact) {
-            $contact->status = $contact->isOnline();
+        $contactBook = $this->grabContactList($user_id);
+        if (!is_null($contactBook)) {
+            $contacts = User::whereIn('id', $contactBook->contacts_id)->get(['id','slug','avatar','name','username','status','email']);
+            foreach ($contacts as $contact) {
+                $contact->status = $contact->isOnline();
+            }
         }
         return response()->json($contacts);
     }
@@ -126,26 +134,28 @@ class MessagingController extends Controller
         Pusher::trigger('messaging', 'new-message', $pusher);
 
         $conversation = MessageConversation::create(['sender_id' => $data['sender_id'], 'receiver_id' => $data['receiver_id'], 'message' => $data['message']]);
-//        $data['last_read'] = Carbon::now()->toDateTimeString();
+
         $data['conversation_id'] = $conversation->id;
 
-        $inserted = Message::create($data);
+        Message::create($data);
 
-        $new = Message::find($inserted->id);
-        $pusher = [
-            'id' => $new->id,
-            'sender_id' => $new->sender_id,
-            'receiver_id' => $new->receiver_id,
-            'conversation_id' => $new->conversation_id,
-            'messaging_group_id' => $new->messaging_group_id,
-            'message' => $new->message,
-            'file' => $new->file,
-            'type' => $new->type,
-            'las_read' => $new->last_read,
-            'status' => $new->status,
-            'created_at' => $new->created_at,
-            'updated_at' => $new->updated_at
-        ];
+        return response()->json(['success' => true]);
+    }
+
+
+    public function markAllAsRead( Request $request )
+    {
+        $data = $request->all();
+        $messages = Message::byFilter($data)->where('status', '=', 'unread')->get();
+        foreach ($messages as $message) {
+            Message::find($message->id)->update(['status' => 'read']);
+        }
+
+        $data = ['sender_id' => $data['receiver_id'], 'receiver_id' => $data['sender_id']];
+        $messages2 = Message::byFilter($data)->where('status', '=', 'unread')->get();
+        foreach ($messages2 as $message) {
+            Message::find($message->id)->update(['status' => 'read']);
+        }
 
         return response()->json(['success' => true]);
     }
