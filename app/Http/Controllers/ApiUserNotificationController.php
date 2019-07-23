@@ -32,6 +32,10 @@ class ApiUserNotificationController extends Controller
     public function index()
     {
         $notifications = $this->notification->where('target_id', '=', auth()->user()->id)->with('user')->get();
+
+        if (is_null($notifications)) {
+            $notifications = [];
+        }
         return response()->json($notifications);
     }
 

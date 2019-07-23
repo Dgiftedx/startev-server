@@ -87,6 +87,7 @@ class ApiFeedsController extends Controller
                     'images' => $item->images,
                     'video' => $item->image,
                     'link' => $item->link,
+                    'views' => $item->views,
                     'content' => $item->body,
                     'time' => $item->time
                 ];
@@ -287,6 +288,7 @@ class ApiFeedsController extends Controller
                     'image' => $item->image,
                     'images' => $item->images,
                     'video' => $item->image,
+                    'views' => $item->views,
                     'link' => $item->link,
                     'content' => $item->body,
                     'time' => $item->time
@@ -359,6 +361,17 @@ class ApiFeedsController extends Controller
         $feed->delete();
 
         return response()->json(['success' => true]);
+    }
+
+
+
+    public function increaseFeedViews($id)
+    {
+        $feed = $this->feed->find($id);
+        $feed->update(['views' => $feed->views + 1]);
+        $update = $this->feed->find($id);
+
+        return response()->json($update);
     }
 
 }

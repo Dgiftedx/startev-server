@@ -20,6 +20,7 @@ class Business extends Model implements Searchable
         'phone',
         'website',
         'social_handle',
+        'partnership_terms',
         'verified',
         'verification_status'
     ];

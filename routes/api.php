@@ -82,6 +82,7 @@ Route::group([
     Route::post('feed-post-article','ApiFeedsController@post');
     Route::post('delete-feed','ApiFeedsController@deleteFeed');
     Route::get('single-feed/{feed_id}','ApiFeedsController@showSingle');
+    Route::get('increase-feed-view/{id}','ApiFeedsController@increaseFeedViews');
 
     //Follow & Un-follow
     Route::get('follow/{userId}/{target}', 'ApiFollowController@follow');

@@ -532,6 +532,8 @@ class ApiAccountController extends Controller
 
         $business = Business::where('user_id','=',$id)->first();
 
+        $data['partnership_terms'] = strip_tags($data['partnership_terms'], '<a><b><p><table><div><br><aside><h1><h2><h3><h4><h5><h6>');
+
         Business::find($business->id)->update($data);
 
         $updated = Business::find($business->id);

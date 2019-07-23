@@ -12,6 +12,7 @@ class Feed extends Model implements Searchable
     use CanBeLiked;
 
     protected $fillable = [
+        'views',
         'user_id',
         'title',
         'body',
