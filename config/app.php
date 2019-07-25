@@ -166,6 +166,7 @@ return [
         Pusher\Laravel\PusherServiceProvider::class,
         Overtrue\LaravelFollow\FollowServiceProvider::class,
         JD\Cloudder\CloudderServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -234,6 +235,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Pusher' => Pusher\Laravel\Facades\Pusher::class,
         'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

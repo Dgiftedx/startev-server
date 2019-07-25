@@ -310,9 +310,9 @@ class ApiAccountController extends Controller
     public function newSignUps()
     {
         $users = $this->user
-            ->inRandomOrder()
+            ->orderBy('id','desc')
             ->whereBetween('created_at', [Carbon::now()->subDays(3)->toDateTimeString(), Carbon::now()->toDateTimeString()])
-            ->take(10)
+            ->take(8)
             ->get(['id','avatar','name','slug']);
 
         if (count($users) > 0) {

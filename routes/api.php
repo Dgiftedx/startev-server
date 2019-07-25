@@ -151,6 +151,16 @@ Route::group([
     Route::get('get-user-contact-list/{id}', 'ContactListController@index');
     Route::post('add-to-contact-list', 'ContactListController@addToContact');
     Route::post('remove-from-contact-list', 'ContactListController@removeFromContact');
+
+    //Broadcast
+    Route::post('submit-schedule', 'BroadcastManagerController@submitSchedule');
+    Route::post('update-schedule', 'BroadcastManagerController@updateSchedule');
+    Route::post('send-schedule-notice', 'BroadcastManagerController@sendReminder');
+    Route::get('clear-broadcast-schedules/{id}', 'BroadcastManagerController@clearSchedules');
+    Route::get('delete-schedule/{schedule_id}', 'BroadcastManagerController@deleteSchedule');
+    Route::get('get-broadcast-schedules/{user_id}', 'BroadcastManagerController@schedules');
+    Route::get('get-mentor-trainees/{user_id}', 'BroadcastManagerController@getTrainees');
+    Route::get('fetch-schedule-participants/{schedule_id}', 'BroadcastManagerController@getParticipants');
 });
 
 

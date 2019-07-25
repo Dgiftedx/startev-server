@@ -15,6 +15,9 @@
 Route::get('download-file', 'DownloadController@download');
 Route::get('send-mail', 'TestController@sendMail');
 
+//Download schedule
+Route::get('download-broadcast-schedules/{id}', 'OpenApiController@downloadScheduleReport');
+
 
 Auth::routes();
 Route::group(['middleware' => ['auth:admin']], function () {
@@ -53,12 +56,10 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('platform-update-graduate/{id}', 'Admin\PlatformUsersController@platformUpdateGraduate');
     Route::get('platform-delete-graduate/{id}', 'Admin\PlatformUsersController@deleteGraduateAccount');
 
-
     Route::get('get-platform-mentors', 'Admin\PlatformUsersController@platformMentors');
     Route::post('platform-create-mentor', 'Admin\PlatformUsersController@platformCreateMentor');
     Route::post('platform-update-mentor/{id}', 'Admin\PlatformUsersController@platformUpdateMentor');
     Route::get('platform-delete-mentor/{id}', 'Admin\PlatformUsersController@deleteMentorAccount');
-
 
     Route::get('get-platform-businesses', 'Admin\PlatformUsersController@platformBusinesses');
     Route::post('platform-create-business', 'Admin\PlatformUsersController@platformCreateBusiness');
