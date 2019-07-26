@@ -15,6 +15,7 @@ class CreateBroadcastSchedulesTable extends Migration
     {
         Schema::create('broadcast_schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title');
             $table->string('identifier');
             $table->integer('user_id'); //The mentor
             $table->string('type'); //video, audio

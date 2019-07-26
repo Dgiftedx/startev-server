@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BroadcastSchedule extends Model
 {
     protected $fillable = [
+        'title',
         'identifier',
         'user_id',
         'type',

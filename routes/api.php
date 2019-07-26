@@ -153,6 +153,8 @@ Route::group([
     Route::post('remove-from-contact-list', 'ContactListController@removeFromContact');
 
     //Broadcast
+    Route::post('log-live-session', 'BroadcastManagerController@logSession');
+    Route::post('remove-live-session', 'BroadcastManagerController@removeSession');
     Route::post('submit-schedule', 'BroadcastManagerController@submitSchedule');
     Route::post('update-schedule', 'BroadcastManagerController@updateSchedule');
     Route::post('send-schedule-notice', 'BroadcastManagerController@sendReminder');
@@ -161,6 +163,12 @@ Route::group([
     Route::get('get-broadcast-schedules/{user_id}', 'BroadcastManagerController@schedules');
     Route::get('get-mentor-trainees/{user_id}', 'BroadcastManagerController@getTrainees');
     Route::get('fetch-schedule-participants/{schedule_id}', 'BroadcastManagerController@getParticipants');
+
+    Route::get('get-broadcast-messages', 'BroadcastManagerController@getBroadcastMessages');
+    Route::get('get-live-sessions/{user_id}', 'BroadcastManagerController@getLiveSessions');
+    Route::post('submit-broadcast-message', 'BroadcastManagerController@submitBroadcastMessage');
+    Route::get('get-upcoming-meetings/{user_id}', 'BroadcastManagerController@getUpcomingMeetings');
+    Route::get('remove-broadcast-messages/{schedule_id}', 'BroadcastManagerController@removeBroadcastMessages');
 });
 
 
