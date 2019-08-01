@@ -92,7 +92,8 @@ class ApiPublicationController extends Controller
 
             foreach ($request->file('images') as $file) {
                 //upload image and add link to array
-                $data['images'][] = $this->url. '/storage'. HelperController::processImageUpload($file, $data['title'],'publication',640,800);
+//                $data['images'][] = $this->url. '/storage'. HelperController::processImageUpload($file, $data['title'],'publication',640,800);
+                $data['images'][] = '/storage'. HelperController::processImageUpload($file, $data['title'],'publication',640,800);
 
             }
 
@@ -103,7 +104,7 @@ class ApiPublicationController extends Controller
             $data['files'] = [];
             foreach ($request->file('files') as $file) {
                 //upload image and add link to array
-                $data['files'][] = $this->url. HelperController::processFileUpload($file, $data['title']);
+                $data['files'][] = HelperController::processFileUpload($file, $data['title']);
 
             }
 

@@ -236,7 +236,8 @@ class BusinessStoreController extends Controller
         if (count($data['images']) > 0) {
             //process image upload
             foreach ($data['images'] as $file) {
-                $images[] = $this->url . '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
+//                $images[] = $this->url . '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
+                $images[] =  '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
 
             }
 
@@ -292,7 +293,7 @@ class BusinessStoreController extends Controller
                 //Remove the old images
                 if (!is_null($images)) {
                     foreach ($images as $image) {
-                        $image = str_replace($this->url.'/storage', "", $image);
+                        $image = str_replace('/storage', "", $image);
 
                         //Remove old image from storage if exists
                         if (Storage::disk('public')->exists($image)) {
@@ -304,7 +305,8 @@ class BusinessStoreController extends Controller
 
                 //process image upload
                 foreach ($data['images'] as $file) {
-                    $images[] = $this->url . '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
+//                    $images[] = $this->url . '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
+                    $images[] = '/storage/'. HelperController::processProductsImage($file,$data['product_name'],'storeManager');
 
                 }
 
@@ -351,7 +353,7 @@ class BusinessStoreController extends Controller
         $images = $product->images;
 
         foreach ($images as $image) {
-            $image = str_replace($this->url, "", $image);
+            $image = str_replace("/storage", "", $image);
             //Remove old image from storage if exists
             if(Storage::disk('public')->exists($image)){
                 //remove

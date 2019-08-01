@@ -555,7 +555,8 @@ class ApiAccountController extends Controller
 
         $image = str_replace('data:image/png;base64,', '', $data['image']);
         $image = str_replace(' ', '+', $image);
-        $path = $this->url. '/storage' . HelperController::processSimpleUpload(base64_decode($image), $id);
+//        $path = $this->url. '/storage' . HelperController::processSimpleUpload(base64_decode($image), $id);
+        $path = '/storage' . HelperController::processSimpleUpload(base64_decode($image), $id);
 
         $this->user->find($id)->update(['avatar' => $path]);
 
@@ -581,7 +582,8 @@ class ApiAccountController extends Controller
             }
         }
 
-        $path = $this->url. '/storage'. HelperController::processImageUpload($data['image'],$user->name);
+//        $path = $this->url. '/storage'. HelperController::processImageUpload($data['image'],$user->name);
+        $path = '/storage'. HelperController::processImageUpload($data['image'],$user->name);
 
         $user->update(['bg_image' => $path]);
 
