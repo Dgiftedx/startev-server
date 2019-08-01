@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateAppTestImageUrl extends Migration
+class UpdateAppDevImageUrl extends Migration
 {
     /**
      * Run the migrations.
@@ -20,7 +20,7 @@ class UpdateAppTestImageUrl extends Migration
     public function up()
     {
 //        $old_url = 'https://server.startev.africa';
-        $old_url = 'https://server.startev.africa';
+        $old_url = 'https://serverclone.startev.africa';
 //        $old_url = 'http://startev.server';
 
         $feeds = Feed::whereNotNull('image')->get(['id','image']);
