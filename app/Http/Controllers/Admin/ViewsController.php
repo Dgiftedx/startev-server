@@ -46,4 +46,14 @@ class ViewsController extends Controller
     {
         return view('pages.verification.requests');
     }
+
+    public function vocalsView()
+    {
+        return view('pages.platform.vocals');
+    }
+
+    public function createVocalProfileView()
+    {
+        return view('pages.platform.create-vocal');
+    }
 }

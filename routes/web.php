@@ -72,4 +72,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/download-verification-file/{file}', 'Admin\VerificationController@downloadDocument');
     Route::get('verification/requests', 'Admin\ViewsController@verificationRequests')->name('verification requests');
 
+    //Platform Vocals
+    Route::post('platform-vocals/store','VocalsController@store');
+    Route::get('platform-vocals/get-all','VocalsController@allVocals');
+    Route::get('platform-vocals/delete-vocal/{id}','VocalsController@deleteVocal');
+    Route::get('platform/vocals-view', 'Admin\ViewsController@vocalsView')->name('vocals view');
+    Route::get('platform/create-vocal-view', 'Admin\ViewsController@createVocalProfileView')->name('create vocal profile');
+
 });

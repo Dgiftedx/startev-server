@@ -11,6 +11,8 @@ use App\Models\Student;
 use App\Models\Trainee;
 use App\Models\User;
 use App\Models\UserHiddenFeed;
+use App\Models\Vocal;
+use App\Models\VocalReferral;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\HelperController as AdminHelperController;
@@ -60,13 +62,19 @@ class ApiAuthController extends Controller
     {
         $data = $request->all();
 
+        $refCode = $data['ref_code'];
+
         //check if use with thesame email exists
         if ($this->user->where('email', '=', $data['email'])->exists()) {
-            return response()->json(['error' => 'User with same email already exists. Go to login page and click forgot password.'], '401');
+            return response()->json(['error' => 'User with same email already exists. Go to login page and click forgot password'], '401');
         }
 
+        unset($data['ref_code']);
         $data['slug'] = uniqid(rand(), true);
         $user = $this->user->create($data);
+
+        //handle referral logic and determine if this user was referred or not
+        $this->handleVocalRegistration($user->id, $refCode);
 
         $data['user_id'] = $user->id;
 
@@ -103,6 +111,37 @@ class ApiAuthController extends Controller
         }
 
         return response()->json(['error' => "Your account cannot be created this time, Please contact support"], 401);
+    }
+
+
+    /**
+     * @param $userID
+     * @param $RefCode
+     */
+    private function handleVocalRegistration($userID, $RefCode)
+    {
+
+        // Get the vocal with this referral code
+        $vocal = Vocal::where('ref_code', '=', $RefCode)->first();
+
+
+        // If found, proceed
+        if ($vocal) {
+
+            // Check if vocal and user haven't been created already, if no, proceed
+            if (!VocalReferral::where('vocal_id','=',$vocal->id)->where('user_id','=',$userID)->exists()) {
+
+                // Arrange the data to create a new entry
+                $toSeed = [
+                    'vocal_id' => $vocal->id,
+                    'user_id' => $userID,
+                    'registered_on' => Carbon::now()->toDateTimeString()
+                ];
+
+                // Log referral record
+                VocalReferral::create($toSeed);
+            }
+        }
     }
 
     public function verify(Request $request)
