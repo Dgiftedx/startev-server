@@ -110,6 +110,25 @@ class HelperController extends Controller
         return $token;
     }
 
+
+    /**
+     * @param $length
+     * @return string
+     * @throws \Exception
+     */
+    public static function generateRefCode($length){
+        $token = "";
+        $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
+        $codeAlphabet.= "0123456789";
+        $max = strlen($codeAlphabet); // edited
+
+        for ($i=0; $i < $length; $i++) {
+            $token .= $codeAlphabet[random_int(0, $max-1)];
+        }
+        return $token;
+    }
+
     public static function processFileUpload( $file , $name)
     {
 
