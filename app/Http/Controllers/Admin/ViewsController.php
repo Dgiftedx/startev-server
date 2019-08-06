@@ -15,8 +15,6 @@ class ViewsController extends Controller
         $this->middleware('auth:admin');
     }
 
-
-
     public function allAdminUsersView()
     {
         return view('pages.all-admin-users');
@@ -55,5 +53,10 @@ class ViewsController extends Controller
     public function createVocalProfileView()
     {
         return view('pages.platform.create-vocal');
+    }
+
+    public function compose()
+    {
+        return view('pages.mailbox.compose');
     }
 }

@@ -45,7 +45,7 @@ return [
     |--------------------------------------------------------------------------
     | JWT Authentication Keys
     |--------------------------------------------------------------------------
-    |
+    |admin@onehealth.com
     | The algorithm you are using, will determine whether your tokens are
     | signed with a random string (defined in `JWT_SECRET`) or using the
     | following public & private keys.
@@ -115,7 +115,7 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 1220),
+    'ttl' => env('JWT_TTL', 20),
 
     /*
     |--------------------------------------------------------------------------

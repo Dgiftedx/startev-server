@@ -18,10 +18,15 @@
     <link href="{{ asset('/core-assets/plugins/c3-master/c3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/core-assets/css/pages/dashboard3.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
+    <link href="{{ asset('/core-assets/plugins/html5-editor/bootstrap-wysihtml5.css') }}" rel="stylesheet"/>
+    <!-- Dropzone css -->
+    <link href="{{ asset('/core-assets/plugins/dropzone-master/dist/dropzone.css') }}" rel="stylesheet"/>
     <link href="{{ asset('/core-assets/css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('/core-assets/lib/select.css') }}" rel="stylesheet">
     <link href="{{ asset('/core-assets/lib/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <link href="{{ asset('/core-assets/lib/toast.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/lib/coderty-loader.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/lib/ADM-dateTimePicker.css') }}" rel="stylesheet">
     <link href="{{ asset('/core-assets/lib/selectize.default.css') }}" rel="stylesheet">
     <!-- You can change the theme colors from here -->
     <link href="{{ asset('/core-assets/css/colors/default-dark.css') }}" id="theme" rel="stylesheet">
@@ -80,6 +85,9 @@
 <!--c3 JavaScript -->
 <script src="{{ asset('/core-assets/plugins/d3/d3.min.js') }}"></script>
 <script src="{{ asset('/core-assets/plugins/c3-master/c3.min.js') }}"></script>
+<script src="{{ asset('/core-assets/plugins/html5-editor/wysihtml5-0.3.0.js') }}"></script>
+<script src="{{ asset('/core-assets/plugins/html5-editor/bootstrap-wysihtml5.js') }}"></script>
+<script src="{{ asset('/core-assets/plugins/dropzone-master/dist/dropzone.js') }}"></script>
 <!-- Chart JS -->
 <script src="{{ asset('/core-assets/js/dashboard3.js') }}"></script>
 <script src="{{ asset('/core-assets/lib/sweetalert/sweetalert.min.js') }}"></script>

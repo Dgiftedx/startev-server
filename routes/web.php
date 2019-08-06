@@ -80,4 +80,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('platform/vocals-view', 'Admin\ViewsController@vocalsView')->name('vocals view');
     Route::get('platform/create-vocal-view', 'Admin\ViewsController@createVocalProfileView')->name('create vocal profile');
 
+
+    //Mail Manager
+    Route::post('mail-manager/check-users','MailManagerController@checkUsers');
+    Route::post('mail-manager/send-mail','MailManagerController@sendMail');
+    Route::get('mail-manager/compose-view','Admin\ViewsController@compose')->name('compose');
+//    Route::get('platform/create-vocal-view', 'Admin\ViewsController@createVocalProfileView')->name('create vocal profile');
+
 });
