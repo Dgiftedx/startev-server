@@ -12,6 +12,7 @@ use App\Models\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
+use Nahid\Linkify\Facades\Linkify;
 use Pusher\Laravel\Facades\Pusher;
 
 class ApiFeedsController extends Controller
@@ -103,12 +104,14 @@ class ApiFeedsController extends Controller
         $data = $request->all();
         $mailContent = [];
 
+        $convertToLink = new \Nahid\Linkify\Linkify(array('attr' => array('class' => 'feed-link', 'target' => '_blank')));
+
         $feedData = [
             'postType' => $data['post_type'],
             'roleData' => HelperController::fetchRoleData($data['user_id']),
             'user' => $this->user->where('id','=',$data['user_id'])->first(['id','slug','name','avatar']),
             'title' => $data['title'],
-            'body' => $data['body'],
+            'body' => $convertToLink->process($data['body']),
             'hasLiked' => 0,
             'time' => Carbon::now()
         ];
@@ -116,7 +119,7 @@ class ApiFeedsController extends Controller
         $databaseUpdate = [
             'user_id' => $data['user_id'],
             'title' => $data['title'],
-            'body' => $data['body'],
+            'body' => $convertToLink->process($data['body']),
             'post_type' => $data['post_type'],
             'hasLiked' => 0,
             'time' => Carbon::now()
