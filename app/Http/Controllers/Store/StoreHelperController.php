@@ -459,7 +459,7 @@ class StoreHelperController extends Controller
             ->mapToGroups( function($item) use (&$orders, $products) {
 
                 $orders[$item->identifier][] = [
-                    'name' => $item->buyer->name,
+                    'name' => $item->buyer->name?$item->buyer->name : "N/A",
                     'product_sku' => $item->product_sku,
                     'order_id' => $item->identifier,
                     'image' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->images[0]:'',
