@@ -168,7 +168,7 @@ class UserStoreController extends Controller
 
         foreach ($partnerships as $partnership) {
             // attach product counts
-            $partnership->venture = StoreHelperController::attachSingleProductCount($partnership->venture);
+            $partnership->venture = StoreHelperController::attachSingleProductCount($partnership->venture, $userId);
         }
 
         return response()->json($partnerships);
@@ -400,9 +400,7 @@ class UserStoreController extends Controller
         $query = [
             'store_id' => UserStore::storeId($userId)
         ];
-
         $products = StoreHelperController::ventureProducts($query);
-
         return response()->json($products);
     }
 

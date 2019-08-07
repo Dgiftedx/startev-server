@@ -333,7 +333,7 @@ class BusinessStoreController extends Controller
         $business = (new ApiVentureController($this->user))->businessVentures(Business::businessId($userId));
         $ventures = $business->ventures;
         //attach product counts
-        $result = StoreHelperController::attachProductCount($ventures);
+        $result = StoreHelperController::attachProductCount($ventures, $userId);
 
         return response()->json($result);
     }

@@ -535,7 +535,7 @@ class StoreHelperController extends Controller
     {
         $products = [];
         UserVentureProduct::orderBy('id','desc')
-            ->byFilter($query)
+            ->where('store_id', '=', $query['store_id'])
             ->get()
             ->mapToGroups(function($item) use (&$products) {
                 $products[] = [
@@ -568,30 +568,32 @@ class StoreHelperController extends Controller
     /**
      * Attach product count to ventures model
      * @param $ventures
+     * @param $userId
      * @return mixed
      */
-    public static function attachProductCount( $ventures )
+    public static function attachProductCount( $ventures , $userId)
     {
         foreach ( $ventures as $venture ) {
             if (UserBusinessProduct::where('venture_id','=',$venture->id)->exists()) {
-                $venture->product_count = UserBusinessProduct::where('venture_id','=',$venture->id)->count();
+                $venture->product_count = UserBusinessProduct::where('venture_id','=',$venture->id)
+                    ->where('business_id', '=', Business::businessId($userId))->count();
             }else{
                 $venture->product_count = 0;
             }
 
         }
-
-
         return $ventures;
     }
 
     /**
      * @param $venture
+     * @param $userID
      * @return mixed
      */
-    public static function attachSingleProductCount($venture)
+    public static function attachSingleProductCount($venture, $userID)
     {
-        return $venture->product_count = UserVentureProduct::where('venture_id','=',$venture->id)->count();
+        return $venture->product_count = UserVentureProduct::where('venture_id','=',$venture->id)
+            ->where('store_id', '=', UserStore::storeId($userID))->count();
     }
 
     /**
