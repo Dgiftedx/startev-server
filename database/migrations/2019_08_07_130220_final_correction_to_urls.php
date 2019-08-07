@@ -1,16 +1,11 @@
 <?php
 
-use App\Models\Publication;
-use App\Models\Store\UserStore;
-use App\Models\Feed;
-use App\Models\User;
-use App\Models\Business\UserBusinessProduct;
-use App\Models\Store\UserVentureProduct;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Models\User;
 
-class CorrentIpUrlOnUploads extends Migration
+class FinalCorrectionToUrls extends Migration
 {
     /**
      * Run the migrations.
@@ -55,6 +50,6 @@ class CorrentIpUrlOnUploads extends Migration
      */
     public function down()
     {
-        //
+       //
     }
 }
