@@ -42,7 +42,12 @@
                 <li> <a class="has-arrow waves-effect waves-dark" href="javascript:;" aria-expanded="false"><i class="mdi mdi-mailbox"></i><span class="hide-menu">Mail Manager</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ route('compose') }}">Compose</a></li>
-                        {{--<li><a href="{{ route('vocals view') }}"></a></li>--}}
+                    </ul>
+                </li>
+
+                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:;" aria-expanded="false"><i class="mdi mdi-bookmark-outline"></i><span class="hide-menu">Manage Contents</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="{{ route('help tips') }}">Help Tips</a></li>
                     </ul>
                 </li>
 

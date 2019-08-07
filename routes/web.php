@@ -85,6 +85,12 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('mail-manager/check-users','MailManagerController@checkUsers');
     Route::post('mail-manager/send-mail','MailManagerController@sendMail');
     Route::get('mail-manager/compose-view','Admin\ViewsController@compose')->name('compose');
-//    Route::get('platform/create-vocal-view', 'Admin\ViewsController@createVocalProfileView')->name('create vocal profile');
+
+    //Content Management
+    Route::get('manage-contents/get-help-tips','ContentsManagerController@getHelpTips');
+    Route::post('manage-contents/store-help-tip','ContentsManagerController@storeHelpTip');
+    Route::get('manage-contents/delete-help-tip/{id}','ContentsManagerController@deleteHelpTip');
+    Route::post('manage-contents/update-help-tip/{id}','ContentsManagerController@updateHelpTip');
+    Route::get('manage-contents/help-tips-view','Admin\ViewsController@helpTips')->name('help tips');
 
 });

@@ -59,4 +59,10 @@ class ViewsController extends Controller
     {
         return view('pages.mailbox.compose');
     }
+
+
+    public function helpTips()
+    {
+        return view('pages.contents.help-tips');
+    }
 }
