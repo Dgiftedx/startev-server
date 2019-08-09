@@ -11,6 +11,7 @@ mainApp.controller('adminUserViewController', ['$rootScope','lodash','$scope','$
         $scope.model.showMainList = true;
         $scope.model.showUserForm = false;
         $scope.model.sendingUser = false;
+        $scope.model.cargando_main = true;
 
         //=============== Read AvatarPreview =================//
         function readURL(input) {
@@ -30,6 +31,7 @@ mainApp.controller('adminUserViewController', ['$rootScope','lodash','$scope','$
             adminService.fetchData('get-admin-users', function (resp) {
                 $scope.model.users = resp.data.users;
                 $scope.model.roles = resp.data.roles;
+                $scope.model.cargando_main = false;
             });
         };
 

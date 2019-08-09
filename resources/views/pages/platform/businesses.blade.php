@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card" id="main-list">
-                    <div class="card-body">
+                    <div class="card-body" coderty-loading="model.cargando_main">
                         <h4 class="card-title">Manage Platform Businesses</h4>
                         <div class="float-right mb-5">
                             <button ng-click="model.triggerUserForm('add')" type="button" class="btn waves-effect waves-light btn-rounded btn-success">Add New Business Account</button>
@@ -33,7 +33,8 @@
                                     <tr>
                                         <th>Avatar</th>
                                         <th>Business Name</th>
-                                        <th>email</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
                                         <th class="text-nowrap">Action</th>
                                     </tr>
                                     </thead>
@@ -46,6 +47,7 @@
                                             @{{ business.name }}<br/>
                                         </td>
                                         <td>@{{ business.email }}</td>
+                                        <td>@{{ user.phone?user.phone:'N/A' }}</td>
                                         <td class="text-nowrap">
                                             <button type="button" ng-click="model.editBusiness(business)" class="btn btn-circle btn-info"><i class="fa fa-edit"></i></button>
                                             @role('super')

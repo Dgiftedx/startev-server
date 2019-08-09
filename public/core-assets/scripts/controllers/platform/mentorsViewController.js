@@ -11,6 +11,7 @@ mainApp.controller('mentorsViewController', ['$rootScope','lodash','$scope','$lo
         $scope.model.showMainList = true;
         $scope.model.showUserForm = false;
         $scope.model.sendingUser = false;
+        $scope.model.cargando_main = true;
 
         //=============== Read AvatarPreview =================//
         function readURL(input) {
@@ -30,6 +31,7 @@ mainApp.controller('mentorsViewController', ['$rootScope','lodash','$scope','$lo
             adminService.fetchData('get-platform-mentors', function (resp) {
                 $scope.model.users = resp.data.mentors;
                 $scope.model.fields = resp.data.fields;
+                $scope.model.cargando_main = false;
             });
         };
 

@@ -169,6 +169,15 @@ Route::group([
     Route::post('submit-broadcast-message', 'BroadcastManagerController@submitBroadcastMessage');
     Route::get('get-upcoming-meetings/{user_id}', 'BroadcastManagerController@getUpcomingMeetings');
     Route::get('remove-broadcast-messages/{schedule_id}', 'BroadcastManagerController@removeBroadcastMessages');
+
+
+    //Audio Session
+    Route::post('log-audio-session', 'Chat\AudioSessionController@logSession');
+    Route::get('delete-audio-session/{id}', 'Chat\AudioSessionController@deleteSession');
+    Route::post('end-receiver-audio-session', 'Chat\AudioSessionController@endReceiverSession');
+    Route::get('get-audio-session/{target}', 'Chat\AudioSessionController@getSession');
+    Route::get('pick-audio-session/{id}', 'Chat\AudioSessionController@pickSession');
+    Route::get('get-audio-host-session/{host}', 'Chat\AudioSessionController@getHostSession');
 });
 
 

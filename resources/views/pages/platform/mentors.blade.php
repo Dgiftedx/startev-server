@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card" id="main-list">
-                    <div class="card-body">
+                    <div class="card-body" coderty-loading="model.cargando_main">
                         <h4 class="card-title">Manage Platform Mentors</h4>
                         <div class="float-right mb-5">
                             <button ng-click="model.triggerUserForm('add')" type="button" class="btn waves-effect waves-light btn-rounded btn-success">Add New Mentor Account</button>
@@ -35,6 +35,7 @@
                                         <th>Avatar</th>
                                         <th>Full Name</th>
                                         <th>email</th>
+                                        <th>Phone</th>
                                         <th class="text-nowrap">Action</th>
                                     </tr>
                                     </thead>
@@ -47,6 +48,7 @@
                                             @{{ user.name }}<br/>
                                         </td>
                                         <td>@{{ user.email }}</td>
+                                        <td>@{{ user.phone?user.phone:'N/A' }}</td>
                                         <td class="text-nowrap">
                                             <button type="button" ng-click="model.editMentor(user)" class="btn btn-circle btn-info"><i class="fa fa-edit"></i></button>
                                             @role('super')

@@ -10,6 +10,7 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
         $scope.model.showMainList = true;
         $scope.model.showUserForm = false;
         $scope.model.sendingUser = false;
+        $scope.model.cargando_main = true;
 
         //=============== Read AvatarPreview =================//
         function readURL(input) {
@@ -29,6 +30,7 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
             adminService.fetchData('get-platform-students', function (resp) {
                 $scope.model.users = resp.data.students;
                 $scope.model.fields = resp.data.fields;
+                $scope.model.cargando_main = false;
             });
         };
 

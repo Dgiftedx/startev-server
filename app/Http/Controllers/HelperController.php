@@ -26,6 +26,29 @@ class HelperController extends Controller
         self::$base_url = url('/');
     }
 
+
+    public static function fetchMinimalRole( $id )
+    {
+        $user = User::with('mentor')->with('student')->with('business')->with('graduate')->find($id);
+
+        if (!is_null($user) && !is_null($user->student)){
+            $studentData = Student::where('user_id','=',$id)->first();
+            return ['data' => $studentData->institution, 'role' => 'student'];
+
+        }else if(!is_null($user) &&  !is_null($user->graduate)) {
+            $graduateData = Graduate::where('user_id','=',$id)->first();
+            return ['data' => $graduateData->insitutition, 'role' => 'graduate'];
+
+        }else if(!is_null($user) &&  !is_null($user->mentor)) {
+            $mentorData = Mentor::where('user_id','=',$id)->first();
+            return ['data' => $mentorData->organization, 'role' => 'mentor'];
+
+        }else{
+            $businessData = Business::where('user_id','=',$id)->first();
+            return ['data' => $businessData->name, 'role' => 'business'];
+        }
+    }
+
     /**
      * Fetch Role Data
      * @param $id

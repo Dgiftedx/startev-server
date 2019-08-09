@@ -5,11 +5,13 @@ mainApp.controller('vocalsViewController', ['$rootScope','lodash','$scope','$loc
         $scope.model.showMainList = true;
         $scope.model.showUserForm = false;
         $scope.model.sendingUser = false;
+        $scope.model.cargando_main = true;
 
         //===================== Get users list ====================//
         $scope.model.getPlatformVocals = function () {
             adminService.fetchData('/platform-vocals/get-all', function (resp) {
                 $scope.model.vocals = resp.data.vocals;
+                $scope.model.cargando_main = false;
             });
         };
 
@@ -23,7 +25,7 @@ mainApp.controller('vocalsViewController', ['$rootScope','lodash','$scope','$loc
         $scope.model.deleteVocal = function (vocal) {
             SweetAlert.show({
                 title: "Are you sure?",
-                text: "This will remove the vocal and all referral records attached",
+                text: "This will remove the focal and all referral records attached",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",confirmButtonText: "Yes, delete it!",
@@ -40,11 +42,11 @@ mainApp.controller('vocalsViewController', ['$rootScope','lodash','$scope','$loc
                             $scope.model.getPlatformVocals();
                         },
                         function () {
-                            adminService.alert("Error removing vocal profile from system","error");
+                            adminService.alert("Error removing focal profile from system","error");
                         }
                     )
                 }else{
-                    SweetAlert.show("Operation Cancelled", "Vocal account is safe", "error");
+                    SweetAlert.show("Operation Cancelled", "Focal account is safe", "error");
                 }
             });
         };

@@ -11,6 +11,7 @@ mainApp.controller('businessesViewController', ['$rootScope','lodash','$scope','
         $scope.model.showMainList = true;
         $scope.model.showUserForm = false;
         $scope.model.sendingUser = false;
+        $scope.model.cargando_main = true;
 
         //=============== Read AvatarPreview =================//
         function readURL(input) {
@@ -30,6 +31,7 @@ mainApp.controller('businessesViewController', ['$rootScope','lodash','$scope','
             adminService.fetchData('get-platform-businesses', function (resp) {
                 $scope.model.businesses = resp.data.businesses;
                 $scope.model.fields = resp.data.fields;
+                $scope.model.cargando_main = false;
             });
         };
 

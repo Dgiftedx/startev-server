@@ -32,10 +32,10 @@
                     </ul>
                 </li>
 
-                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:;" aria-expanded="false"><i class="mdi mdi-library"></i><span class="hide-menu">Platform Vocals</span></a>
+                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:;" aria-expanded="false"><i class="mdi mdi-library"></i><span class="hide-menu">Platform Focals</span></a>
                     <ul aria-expanded="false" class="collapse">
-                        <li><a href="{{ route('create vocal profile') }}">Create Vocal Profile</a></li>
-                        <li><a href="{{ route('vocals view') }}">View Vocals Referrals</a></li>
+                        <li><a href="{{ route('create vocal profile') }}">Create Focal Profile</a></li>
+                        <li><a href="{{ route('vocals view') }}">View Focal Referrals</a></li>
                     </ul>
                 </li>
 

@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card" id="main-list">
-                    <div class="card-body">
+                    <div class="card-body" coderty-loading="model.cargando_main">
                         <h4 class="card-title">Admin Users</h4>
                         <h6 class="card-subtitle">You can manage users and also assign roles. This does not include super administrators</h6>
 

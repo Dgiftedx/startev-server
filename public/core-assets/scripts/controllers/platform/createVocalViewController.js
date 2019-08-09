@@ -22,7 +22,7 @@ mainApp.controller('createVocalViewController', ['$rootScope','lodash','$scope',
             var data = {
                 name : $scope.model.vocalProfileData.name,
                 email : $scope.model.vocalProfileData.email,
-                phone : $scope.model.vocalProfileData.phone,
+                phone : $scope.model.vocalProfileData.phone
             };
 
             if (lodash.size($scope.model.vocalProfileData.designation) !== 0) {
@@ -43,7 +43,7 @@ mainApp.controller('createVocalViewController', ['$rootScope','lodash','$scope',
                 '/platform-vocals/store',
                 data,
                 function () {
-                    adminService.alert("Vocal created successfully. Open (view vocals referrals) to view more.", "success");
+                    adminService.alert("Focal created successfully. Open (view focals referrals) to view more.", "success");
                     $scope.model.clearForm();
                 },
                 function (resp) {

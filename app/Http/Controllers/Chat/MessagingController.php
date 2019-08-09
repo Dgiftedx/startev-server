@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Chat;
 
 use App\Http\Controllers\HelperController;
+use App\Jobs\SendEmailNotification;
 use App\Models\Chat\Message;
 use App\Models\Chat\MessageConversation;
 use App\Models\User;
@@ -46,10 +47,11 @@ class MessagingController extends Controller
 
         $removeDuplicates = array_unique($merge);
         // get this users and their messages
-        $contacts = User::whereIn('id',$removeDuplicates)->get(['id','avatar','name','username','state','country','status']);
+        $contacts = User::whereIn('id',$removeDuplicates)->get(['id','avatar','bio','name','username','state','country','status']);
         foreach ($contacts as $contact) {
             $contact->status = $contact->isOnline();
             $contact->messages = $this->helperGetMessages($user_id, $contact->id);
+            $contact->role = HelperController::fetchMinimalRole($contact->id);
         }
 
         return response()->json($contacts);
@@ -100,6 +102,7 @@ class MessagingController extends Controller
             $contacts = User::whereIn('id', $contactBook->contacts_id)->get(['id','slug','avatar','name','username','status','email']);
             foreach ($contacts as $contact) {
                 $contact->status = $contact->isOnline();
+                $contact->role = HelperController::fetchMinimalRole($contact->id);
             }
         }
         return response()->json($contacts);
@@ -120,7 +123,6 @@ class MessagingController extends Controller
     {
         $data = $request->all();
 
-
         $pusher = [
             'sender_id' => $data['sender_id'],
             'receiver_id' => $data['receiver_id'],
@@ -138,8 +140,24 @@ class MessagingController extends Controller
         $data['conversation_id'] = $conversation->id;
 
         Message::create($data);
+        //send email notification to recipient if offline
+        $this->handleOfflineMessageNotification($data['receiver_id'], $data['message']);
 
         return response()->json(['success' => true]);
+    }
+
+
+    private  function handleOfflineMessageNotification($recipient, $message)
+    {
+        $user = User::find($recipient);
+
+        if (!$user->isOnline()) {
+            $mailContent = [];
+            $mailContent['message'] = $message;
+            $mailContent['to'] = $user->email;
+            $mailContent['subject'] = "You have a new Message";
+            dispatch(new SendEmailNotification($mailContent));
+        }
     }
 
 

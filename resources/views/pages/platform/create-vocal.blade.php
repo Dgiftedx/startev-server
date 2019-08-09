@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Create Platform Vocal :: Startev Africa')
+@section('title', 'Create Platform Focal :: Startev Africa')
 @section('content')
     <div class="container-fluid" ng-controller="createVocalViewController">
         <!-- ============================================================== -->
@@ -12,7 +12,7 @@
             <div class="col-md-7 align-self-center">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('vocals view') }}">Vocal</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('vocals view') }}">Focal</a></li>
                     <li class="breadcrumb-item active">Create Profile</li>
                 </ol>
             </div>
@@ -23,7 +23,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="card-title">Create New Vocal Profile</div>
+                        <div class="card-title">Create New Focal Profile</div>
 
                         <div class="">
                             <div class="row">
