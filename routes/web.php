@@ -18,6 +18,16 @@ Route::get('send-mail', 'TestController@sendMail');
 //Download schedule
 Route::get('download-broadcast-schedules/{id}', 'OpenApiController@downloadScheduleReport');
 
+Route::get('/video/{file}', function ( $file ) {
+    $path = base_path("public/uploads/{$file}");
+
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With, X-Auth-Token');
+    header('Access-Control-Allow-Credentials: true');
+
+        return response()->file($path, array('Content-Type' => 'video/mp4'));
+});
 
 Auth::routes();
 Route::group(['middleware' => ['auth:admin']], function () {
@@ -92,5 +102,4 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('manage-contents/delete-help-tip/{id}','ContentsManagerController@deleteHelpTip');
     Route::post('manage-contents/update-help-tip/{id}','ContentsManagerController@updateHelpTip');
     Route::get('manage-contents/help-tips-view','Admin\ViewsController@helpTips')->name('help tips');
-
 });

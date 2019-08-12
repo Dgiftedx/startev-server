@@ -79,6 +79,7 @@ Route::group([
     Route::get('get-feeds','ApiFeedsController@index');
     Route::get('get-people','ApiFeedsController@people'); //Get people to follow
     Route::post('hide-feed', 'ApiFeedsController@hideFeed');
+    Route::post('upload-video', 'ApiFeedsController@uploadVideo');
     Route::post('feed-post-article','ApiFeedsController@post');
     Route::post('delete-feed','ApiFeedsController@deleteFeed');
     Route::get('single-feed/{feed_id}','ApiFeedsController@showSingle');

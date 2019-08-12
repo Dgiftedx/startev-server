@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\UserHiddenFeed;
 use App\Models\UserNotification;
 use Carbon\Carbon;
+use FFMpeg\Format\Video\WebM;
+use Pbmedia\LaravelFFMpeg\FFMpegFacade as FFMpeg;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
 use Nahid\Linkify\Facades\Linkify;
@@ -86,7 +88,7 @@ class ApiFeedsController extends Controller
                     'comments'=> $item->feedComments,
                     'image' => $item->image,
                     'images' => $item->images,
-                    'video' => $item->image,
+                    'video' => $item->video,
                     'link' => $item->link,
                     'views' => $item->views,
                     'content' => $item->body,
@@ -98,6 +100,82 @@ class ApiFeedsController extends Controller
 
         return response()->json($feeds);
     }
+
+
+    public function uploadVideo( Request $request )
+    {
+
+        $this->validate($request, [
+            'file' => 'required|mimes:mp4,avi,asf,mov,qt,avchd,flv,swf,mpg,mpeg,mpeg-4,wmv,divx,3gp|max:20480',
+        ]);
+
+        $data = $request->all();
+        if (!$request->hasFile('file') && !$request->file('file')->isValid()) {
+            return response()->json(['error' => "Invalid video type!!!"]);
+        }
+
+
+        $videoTmp = time();
+
+        $file = $request->file('file');
+        $fileName = $videoTmp.'.'.$file->getClientOriginalExtension();;
+        $path = public_path().'/uploads/';
+        $file->move($path, $fileName);
+
+
+        if($file->getClientOriginalExtension() != "webm"){
+            $lowBitrateFormat = (new WebM)->setKiloBitrate(500);
+            FFMpeg::fromDisk('video')
+                ->open($fileName)
+                ->export()
+                ->toDisk('video')
+                ->inFormat($lowBitrateFormat)
+                ->save($fileName . '.webm');
+
+        }
+
+        $video = FFMpeg::fromDisk('video')->open($fileName . ".webm");
+
+        $video->getFrameFromSeconds(10)
+        ->export()
+        ->toDisk('video')
+        ->save($fileName.'.png');
+
+        $feedData = [
+            'postType' => $data['post_type'],
+            'roleData' => HelperController::fetchRoleData($data['user_id']),
+            'user' => $this->user->where('id','=',$data['user_id'])->first(['id','slug','name','avatar']),
+            'title' => $data['title'],
+            'body' => 'N/A',
+            'image' => $fileName . '.png',
+            'video' => "video/". $fileName . ".webm",
+            'hasLiked' => 0,
+            'time' => Carbon::now()
+        ];
+
+        $databaseUpdate = [
+            'user_id' => $data['user_id'],
+            'title' => $data['title'],
+            'body' => 'N/A',
+            'post_type' => $data['post_type'],
+            'image' => $fileName . '.png',
+            'video' => "video/". $fileName . ".webm",
+            'hasLiked' => 0,
+            'time' => Carbon::now()
+        ];
+
+        $update = $this->feed->create($databaseUpdate);
+
+        $feedData['id'] = $update->id;
+
+        Pusher::trigger('my-channel', 'my-event', $feedData);
+        $user = User::find($data['user_id']);
+
+        UserNotification::create(['user_id' => $data['user_id'], 'target_id' => 0, 'title' => "New feed has been published", 'content' => "{$user->name} published  {$data['title']} to news feed."]);
+
+        return response()->json(['success' => true, 'message' => 'Post published successfully']);
+    }
+
 
     public function post( Request $request )
     {

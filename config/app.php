@@ -168,6 +168,7 @@ return [
         JD\Cloudder\CloudderServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Nahid\Linkify\LinkifyServiceProvider::class,
+        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -238,6 +239,7 @@ return [
         'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Linkify' => Nahid\Linkify\Facades\Linkify::class,
+        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class
     ],
 
 ];
