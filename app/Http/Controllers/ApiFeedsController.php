@@ -105,9 +105,9 @@ class ApiFeedsController extends Controller
     public function uploadVideo( Request $request )
     {
 
-        $this->validate($request, [
-            'file' => 'required|mimes:mp4,avi,asf,mov,qt,avchd,flv,swf,mpg,mpeg,mpeg-4,wmv,divx,3gp|max:20480',
-        ]);
+//        $this->validate($request, [
+//            'file' => 'required|mimes:mp4,avi,asf,mov,qt,avchd,flv,swf,mpg,mpeg,mpeg-4,wmv,divx,3gp|max:20480',
+//        ]);
 
         $data = $request->all();
 //        if (!$request->hasFile('file') && !$request->file('file')->isValid()) {
