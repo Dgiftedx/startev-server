@@ -45,6 +45,16 @@ class Admin extends Authenticatable
         'password', 'remember_token',
     ];
 
+
+    /**
+     * Encrypt password field that will be stored in user object
+     * @param $value
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
     /**
      * The attributes that should be cast to native types.
      *
