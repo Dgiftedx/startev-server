@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\MailController;
+use App\Jobs\PostVideoConverter;
 use App\Jobs\SendEmailNotification;
 use App\Models\Feed;
 use App\Models\FeedComment;
@@ -10,8 +11,6 @@ use App\Models\User;
 use App\Models\UserHiddenFeed;
 use App\Models\UserNotification;
 use Carbon\Carbon;
-use FFMpeg\Format\Video\WebM;
-use Pbmedia\LaravelFFMpeg\FFMpegFacade as FFMpeg;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
 use Nahid\Linkify\Facades\Linkify;
@@ -105,81 +104,29 @@ class ApiFeedsController extends Controller
     public function uploadVideo( Request $request )
     {
 
-//        $this->validate($request, [
-//            'file' => 'required|mimes:mp4,avi,asf,mov,qt,avchd,flv,swf,mpg,mpeg,mpeg-4,wmv,divx,3gp|max:20480',
-//        ]);
 
-        $data = $request->all();
-//        if (!$request->hasFile('file') && !$request->file('file')->isValid()) {
-//            return response()->json(['error' => "Invalid video type!!!"]);
-//        }
+        $fileExtension = request('file')->getClientOriginalExtension();
+        $allowed = ['mp4','avi','asf','mov','qt','mpg','mpeg','mpeg-4','wmv','3gp'];
 
-        if (!request('file') && !request('file')) {
-            return response()->json(['error' => "Invalid video type!!!"]);
+        if (!in_array($fileExtension, $allowed)) {
+            return response()->json(['error' => "Invalid file type."], 404);
         }
 
-
-//        return response()->json(['file' => ])
+        $data = $request->all();
 
         $videoTmp = time();
 
         $file = request('file');
-        $fileName = $videoTmp.'.'.$file->getClientOriginalExtension();;
+        $fileName = $videoTmp.'.'.$file->getClientOriginalExtension();
         $path = public_path().'/uploads/';
         $file->move($path, $fileName);
 
+        $data['file'] = $fileName;
 
-        if($file->getClientOriginalExtension() != "webm"){
-            $lowBitrateFormat = (new WebM)->setKiloBitrate(500);
-            FFMpeg::fromDisk('video')
-                ->open($fileName)
-                ->export()
-                ->toDisk('video')
-                ->inFormat($lowBitrateFormat)
-                ->save($fileName . '.webm');
-
-        }
-
-        $video = FFMpeg::fromDisk('video')->open($fileName . ".webm");
-
-        $video->getFrameFromSeconds(10)
-        ->export()
-        ->toDisk('video')
-        ->save($fileName.'.png');
-
-        $feedData = [
-            'postType' => $data['post_type'],
-            'roleData' => HelperController::fetchRoleData($data['user_id']),
-            'user' => $this->user->where('id','=',$data['user_id'])->first(['id','slug','name','avatar']),
-            'title' => $data['title'],
-            'body' => 'N/A',
-            'image' => $fileName . '.png',
-            'video' => "video/". $fileName . ".webm",
-            'hasLiked' => 0,
-            'time' => Carbon::now()
-        ];
-
-        $databaseUpdate = [
-            'user_id' => $data['user_id'],
-            'title' => $data['title'],
-            'body' => 'N/A',
-            'post_type' => $data['post_type'],
-            'image' => $fileName . '.png',
-            'video' => "video/". $fileName . ".webm",
-            'hasLiked' => 0,
-            'time' => Carbon::now()
-        ];
-
-        $update = $this->feed->create($databaseUpdate);
-
-        $feedData['id'] = $update->id;
-
-        Pusher::trigger('my-channel', 'my-event', $feedData);
-        $user = User::find($data['user_id']);
-
-        UserNotification::create(['user_id' => $data['user_id'], 'target_id' => 0, 'title' => "New feed has been published", 'content' => "{$user->name} published  {$data['title']} to news feed."]);
-
-        return response()->json(['success' => true, 'message' => 'Post published successfully']);
+        // Send Video Conversion and Upload to Job
+        dispatch(new PostVideoConverter($data));
+        // Return response
+        return response()->json(['success' => true, 'message' => 'Your video upload is processing. You\'ll receive notification update once it\'s done']);
     }
 
 
