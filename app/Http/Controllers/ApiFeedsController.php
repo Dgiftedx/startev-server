@@ -110,14 +110,20 @@ class ApiFeedsController extends Controller
         ]);
 
         $data = $request->all();
-        if (!$request->hasFile('file') && !$request->file('file')->isValid()) {
+//        if (!$request->hasFile('file') && !$request->file('file')->isValid()) {
+//            return response()->json(['error' => "Invalid video type!!!"]);
+//        }
+
+        if (!request('file') && !request('file')) {
             return response()->json(['error' => "Invalid video type!!!"]);
         }
 
 
+//        return response()->json(['file' => ])
+
         $videoTmp = time();
 
-        $file = $request->file('file');
+        $file = request('file');
         $fileName = $videoTmp.'.'.$file->getClientOriginalExtension();;
         $path = public_path().'/uploads/';
         $file->move($path, $fileName);
