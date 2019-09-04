@@ -156,7 +156,7 @@ class ApiFeedsController extends Controller
             'time' => Carbon::now()
         ];
 
-        if (count($request->file('images'))){
+        if (!is_null($request->file('images')) && count($request->file('images'))){
 
 
             foreach ($request->file('images') as $file) {
