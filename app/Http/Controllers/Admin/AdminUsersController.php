@@ -46,7 +46,7 @@ class AdminUsersController extends Controller
         }
 
         $data['slug'] = uniqid(rand(), true);
-        $data['password'] = bcrypt($data['password']);
+//        $data['password'] = bcrypt($data['password']);
 
         if (isset($data['avatar']) && $data['avatar'] !== 'undefined') {
 
