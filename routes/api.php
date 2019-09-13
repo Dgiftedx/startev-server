@@ -13,6 +13,27 @@ use Illuminate\Http\Request;
 |
 */
 
+
+Route::group(['prefix' => 'store'], function () {
+    Route::get('/get-local-product','Store\MainStoreController@getLocalProduct');
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    /// Main Store routes starts
+    Route::get('main-store-products', 'Store\FrontController@all');
+    Route::get('main-store-new-products', 'Store\FrontController@newProducts');
+
+    Route::get('main-store-get-cart', 'Store\MainStoreController@getCart');
+    Route::post('main-store-add-to-cart', 'Store\MainStoreController@addToCart');
+    Route::post('main-store-place-order', 'Store\MainStoreController@placeOrder');
+    Route::get('main-store-get-products/{identifier}', 'Store\MainStoreController@index');
+    Route::get('main-store-remove-from-cart/{item_id}', 'Store\MainStoreController@removeFromCart');
+    Route::get('main-store-get-single-product/{product}', 'Store\MainStoreController@singleProduct');
+    Route::get('main-store-get-products-with-query/{identifier}', 'Store\MainStoreController@byFilter');
+
+    Route::post('validate-referral-code', 'Store\FrontController@validateCode');
+    Route::post('place-new-order', 'Store\FrontController@newMainStorePlaceOrder');
+});
+
 Route::group([
 
     'middleware' => ['api'],
@@ -229,20 +250,4 @@ Route::group([
     Route::get('store-manager/detach-products-from-venture/{venture}','Store\BusinessStoreController@detachProductVenture');
 
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// Main Store routes starts
-    Route::get('main-store-products', 'Store\FrontController@all');
-    Route::get('main-store-new-products', 'Store\FrontController@newProducts');
-
-    Route::get('main-store-get-cart', 'Store\MainStoreController@getCart');
-    Route::post('main-store-add-to-cart', 'Store\MainStoreController@addToCart');
-    Route::post('main-store-place-order', 'Store\MainStoreController@placeOrder');
-    Route::get('main-store-get-products/{identifier}', 'Store\MainStoreController@index');
-    Route::get('main-store-remove-from-cart/{item_id}', 'Store\MainStoreController@removeFromCart');
-    Route::get('main-store-get-single-product/{product}', 'Store\MainStoreController@singleProduct');
-    Route::get('main-store-get-products-with-query/{identifier}', 'Store\MainStoreController@byFilter');
-
-    Route::post('validate-referral-code', 'Store\FrontController@validateCode');
-    Route::post('place-new-order', 'Store\FrontController@newMainStorePlaceOrder');
 });

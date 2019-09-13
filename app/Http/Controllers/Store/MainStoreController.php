@@ -34,8 +34,6 @@ class MainStoreController extends Controller
         //User model property
         $this->user = $userModel;
 
-        //Authentication Middleware
-        $this->middleware('auth:api');
         //Base url
         $this->url = url('/');
     }
@@ -78,14 +76,22 @@ class MainStoreController extends Controller
     }
 
 
+    public function getLocalProduct( Request $request )
+    {
+        $query = $request->all();
+        $product = UserVentureProduct::find($query['product_id']);
+        $store = UserStore::find($product->store_id);
+        $store_identifier = $store->identifier;
+
+        $result = ['product' => $product, 'store' => $store, 'store_identifier' => $store_identifier];
+        return response()->json($result);
+    }
+
+
     public function getCart()
     {
-        if (auth()->check()) {
-            $cartItems = StoreHelperController::getCartItems();
-            return response()->json($cartItems);
-        }
-
-        return response()->json([], 401);
+        $cartItems = StoreHelperController::getCartItems();
+        return response()->json($cartItems);
     }
 
 
@@ -93,37 +99,156 @@ class MainStoreController extends Controller
     {
         $data = $request->all();
 
-       if(auth()->check()) {
-           //user authenticated
+        if(auth()->check()) {
+            //user authenticated
 
-           //check if store_identifier is set
-           if (!isset($data['store_identifier'])) {
-               $product = UserVentureProduct::find($data['product_id']);
-               $store = UserStore::find($product->store_id);
-               $data['store_identifier'] = $store->identifier;
-           }
+            //check if store_identifier is set
+            if (!isset($data['store_identifier'])) {
+                $product = UserVentureProduct::find($data['product_id']);
+                $store = UserStore::find($product->store_id);
+                $data['store_identifier'] = $store->identifier;
+            }
 
-           //check if item already exist in cart
-           if (!UserCart::where('user_id','=',$data['user_id'])
-               ->where('product_id','=',$data['product_id'])
-               ->where('store_identifier','=',$data['store_identifier'])->exists()) {
+            //check if item already exist in cart
+            if (!UserCart::where('user_id','=',$data['user_id'])
+                ->where('product_id','=',$data['product_id'])
+                ->where('store_identifier','=',$data['store_identifier'])->exists()) {
 
-               //log new item
-               UserCart::create($data);
-               //pull all cart items for user
-               $cartItems = StoreHelperController::getCartItems();
+                //log new item
+                UserCart::create($data);
+                //pull all cart items for user
+                $cartItems = StoreHelperController::getCartItems();
 
-               //return response
-               return response()->json($cartItems);
-           }
+                //return response
+                return response()->json(['items' => $cartItems, 'message' => "Product has been added to cart"]);
+            }
 
-           //return response
-           return response()->json(['message' => "Item added to cart already"]);
-       }
+            //return response
+            return response()->json(['error' => "Item has been added to cart already"]);
+        }
 
-       //user not authenticated, throw 401 error
-       return response()->json([],401);
+        return response()->json(['error' => "There is an error"]);
     }
+
+    private function sessionSaveCart($item)
+    {
+        $cartItems = StoreHelperController::getCartItems();
+        $cartItems[] = $item;
+        $items = json_encode($cartItems);
+        session(['cartItems' => $items]);
+    }
+
+    private function find_key_value($array, $key, $val)
+    {
+        foreach ($array as $item)
+        {
+            if (is_array($item) && $this->find_key_value($item, $key, $val)) return true;
+
+            if (isset($item[$key]) && $item[$key] == $val) return true;
+        }
+
+        return false;
+    }
+
+
+
+//
+//    public function addToCart( Request $request )
+//    {
+//        $data = $request->all();
+//
+//        if(auth()->check()) {
+//            //user authenticated
+//            //check if store_identifier is set
+//            if (!isset($data['store_identifier'])) {
+//                $product = UserVentureProduct::find($data['product_id']);
+//                $store = UserStore::find($product->store_id);
+//                $data['store_identifier'] = $store->identifier;
+//            }
+//
+//            //check if item already exist in cart
+//            if (!UserCart::where('user_id','=',$data['user_id'])
+//                ->where('product_id','=',$data['product_id'])
+//                ->where('store_identifier','=',$data['store_identifier'])->exists()) {
+//
+//                //log new item
+//                UserCart::create($data);
+//                //pull all cart items for user
+//                $cartItems = StoreHelperController::getCartItems();
+//
+//                //return response
+//                return response()->json(['items' => $cartItems, 'message' => "Item has been added to cart"]);
+//            }
+//
+//            //return response
+//            return response()->json(['error' => "Item added to cart already"]);
+//        }
+//
+//
+//        if ($data['user_id'] === 0) {
+//            //it's a general user that's not logged in
+//            if (!isset($data['store_identifier'])) {
+//                $product = UserVentureProduct::find($data['product_id']);
+//                $store = UserStore::find($product->store_id);
+//                $data['store_identifier'] = $store->identifier;
+//            }
+//
+//            // cart Item is empty
+//            if (count(StoreHelperController::getCartItems()) < 1) {
+//                $this->sessionSaveCart($data);
+//
+//                //pull all cart items for user
+//                $cartItems = StoreHelperController::getCartItems();
+//
+//                //return response
+//                return response()->json(['items' => $cartItems, 'message' => "Item has been added to cart"]);
+//            }else{
+//
+//                //There are items in the cart already
+//                $cartItems = StoreHelperController::getCartItems();
+//                if ($this->find_key_value($cartItems, 'product_id', $data['product_id'])) {
+//                    //return response
+//                    return response()->json(['error' => "Item already exist in your cart"]);
+//                }else{
+//                    $this->sessionSaveCart($data);
+//
+//                    //pull all cart items for user
+//                    $cartItems = StoreHelperController::getCartItems();
+//
+//                    //return response
+//                    return response()->json(['items' => $cartItems, 'message' => "Item has been added to cart"]);
+//                }
+//            }
+//
+//
+//
+//        }
+//
+//
+//        return response()->json(['error' => "There is an error"]);
+//    }
+//
+//    private function sessionSaveCart($item)
+//    {
+//        $cartItems = StoreHelperController::getCartItems();
+//        $cartItems[] = $item;
+//        $items = json_encode($cartItems);
+//        session(['cartItems' => $items]);
+//    }
+//
+//    private function find_key_value($array, $key, $val)
+//    {
+//        foreach ($array as $item)
+//        {
+//            if (is_array($item) && $this->find_key_value($item, $key, $val)) return true;
+//
+//            if (isset($item[$key]) && $item[$key] == $val) return true;
+//        }
+//
+//        return false;
+//    }
+
+
 
 
     public function removeFromCart( $item_id )
@@ -141,9 +266,18 @@ class MainStoreController extends Controller
     {
         $items = json_decode($request->get('items'));
 
-        $data = $request->only(['transaction_ref','delivery_address','user_id']);
+        $data = $request->only(['transaction_ref','delivery_address','user_id','email','phone','name']);
         $data['identifier'] = 'OD'. HelperController::generateIdentifier(14);
+
         $data['buyer_id'] = $data['user_id'];
+
+        if ($data['user_id'] < 1){
+            if(User::where('email','=',$data['email'])->exists()){
+                $user = User::where('email','=',$data['email'])->first();
+                $data['buyer_id'] = $user->id;
+            }
+        }
+
         unset($data['user_id']);
 
 
@@ -195,7 +329,10 @@ class MainStoreController extends Controller
             ];
 
             //remove item from cart
-            UserCart::find($item->id)->delete();
+            if ($data['buyer_id'] > 0 && isset($item->id)){
+
+                UserCart::find($item->id)->delete();
+            }
         }
 
         //Attach total
@@ -205,7 +342,12 @@ class MainStoreController extends Controller
 
         //generate invoice
         UserInvoice::create($invoice);
-        $cartItems = StoreHelperController::getCartItems();
+
+        if ($data['buyer_id'] > 0) {
+            $cartItems = StoreHelperController::getCartItems();
+        }else{
+            $cartItems = [];
+        }
 
         return response()->json([
             'invoice' => $invoice,

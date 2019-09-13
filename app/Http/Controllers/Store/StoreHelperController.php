@@ -643,7 +643,23 @@ class StoreHelperController extends Controller
 
     public static function getCartItems()
     {
-        $user_id = auth()->user()->id;
-        return UserCart::with('product')->with('store')->where('user_id','=',$user_id)->get();
+        if (auth()->check()) {
+            $user_id = auth()->user()->id;
+            return UserCart::with('product')->with('store')->where('user_id','=',$user_id)->get();
+        }
+
+//        if (session()->has('cartItems')) {
+//            $cartItems = session('cartItems');
+//            $cartArrays = json_decode($cartItems);
+//
+//            foreach ($cartArrays as $cartArray) {
+//                $cartArray->product = UserVentureProduct::find($cartArray->product_id);
+//                $cartArray->store =  UserStore::find($cartArray->product->store_id);
+//            }
+//
+//            return (array) $cartArrays;
+//        }
+
+        return [];
     }
 }
