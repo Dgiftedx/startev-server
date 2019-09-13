@@ -13,9 +13,11 @@ class AddPartnershipTermsToBusinessesTable extends Migration
      */
     public function up()
     {
-        Schema::table('businesses', function (Blueprint $table) {
-            $table->longText('partnership_terms')->nullable()->after('website');
-        });
+        if (!Schema::hasColumn('businesses','partnership_terms')){
+            Schema::table('businesses', function (Blueprint $table) {
+                $table->longText('partnership_terms')->nullable()->after('website');
+            });
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ class AddPartnershipTermsToBusinessesTable extends Migration
      */
     public function down()
     {
-        Schema::table('businesses', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasColumn('businesses','partnership_terms')){
+            Schema::table('businesses', function (Blueprint $table) {
+                $table->dropColumn('partnership_terms');
+            });
+        }
     }
 }

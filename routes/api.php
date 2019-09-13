@@ -212,16 +212,16 @@ Route::group([
     //////////////////////////////////////////////////////////////////////////////
     /// Business store routes starts
     Route::post('store-manager/order-action','Store\BusinessStoreController@orderAction');
-    Route::post('store-manager/add-product/{userId}','Store\BusinessStoreController@addProduct');
+    Route::post('store-manager/add-product/{ventureId}/{userId}','Store\BusinessStoreController@addProduct');
     Route::get('store-manager/get-ventures/{userId}','Store\BusinessStoreController@getVentures');
     Route::post('store-manager/add-venture/{businessId}','Store\BusinessStoreController@addVenture');
     Route::get('store-manager/get-settings/{businessId}','Store\BusinessStoreController@getSettings');
-    Route::get('store-manager/get-dashboard-data/{userId}','Store\BusinessStoreController@dashboard');
-    Route::get('store-manager/get-store-orders/{userId}','Store\BusinessStoreController@storeOrders');
+    Route::get('store-manager/get-dashboard-data/{ventureId}/{userId}','Store\BusinessStoreController@dashboard');
+    Route::get('store-manager/get-store-orders/{ventureId}/{userId}','Store\BusinessStoreController@storeOrders');
     Route::get('store-manager/get-single-product/{Id}','Store\BusinessStoreController@singleProduct');
     Route::get('store-manager/track-order/{Id}/{business}','Store\BusinessStoreController@trackOrder');
     Route::get('store-manager/delete-single-product/{Id}','Store\BusinessStoreController@deleteProduct');
-    Route::get('store-manager/get-store-products/{userId}','Store\BusinessStoreController@storeProducts');
+    Route::get('store-manager/get-store-products/{ventureId}/{userId}','Store\BusinessStoreController@storeProducts');
     Route::post('store-manager/edit-product/{product}/{userId}','Store\BusinessStoreController@editProduct');
     Route::post('store-manager/update-settings/{businessId}','Store\BusinessStoreController@updateSettings');
     Route::post('store-manager/update-venture/{venture}/{businessId}','Store\BusinessStoreController@updateVenture');

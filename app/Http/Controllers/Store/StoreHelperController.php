@@ -344,13 +344,15 @@ class StoreHelperController extends Controller
     /**
      * Get recent orders
      * @param $userId
-     * @return mixed
+     * @param $ventureId
+     * @return array
      */
-    public static function recentBusinessOrders($userId)
+    public static function recentBusinessOrders($userId, $ventureId)
     {
         //Build query array
         $query = [
-            'business_id' => Business::businessId($userId)
+            'business_id' => Business::businessId($userId),
+            'venture_id' => $ventureId
         ];
 
         $orders = [];
@@ -388,18 +390,19 @@ class StoreHelperController extends Controller
     }
 
 
-
     /**
-     * Get business orders total amount
+     * @param $ventureId
      * @param $userId
      * @return float|int
      */
-    public static function businessOrdersTotalAmount( $userId )
+    public static function businessOrdersTotalAmount($userId, $ventureId )
     {
         // If business store has orders
         if (self::businessHasOrders($userId)) {
             //return amount
-            return self::getBusinessOrdersTotalAmount($userId);
+            $query = [];
+            $query['venture_id'] = $ventureId;
+            return self::getBusinessOrdersTotalAmount($userId, $query);
         }
 
         // if there are no orders, return 0
@@ -411,14 +414,17 @@ class StoreHelperController extends Controller
     /**
      * Get delivered business orders
      * @param $userId
+     * @param $ventureId
      * @return float|int
      */
-    public static function businessOrdersDeliveredAmount( $userId )
+    public static function businessOrdersDeliveredAmount( $userId, $ventureId )
     {
         // If business store has orders
         if (self::businessHasOrders($userId)) {
             //return amount
-            return self::getBusinessOrdersDeliveredAmount($userId);
+            $query = [];
+            $query['venture_id'] = $ventureId;
+            return self::getBusinessOrdersDeliveredAmount($userId, $query);
         }
 
         // if there are no orders, return 0
@@ -428,11 +434,13 @@ class StoreHelperController extends Controller
     /**
      * Get business total amount of orders in store
      * @param $userId
+     * @param array $array
      * @return float|int
      */
-    private static function getBusinessOrdersTotalAmount($userId)
+    private static function getBusinessOrdersTotalAmount($userId, $array)
     {
-        $total = UserBusinessOrder::where('business_id','=', Business::businessId($userId))->pluck('amount')->toArray();
+        $array['business_id'] = Business::businessId($userId);
+        $total = UserBusinessOrder::byFilter($array)->pluck('amount')->toArray();
         return array_sum($total);
     }
 
@@ -488,24 +496,24 @@ class StoreHelperController extends Controller
     /**
      * Get business amount of orders delivered so far.
      * @param $userId
+     * @param $array
      * @return float|int
      */
-    private static function getBusinessOrdersDeliveredAmount($userId)
+    private static function getBusinessOrdersDeliveredAmount($userId, $array)
     {
-        $deliveredAmount = UserBusinessOrder::where('business_id','=', Business::businessId($userId))
-            ->where('status','=','delivered')->pluck('amount')->toArray();
+        $array['business_id'] = Business::businessId($userId);
+        $deliveredAmount = UserBusinessOrder::byFilter($array)->where('status','=','delivered')->pluck('amount')->toArray();
         return array_sum($deliveredAmount);
     }
 
 
     /**
-     * Get total partners
-     * @param $userId
+     * @param $array
      * @return mixed
      */
-    public static function totalPartners( $userId )
+    public static function totalPartners( $array )
     {
-        return Partnership::where('business_id','=', Business::businessId($userId))->count();
+        return Partnership::byFilter($array)->count();
     }
 
     public static function businessProducts($query)

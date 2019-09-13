@@ -14,6 +14,7 @@ class UserBusinessOrder extends Model
     protected $fillable = [
         'identifier',
         'store_id',
+        'venture_id',
         'business',
         'business_id',
         'product_sku',

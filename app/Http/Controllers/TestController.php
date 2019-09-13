@@ -7,6 +7,9 @@ use App\Jobs\SendConfirmationMail;
 use App\Jobs\SendEmailNotification;
 use App\Mail\ConfirmationMail;
 use App\Mail\MailNotify;
+use App\Models\Business\UserBusinessOrder;
+use App\Models\Business;
+use App\Models\BusinessVenture;
 use App\Models\Feed;
 use App\Models\User;
 use Carbon\Carbon;
@@ -111,5 +114,22 @@ class TestController extends Controller
             }
 
         dump($collection, $total);
+    }
+
+
+
+    public function resetVentureIds()
+    {
+        $orders = UserBusinessOrder::get(['id','business_id']);
+
+        foreach ($orders as $order) {
+            $venture = BusinessVenture::where('business_id','=',$order->business_id)->first();
+
+            if (!is_null($venture)) {
+//                dd($order->id, $venture->id);
+                UserBusinessOrder::find($order->id)->update(['venture_id' => $venture->id]);
+            }
+        }
+        return "completed successfully";
     }
 }

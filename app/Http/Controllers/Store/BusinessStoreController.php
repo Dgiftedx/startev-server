@@ -43,20 +43,27 @@ class BusinessStoreController extends Controller
 
 
     /**
-     * Get dashboard Data
+     *  Get dashboard Data
+     * @param $ventureId
      * @param $userId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function dashboard( $userId )
+    public function dashboard( $ventureId, $userId )
     {
+
+        $filter = [
+            'business_id' => Business::businessId($userId),
+            'venture_id' => $ventureId
+        ];
+
         // Gather data
         $data = [
-            'orders_amount' => StoreHelperController::businessOrdersTotalAmount($userId),
-            'orders_amount_avg' => UserBusinessOrder::where('business_id','=', Business::businessId($userId))->avg('amount'),
-            'delivered_orders' => StoreHelperController::businessOrdersDeliveredAmount($userId),
-            'delivered_orders_avg' => UserBusinessOrder::where('business_id','=', Business::businessId($userId))->where('status','=','delivered')->avg('amount'),
-            'total_partners' => StoreHelperController::totalPartners($userId),
-            'recent_orders' => StoreHelperController::recentBusinessOrders($userId)
+            'orders_amount' => StoreHelperController::businessOrdersTotalAmount($userId, $ventureId),
+            'orders_amount_avg' => UserBusinessOrder::byFilter($filter)->avg('amount'),
+            'delivered_orders' => StoreHelperController::businessOrdersDeliveredAmount($userId, $ventureId),
+            'delivered_orders_avg' => UserBusinessOrder::byFilter($filter)->where('status','=','delivered')->avg('amount'),
+            'total_partners' => StoreHelperController::totalPartners($filter),
+            'recent_orders' => StoreHelperController::recentBusinessOrders($userId, $ventureId)
         ];
 
         return response()->json($data);
@@ -159,12 +166,14 @@ class BusinessStoreController extends Controller
 
     /**
      * Get Store Orders
+     *
+     * @param $ventureId
      * @param $userId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeOrders( $userId )
+    public function storeOrders( $ventureId, $userId )
     {
-        $query = ['business_id' => Business::businessId($userId)];
+        $query = ['business_id' => Business::businessId($userId), 'venture_id' => $ventureId];
         $orders = StoreHelperController::businessGetOrders($query);
         return response()->json($orders);
     }
@@ -200,13 +209,16 @@ class BusinessStoreController extends Controller
 
     /**
      * Get store products
+     *
+     * @param $ventureId
      * @param $userId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeProducts( $userId )
+    public function storeProducts( $ventureId, $userId )
     {
         $query = [
-            'business_id' => Business::businessId($userId)
+            'business_id' => Business::businessId($userId),
+            'venture_id' => $ventureId
         ];
 
         $products = StoreHelperController::businessProducts($query);
@@ -217,17 +229,20 @@ class BusinessStoreController extends Controller
 
     /**
      * Store new product to store
+     *
      * @param Request $request
+     * @param $ventureId
      * @param $userId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addProduct( Request $request, $userId )
+    public function addProduct( Request $request,$ventureId, $userId )
     {
         $data = $request->all();
 
         $images = [];
 
         $data['business_id'] = Business::businessId($userId);
+        $data['venture_id'] = $ventureId;
         $data['slug'] = uniqid(rand(), true);
 
 //        $data['sizes'] = json_decode($data['sizes']);

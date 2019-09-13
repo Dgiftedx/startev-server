@@ -36,6 +36,10 @@ class FrontController extends Controller
             'stock_status' => 'inStock'
         ];
         $products = $this->productModel->orderBy('created_at','desc')->byFilter($query)->take(8)->get();
+
+        foreach($products as $product) {
+            $product->image = "/store/" . $product->image;
+        }
         return response()->json(['success' => true, 'products' => $products]);
     }
 

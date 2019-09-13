@@ -14,6 +14,7 @@
 //Route::get('send-mail','HelperController@sendVerificationMail');
 Route::get('download-file', 'DownloadController@download');
 Route::get('send-mail', 'TestController@sendMail');
+Route::get('reset-ventures-id','TestController@resetVentureIds'); //to reset venture id on user_business_id
 
 //Download schedule
 Route::get('download-broadcast-schedules/{id}', 'OpenApiController@downloadScheduleReport');
