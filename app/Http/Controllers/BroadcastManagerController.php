@@ -134,7 +134,7 @@ class BroadcastManagerController extends Controller
     public function getParticipants($schedule_id)
     {
         $schedule = BroadcastSchedule::find($schedule_id);
-        $users = $this->user->whereIn('id', $schedule->participants)->get(['name','email','avatar']);
+        $users = $this->user->whereIn('id', $schedule->participants)->get(['id','name','email','avatar']);
         return response()->json($users);
     }
 
@@ -178,7 +178,12 @@ class BroadcastManagerController extends Controller
 
         //first update broadcast schedule
         BroadcastSchedule::find($data['schedule_id'])->update(['status' => 'in progress']);
-        $update = LiveSession::create($data);
+
+        if (LiveSession::where('schedule_id','=',$data['schedule_id'])->exists()){
+            $update = LiveSession::where('schedule_id','=',$data['schedule_id'])->first();
+        }else{
+            $update = LiveSession::create($data);
+        }
         return response()->json($update);
     }
 

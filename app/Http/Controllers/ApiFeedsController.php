@@ -82,7 +82,7 @@ class ApiFeedsController extends Controller
                     'roleData' => HelperController::fetchRoleData($item->user_id),
                     'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
                     'hasLiked' => $this->user->where('id','=',$item->user_id)->first()->hasLiked($item), //$item->hasLiked,
-                    'title' => $item->title,
+//                    'title' => $item->title,
                     'likers' => $item->likers()->get(),
                     'comments'=> $item->feedComments,
                     'image' => $item->image,
@@ -130,6 +130,13 @@ class ApiFeedsController extends Controller
     }
 
 
+    public function updateFeed( Request $request )
+    {
+        $id = $request->get('id');
+        Feed::find($id)->update(['body' => $request->get('body')]);
+        return response()->json(['success' => true]);
+    }
+
     public function post( Request $request )
     {
         $data = $request->all();
@@ -137,11 +144,14 @@ class ApiFeedsController extends Controller
 
         $convertToLink = new \Nahid\Linkify\Linkify(array('attr' => array('class' => 'feed-link', 'target' => '_blank')));
 
+        if (is_null($data['post_type'])) {
+            $data['post_type'] = "post";
+        }
         $feedData = [
             'postType' => $data['post_type'],
             'roleData' => HelperController::fetchRoleData($data['user_id']),
             'user' => $this->user->where('id','=',$data['user_id'])->first(['id','slug','name','avatar']),
-            'title' => $data['title'],
+//            'title' => $data['title'],
             'body' => $convertToLink->process($data['body']),
             'hasLiked' => 0,
             'time' => Carbon::now()
@@ -149,7 +159,7 @@ class ApiFeedsController extends Controller
 
         $databaseUpdate = [
             'user_id' => $data['user_id'],
-            'title' => $data['title'],
+//            'title' => $data['title'],
             'body' => $convertToLink->process($data['body']),
             'post_type' => $data['post_type'],
             'hasLiked' => 0,
@@ -161,17 +171,10 @@ class ApiFeedsController extends Controller
 
             foreach ($request->file('images') as $file) {
                 //upload image and add link to array
-//                $path = $this->url. '/storage'. HelperController::processImageUpload($file, "homeFeed",'feeds',640,800);
                 $path = '/storage'. HelperController::processImageUpload($file, "homeFeed",'feeds',640,800);
                 $feedData['images'][] = $path;
                 $databaseUpdate['images'][] = $path;
             }
-
-//            Cloudder::Upload($request->file('image'));
-//            $image = Cloudder::getPublicId();
-//
-//            $databaseUpdate['image'] = $image;
-//            $feedData['image'] = $image;
 
         }
 
@@ -182,7 +185,7 @@ class ApiFeedsController extends Controller
         Pusher::trigger('my-channel', 'my-event', $feedData);
         $user = User::find($data['user_id']);
 
-        UserNotification::create(['user_id' => $data['user_id'], 'target_id' => 0, 'title' => "New feed has been published", 'content' => "{$user->name} published  {$data['title']} to news feed."]);
+        UserNotification::create(['user_id' => $data['user_id'], 'target_id' => 0, 'title' => "New feed has been published", 'content' => "{$user->name} published to news feed."]);
         $mailContent['message'] = "Your Post, <strong>{$update->title}</strong>, has been published successfully. Login to see user reactions.";
         $mailContent['to'] = $user->email;
 
@@ -317,7 +320,7 @@ class ApiFeedsController extends Controller
                     'roleData' => HelperController::fetchRoleData($item->user_id),
                     'user' => $this->user->where('id','=',$item->user_id)->first(['id','slug','name','avatar']),
                     'hasLiked' => $item->hasLiked,
-                    'title' => $item->title,
+//                    'title' => $item->title,
                     'likers' => $item->likers()->get(),
                     'comments'=> $item->feedComments,
                     'image' => $item->image,

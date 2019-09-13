@@ -292,6 +292,8 @@ class ApiAccountController extends Controller
     {
         $mentorsId = $this->gatherFeaturedMentors();
 
+        $mentorsId = array_slice($mentorsId, 0, 12);
+
         $mentors = $this->user->whereIn('id',$mentorsId)->get(['id','avatar','name','slug']);
 
         if (count($mentors) > 0) {
@@ -496,7 +498,7 @@ class ApiAccountController extends Controller
             $this->user->find($id)->update(['bio' => $bio]);
             unset($data['bio']);
         }
-        
+
         $mentor = Mentor::where('user_id','=',$id)->first();
         Mentor::find($mentor->id)->update($data);
         $update = Mentor::find($mentor->id);

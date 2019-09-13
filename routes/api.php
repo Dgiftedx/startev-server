@@ -82,6 +82,7 @@ Route::group([
     Route::post('upload-video', 'ApiFeedsController@uploadVideo');
     Route::post('feed-post-article','ApiFeedsController@post');
     Route::post('delete-feed','ApiFeedsController@deleteFeed');
+    Route::post('api-update-feed','ApiFeedsController@updateFeed');
     Route::get('single-feed/{feed_id}','ApiFeedsController@showSingle');
     Route::get('increase-feed-view/{id}','ApiFeedsController@increaseFeedViews');
 
