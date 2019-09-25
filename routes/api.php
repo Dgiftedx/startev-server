@@ -130,8 +130,8 @@ Route::group([
     //Partner
     Route::get('get-partners','ApiVentureController@getPartners');
     Route::get('single-venture/{identifier}','ApiVentureController@singleVenture');
-    Route::get('apply-to-partner/{venture}/{user_id}','ApiVentureController@applyToPartner');
-    Route::get('accept-partnership/{partnership_id}/{user_id}','ApiVentureController@acceptPartnership');
+    Route::post('apply-to-partner','ApiVentureController@applyToPartner');
+    Route::post('accept-partnership','ApiVentureController@acceptPartnership');
 
 
     //Publication
@@ -223,7 +223,8 @@ Route::group([
     Route::get('get-single-order/{orderId}', 'Store\UserStoreController@singleOrder');
     Route::post('save-store-settings/{user}','Store\UserStoreController@saveStoreSettings');
     Route::get('sync-venture-products/{user}/{venture}','Store\UserStoreController@syncVentureProducts');
-    Route::get('import-venture-products/{user}/{venture}','Store\UserStoreController@importVentureProducts');
+    Route::post('import-venture-products','Store\UserStoreController@importVentureProducts');
+    Route::get('fetch-venture-products/{user}/{venture}','Store\UserStoreController@fetchVentureProducts');
     Route::get('detach-venture-products/{user}/{venture}','Store\UserStoreController@detachVentureProducts');
     Route::get('get-single-product/{Id}','Store\UserStoreController@singleProduct');
     Route::post('edit-product/{product}/{userId}','Store\UserStoreController@editProduct');

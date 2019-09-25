@@ -142,22 +142,29 @@ class ApiVentureController extends Controller
     }
 
 
-    public function applyToPartner( $ventureId, $userId )
+    public function applyToPartner(Request $request)
     {
+
+        $input = $request->all();
         $data = [];
-        $role = HelperController::fetchRoleData($userId);
-        $venture = BusinessVenture::where('id','=',$ventureId)->first();
+        $role = HelperController::fetchRoleData($input['user_id']);
+        $venture = BusinessVenture::where('id','=',$input['id'])->first();
         $data['type'] = $role['role'];
-        $data['user_id'] = $userId;
+        $data['user_id'] = $input['user_id'];
         $data['role_data_id'] = $role['data']->id;
-        $data['venture_id'] = $ventureId;
+        $data['venture_id'] = $input['id'];
         $data['business_id'] = $venture->business_id;
+
+        //set application letter is it's set
+        if(isset($input['letter'])) {
+            $data['letter'] = $input['letter'];
+        }
 
         $id = Partnership::create($data);
         $update = Partnership::find($id);
 
         $mailContent['message'] = "Your partnership request with <strong>{$venture->venture_name}</strong> has been submitted. You'll be notified upon approval.";
-        $user = User::find($userId);
+        $user = User::find($input['user_id']);
         $mailContent['to'] = $user->email;
         $mailContent['subject'] = "Partnership Update";
 
@@ -166,18 +173,20 @@ class ApiVentureController extends Controller
         return response()->json($update[0]);
     }
 
-    public function acceptPartnership( $partnershipId, $userId )
+    public function acceptPartnership( Request $request )
     {
-        $user = $this->user->find($userId);
+        $input = $request->all();
+
+        $user = $this->user->find($input['user_id']);
         $ref_link = HelperController::generateIdentifier(15);
-        $record = Partnership::find($partnershipId);
+        $record = Partnership::find($input['partner_id']);
 
         // Handle user store as partnership comes with automatic store activation.
         //only and only if it's student
         // If this user doesn't has a store in place, create one.
         $messageAppend = "";
         if (($record->type === 'student') || ($record->type === 'graduate')) {
-            StoreHelperController::CreateUserStore($userId);
+            StoreHelperController::CreateUserStore($input['user_id']);
             $messageAppend = "<br/>In case you don't have a store, a store has been created for you. Login now to activate by updating your store details";
         }
 
@@ -220,6 +229,6 @@ class ApiVentureController extends Controller
             $ventures = BusinessVenture::with('business')->with('business.user')->whereIn('id', $searchIds)->get();
         }
 
-        return response()->json($ventures);
+        return response()->json($ventures); 
     }
 }

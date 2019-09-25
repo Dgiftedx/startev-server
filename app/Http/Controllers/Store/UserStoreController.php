@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\HelperController;
 use App\Models\Business\UserBusinessOrder;
+use App\Models\Business\UserBusinessProduct;
 use App\Models\Partnership;
 use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureOrder;
@@ -187,39 +188,51 @@ class UserStoreController extends Controller
     }
 
 
+    public function fetchVentureProducts($user, $ventureId)
+    {
+        //ensure to get products that are not already in user's store
+
+        //Get store ID
+        $storeId = UserStore::storeId($user);
+
+        //pluck venture products ID
+        $imported = UserVentureProduct::where('store_id','=', $storeId)->pluck('product_id')->toArray();
+        //make selective selection
+        $products = UserBusinessProduct::whereNotIn('id', $imported)->where('venture_id','=',$ventureId)->orderBy('id','desc')->get();
+
+        return response()->json(['success' => true, 'products' => $products]);
+    }
+
+
     /**
-     * Import Venture Products
-     * @param $userId
-     * @param $ventureId
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function importVentureProducts( $userId, $ventureId )
+    public function importVentureProducts(Request $request)
     {
+
+        $data = $request->all();
         // get business id;
-        $partnership = Partnership::where('user_id','=',$userId)->where('venture_id','=',$ventureId)->first();
+        $partnership = Partnership::where('user_id','=',$data['user_id'])->where('venture_id','=', $data['venture_id'])->first();
 
         $query = [
             'business_id' => $partnership->business_id,
-            'venture_id' => $ventureId
+            'venture_id' => $partnership->venture_id
         ];
 
-        $products = StoreHelperController::getBusinessProducts($query);
+        $imports = array_unique($data['imports']);
+        $products = UserBusinessProduct::whereIn('id', $imports)->byFilter($query)->get();
 
         foreach ($products as $product){
             //Attach user store ID
-            $product->store_id = UserStore::storeId($userId);
+            $product->store_id = UserStore::storeId($data['user_id']);
+            //create product copy into user store
 
-            //check if this product already exists
-            if(UserVentureProduct::where('store_id','=', $product->store_id)->where('sku','=',$product->sku)->exists()){
-                //only update
-                //but i don't think this is necessary as this might revert any changes made
-                // to user products before this import.
-            }else{
-
-                //create product copy into user store
+            if (!UserVentureProduct::where('product_id', '=', $product->id)->exists()) {
                 UserVentureProduct::create([
                     'store_id' => $product->store_id,
-                    'venture_id' => $ventureId,
+                    'venture_id' => $partnership->venture_id,
+                    'product_id' => $product->id,
                     'sku' => $product->sku,
                     'slug' => uniqid(rand(), true),
                     'images' => $product->images,
@@ -235,15 +248,7 @@ class UserStoreController extends Controller
             }
         }
 
-
-        //then we need to set the imported_flag to avoid future import
-
-        if (UserVentureProduct::where('store_id', '=', UserStore::storeId($userId))->where('venture_id', '=', $ventureId)->count() > 0) {
-            Partnership::find($partnership->id)->update(['is_products_imported' => true ]);
-            return response()->json(['success' => true, 'message' => "Product importation completed"]);
-        }
-
-        return response()->json(['success' => true, 'message' => "Action Done, But venture has no product to import."]);
+        return response()->json(['success' => true]);
     }
 
 
