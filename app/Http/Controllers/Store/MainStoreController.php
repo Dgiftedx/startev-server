@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\HelperController;
 use App\Models\Business\UserBusinessOrder;
+use App\Models\Business\UserBusinessProduct;
+use App\Models\BusinessVenture;
 use App\Models\Buyer;
 use App\Models\Store\UserCart;
 use App\Models\Store\UserInvoice;
@@ -112,6 +114,7 @@ class MainStoreController extends Controller
             //check if item already exist in cart
             if (!UserCart::where('user_id','=',$data['user_id'])
                 ->where('product_id','=',$data['product_id'])
+                ->where('original_product_id','=','original_product_id')
                 ->where('store_identifier','=',$data['store_identifier'])->exists()) {
 
                 //log new item
@@ -275,6 +278,10 @@ class MainStoreController extends Controller
             if(User::where('email','=',$data['email'])->exists()){
                 $user = User::where('email','=',$data['email'])->first();
                 $data['buyer_id'] = $user->id;
+                $data['name'] = $user->name?$user->name:null;
+                $data['email'] = $user->email?$user->email:null;
+                $data['phone'] = $user->phone?$user->phone:null;
+                $data['location'] = $user->address?$user->address:null;
             }
         }
 
@@ -293,6 +300,7 @@ class MainStoreController extends Controller
 
             $store = UserVentureProduct::find($item->product_id);
             $business = StoreHelperController::fetchBusinessId($store->venture_id);
+            $mainProduct = UserBusinessProduct::find($item->original_product_id)->first();
 
             $data['product_id'] = $item->product_id;
             $data['business_id'] = $business;
@@ -302,6 +310,9 @@ class MainStoreController extends Controller
             $data['product_sku'] = $item->product_sku;
             $data['status'] = 'processing';
             $data['forwarded'] = 1;
+            $data['venture_id'] = $mainProduct->venture_id;
+            //insert original product id
+            $data['original_product_id'] = $item->original_product_id;
 
             //Forward orders to business
             $saved = UserBusinessOrder::create($data);
@@ -330,7 +341,6 @@ class MainStoreController extends Controller
 
             //remove item from cart
             if ($data['buyer_id'] > 0 && isset($item->id)){
-
                 UserCart::find($item->id)->delete();
             }
         }
@@ -349,10 +359,19 @@ class MainStoreController extends Controller
             $cartItems = [];
         }
 
+
+        //dispatch notification mails
+        $this->sendOrderMails();
+
         return response()->json([
             'invoice' => $invoice,
             'cartItems' => $cartItems,
             'message' => "Your order has been successfully place. Our Rep will be in touch for your delivery"
         ]);
+    }
+
+    private function sendOrderMails()
+    {
+
     }
 }

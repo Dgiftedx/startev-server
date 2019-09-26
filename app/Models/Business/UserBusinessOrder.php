@@ -2,6 +2,7 @@
 
 namespace App\Models\Business;
 
+use App\Models\BusinessVenture;
 use App\Models\Buyer;
 use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureProduct;
@@ -15,6 +16,7 @@ class UserBusinessOrder extends Model
         'identifier',
         'store_id',
         'venture_id',
+        'original_product_id',
         'name',
         'email',
         'phone',
@@ -48,6 +50,16 @@ class UserBusinessOrder extends Model
     public function store()
     {
         return $this->belongsTo(UserStore::class, 'store_id');
+    }
+
+    public function venture()
+    {
+        return $this->belongsTo(BusinessVenture::class, 'venture_id');
+    }
+
+    public function mainProduct()
+    {
+        return $this->belongsTo(UserBusinessProduct::class, 'original_product_id');
     }
 
     public function product()

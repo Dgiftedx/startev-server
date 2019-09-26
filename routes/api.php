@@ -240,6 +240,7 @@ Route::group([
     Route::get('store-manager/get-settings/{businessId}','Store\BusinessStoreController@getSettings');
     Route::get('store-manager/get-dashboard-data/{ventureId}/{userId}','Store\BusinessStoreController@dashboard');
     Route::get('store-manager/get-store-orders/{ventureId}/{userId}','Store\BusinessStoreController@storeOrders');
+    Route::get('store-manager/get-single-order/{orderId}', 'Store\BusinessStoreController@singleOrder');
     Route::get('store-manager/get-single-product/{Id}','Store\BusinessStoreController@singleProduct');
     Route::get('store-manager/track-order/{Id}/{business}','Store\BusinessStoreController@trackOrder');
     Route::get('store-manager/delete-single-product/{Id}','Store\BusinessStoreController@deleteProduct');

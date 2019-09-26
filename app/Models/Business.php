@@ -49,6 +49,11 @@ class Business extends Model implements Searchable
         );
     }
 
+    public function scopeGetUser($query, $id)
+    {
+        return User::find($query->find($id)->user_id);
+    }
+
 
     public function businessUser($user_id)
     {

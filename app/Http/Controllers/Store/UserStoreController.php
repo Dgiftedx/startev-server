@@ -138,7 +138,7 @@ class UserStoreController extends Controller
     public function singleOrder( $orderId )
     {
         $orders = UserVentureOrder::with('buyer')
-            ->with('product')
+            ->with(['product','venture'])
             ->where('identifier','=', $orderId)->get();
 
         $all = [
@@ -417,7 +417,7 @@ class UserStoreController extends Controller
      */
     public function singleProduct( $id )
     {
-        $result = UserVentureProduct::find($id);
+        $result = UserVentureProduct::with('venture')->find($id);
         return response()->json($result);
     }
 

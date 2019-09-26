@@ -2,6 +2,8 @@
 
 namespace App\Models\Store;
 
+use App\Models\Business\UserBusinessProduct;
+use App\Models\BusinessVenture;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +11,13 @@ class UserVentureOrder extends Model
 {
     protected $fillable = [
         'identifier',
+        'venture_id',
+        'original_product_id',
+        'name',
+        'email',
+        'phone',
+        'location',
+        'batch_id',
         'store_id',
         'product_id',
         'product_sku',
@@ -35,6 +44,16 @@ class UserVentureOrder extends Model
     public function buyer()
     {
         return $this->belongsTo(User::class, 'buyer_id');
+    }
+
+    public function venture()
+    {
+        return $this->belongsTo(BusinessVenture::class, 'venture_id');
+    }
+
+    public function mainProduct()
+    {
+        return $this->belongsTo(UserBusinessProduct::class,'original_product_id');
     }
 
     public function product()

@@ -2,6 +2,8 @@
 
 namespace App\Models\Store;
 
+use App\Models\Business\UserBusinessProduct;
+use App\Models\BusinessVenture;
 use Illuminate\Database\Eloquent\Model;
 
 class UserVentureProduct extends Model
@@ -18,6 +20,16 @@ class UserVentureProduct extends Model
     public function store()
     {
         return $this->belongsTo(UserStore::class, 'store_id');
+    }
+
+    public function venture()
+    {
+        return $this->belongsTo(BusinessVenture::class, 'venture_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(UserBusinessProduct::class, 'product_id');
     }
 
     public function scopeByFilter($query,$data){

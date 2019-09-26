@@ -247,29 +247,22 @@ class StoreHelperController extends Controller
     {
         $orders = [];
 
-        $products = [];
-        UserVentureProduct::orderBy('id','asc')->get()->mapToGroups(function($item) use (&$products) {
-            $products[$item->sku] = $item;
-            return [];
-        });
-
         UserVentureOrder::with('buyer')
-            ->with('product')
+            ->with(['product','mainProduct'])
             ->byFilter($query)
             ->get()
-            ->mapToGroups( function($item) use (&$orders, $products) {
-
+            ->mapToGroups( function($item) use (&$orders) {
                 $orders[$item->identifier][] = [
                     'name' => $item->buyer->name,
                     'order_id' => $item->identifier,
-                    'image' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->images[0]:'',
-                    'product_name' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->product_name:'',
+                    'image' => $item->mainProduct->images?$item->mainProduct->images[0]:'',
+                    'product_name' => $item->mainProduct->product_name,
                     'amount' => $item->amount,
                     'quantity' => $item->quantity,
                     'date' => $item->created_at,
-                    'status' => $item->status
+                    'status' => $item->status,
+                    'venture' => $item->venture
                 ];
-
 
                 return [];
             });
@@ -324,12 +317,6 @@ class StoreHelperController extends Controller
         // Return query result
         return $reviews;
     }
-
-
-
-
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -452,32 +439,23 @@ class StoreHelperController extends Controller
     public static function businessGetOrders( $query )
     {
         $orders = [];
-
-        $products = [];
-        UserBusinessProduct::orderBy('id','asc')->get()->mapToGroups(function($item) use (&$products) {
-
-            $products[$item->sku] = $item;
-            return [];
-        });
-
-
-        UserBusinessOrder::with('buyer')
+        UserBusinessOrder::with(['buyer','mainProduct','mainProduct.venture','store'])
             ->byFilter($query)
             ->get()
-            ->mapToGroups( function($item) use (&$orders, $products) {
-
+            ->mapToGroups( function($item) use (&$orders) {
                 $orders[$item->identifier][] = [
                     'name' => $item->buyer?$item->buyer->name : "N/A",
                     'product_sku' => $item->product_sku,
                     'order_id' => $item->identifier,
-                    'image' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->images[0]:'',
-                    'product_name' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->product_name:'',
+                    'image' => $item->mainProduct->images?$item->mainProduct->images[0]:'',
+                    'product_name' => $item->mainProduct->product_name,
                     'amount' => $item->amount,
                     'quantity' => $item->quantity,
-                    'date' => Carbon::parse($item->created_at)->toDateTimeString(),
-                    'status' => $item->status
+                    'date' => $item->created_at,
+                    'status' => $item->status,
+                    'venture' => $item->venture,
+                    'store' => $item->store
                 ];
-
 
                 return [];
             });
@@ -543,6 +521,7 @@ class StoreHelperController extends Controller
     {
         $products = [];
         UserVentureProduct::orderBy('id','desc')
+            ->with('venture')
             ->where('store_id', '=', $query['store_id'])
             ->get()
             ->mapToGroups(function($item) use (&$products) {
@@ -550,6 +529,7 @@ class StoreHelperController extends Controller
                     'image' => $item->images? $item->images[0]: null,
                     'name' => $item->product_name,
                     'sku' => $item->sku,
+                    'venture' => $item->venture?$item->venture->venture_name:'N/A',
                     'amount' => $item->product_price,
                     'status' => $item->stock_status,
                     'id' => $item->id,
@@ -647,18 +627,6 @@ class StoreHelperController extends Controller
             $user_id = auth()->user()->id;
             return UserCart::with('product')->with('store')->where('user_id','=',$user_id)->get();
         }
-
-//        if (session()->has('cartItems')) {
-//            $cartItems = session('cartItems');
-//            $cartArrays = json_decode($cartItems);
-//
-//            foreach ($cartArrays as $cartArray) {
-//                $cartArray->product = UserVentureProduct::find($cartArray->product_id);
-//                $cartArray->store =  UserStore::find($cartArray->product->store_id);
-//            }
-//
-//            return (array) $cartArrays;
-//        }
 
         return [];
     }

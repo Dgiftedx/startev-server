@@ -12,6 +12,7 @@ use App\Models\Store\UserInvoice;
 use App\Models\Store\UserVentureOrder;
 use App\Models\User;
 use App\Models\Business\UserBusinessProduct;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -176,6 +177,26 @@ class BusinessStoreController extends Controller
         $query = ['business_id' => Business::businessId($userId), 'venture_id' => $ventureId];
         $orders = StoreHelperController::businessGetOrders($query);
         return response()->json($orders);
+    }
+
+
+    public function singleOrder( $orderId )
+    {
+        $orders = UserBusinessOrder::
+            with(['mainProduct','venture','store','buyer'])
+            ->where('identifier','=', $orderId)->get();
+
+        $all = [
+            'name' => $orders[0]->buyer->name,
+            'email' => $orders[0]->buyer->email,
+            'phone' => $orders[0]->buyer->phone,
+            'delivery_address' => $orders[0]->delivery_address,
+            'order_date' => Carbon::parse($orders[0]->created_at)->toDateTimeString(),
+            'orders' => $orders,
+            'transaction_ref' => $orders[0]->transaction_ref
+        ];
+
+        return response()->json($all);
     }
 
 

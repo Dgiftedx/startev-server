@@ -2,6 +2,7 @@
 
 namespace App\Models\Business;
 
+use App\Models\BusinessVenture;
 use Illuminate\Database\Eloquent\Model;
 
 class UserBusinessProduct extends Model
@@ -14,6 +15,11 @@ class UserBusinessProduct extends Model
         'colors' => 'array',
         'sizes' => 'array'
     ];
+
+    public function venture()
+    {
+        return $this->belongsTo(BusinessVenture::class, 'venture_id');
+    }
 
     public function scopeByFilter($query,$data){
         $whereClause=[];
