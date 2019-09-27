@@ -77,7 +77,8 @@ Route::group([
     Route::get('remove-header-image/{id}', 'ApiAccountController@removeBgImage');
     Route::post('update-user-header-image/{id}','ApiAccountController@updateHeaderImage');
     Route::post('submit-verification','ApiAccountController@submitVerification');
-
+    Route::post('address-search-places','OpenApiController@searchPlacesByAddress');
+    Route::post('main-store-calculate-delivery','OpenApiController@calculateDelivery');
     Route::post('generate-code', 'ApiAccountController@generateCode');
 
     //Industries
