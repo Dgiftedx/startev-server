@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Mail\MailController;
 use App\Jobs\SendConfirmationMail;
 use App\Jobs\SendEmailNotification;
+use App\Jobs\sendMessageCampaign;
 use App\Mail\ConfirmationMail;
 use App\Mail\MailNotify;
 use App\Models\Business\UserBusinessOrder;
@@ -43,17 +44,13 @@ class TestController extends Controller
 
     public function sendMail()
     {
-        $mailContents = [
-            'to' => "olubunmivictor6@gmail.com",
-            'subject' => 'Confirm Your Email Address :: Startev Africa',
-            'message' => "Welcome Victor <br/> Please confirm your email address by clicking the button below. You might not be able to log in without email confirmation",
-            'token' => HelperController::generateIdentifier(20),
-            'base_url' => 'https://startev.africa'
-        ];
 
-//        Mail::to($mailContents['to'])->send(new ConfirmationMail($mailContents));
-        dispatch(new SendConfirmationMail($mailContents));
-        return response("mail sent successfully");
+        $mailContent['message'] = "This is a testing mail";
+        $mailContent['subject'] = "Testing";
+        $mailContent['recipients'] = ['olubunmivictor6@gmail.com'];
+        dispatch(new sendMessageCampaign($mailContent));
+
+        return "success";
     }
 
 

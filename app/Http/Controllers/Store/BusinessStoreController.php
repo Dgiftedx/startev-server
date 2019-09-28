@@ -221,8 +221,7 @@ class BusinessStoreController extends Controller
         }
 
 
-        $message = "Order not found. It might be that this order was made via partnered store. 
-        In such case if they haven't forward the order, it won't be available for you to track.";
+        $message = "Order not found. It might be that this order was made via partnered store.";
 
         return response()->json(['success' => false, 'message' => $message]);
     }

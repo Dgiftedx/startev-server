@@ -46,22 +46,22 @@ class MailManagerController extends Controller
 
             switch ($data['user_group']) {
                 case 'graduates':
-                    $ids = Graduate::pluck('id')->toArray();
+                    $ids = Graduate::pluck('user_id')->toArray();
                     $recipients = User::whereIn('id',$ids)->pluck('email')->toArray();
                     break;
 
                 case 'students':
-                    $ids = Student::pluck('id')->toArray();
+                    $ids = Student::pluck('user_id')->toArray();
                     $recipients = User::whereIn('id',$ids)->pluck('email')->toArray();
                     break;
 
                 case 'mentors':
-                    $ids = Mentor::pluck('id')->toArray();
+                    $ids = Mentor::pluck('user_id')->toArray();
                     $recipients = User::whereIn('id',$ids)->pluck('email')->toArray();
                     break;
 
                 case 'businesses':
-                    $ids = Business::pluck('id')->toArray();
+                    $ids = Business::pluck('user_id')->toArray();
                     $recipients = User::whereIn('id',$ids)->pluck('email')->toArray();
                     break;
 
@@ -73,6 +73,7 @@ class MailManagerController extends Controller
             $mailContent['message'] = $data['message'];
             $mailContent['subject'] = $data['subject'];
             $mailContent['recipients'] = $recipients;
+
             dispatch(new sendMessageCampaign($mailContent));
             return response()->json(['success' => true, "message" => "Message is being dispatched."]);
         }
