@@ -11,6 +11,16 @@
             <ul id="sidebarnav">
                 <li class="nav-small-cap">Main</li>
                 <li class="{{ $route === 'home' ? 'active' : '' }}"> <a class="waves-effect waves-dark" href="{{ route('home') }}"><i class="mdi mdi-gauge"></i>Dashboard </a></li>
+
+                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:;" aria-expanded="false"><i class="mdi mdi-shopping"></i><span class="hide-menu">Manage Orders</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="{{ route('admin new orders') }}">New Orders</a></li>
+                        <li><a href="{{ route('admin confirmed orders') }}">Confirmed Orders</a></li>
+                        <li><a href="{{ route('admin delivered orders') }}">Delivered Orders</a></li>
+                        <li><a href="{{ route('admin cancelled orders') }}">Cancelled Orders</a></li>
+                    </ul>
+                </li>
+
                 <li> <a class="has-arrow waves-effect waves-dark" href="javascript:;" aria-expanded="false"><i class="mdi mdi-account-box"></i><span class="hide-menu">Admin Users</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ route('admin users') }}">Manage Users</a></li>

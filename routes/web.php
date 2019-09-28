@@ -57,6 +57,16 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('platform-businesses', 'Admin\ViewsController@platformBusinesses')->name('platform businesses');
 
 
+    //Orders Management
+    Route::get('new-orders', 'Admin\ViewsController@newOrders')->name('admin new orders');
+    Route::get('confirmed-orders', 'Admin\ViewsController@confirmedOrders')->name('admin confirmed orders');
+    Route::get('cancelled-orders', 'Admin\ViewsController@cancelledOrders')->name('admin cancelled orders');
+    Route::get('delivered-orders', 'Admin\ViewsController@deliveredOrders')->name('admin delivered orders');
+
+    //Ajax calls
+    Route::get('admin/order/get-orders-index/{type}','Admin\OrdersController@index');
+
+
     Route::get('get-platform-students', 'Admin\PlatformUsersController@platformStudents');
     Route::post('platform-create-student', 'Admin\PlatformUsersController@platformCreateStudent');
     Route::post('platform-update-student/{id}', 'Admin\PlatformUsersController@platformUpdateStudent');

@@ -60,6 +60,27 @@ class ViewsController extends Controller
         return view('pages.mailbox.compose');
     }
 
+    public function newOrders()
+    {
+        return view('pages.order.new');
+    }
+
+    public function confirmedOrders()
+    {
+        return view('pages.order.confirmed');
+    }
+
+
+    public function cancelledOrders()
+    {
+        return view('pages.order.cancelled');
+    }
+
+    public function deliveredOrders()
+    {
+        return view('pages.order.delivered');
+    }
+
 
     public function helpTips()
     {
