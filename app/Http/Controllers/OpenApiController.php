@@ -119,14 +119,16 @@ class OpenApiController extends Controller
             }
         }
 
+        return response()->json(['success' => true, "result" => ['price' => 500]]);
+
         //before pushing destinations to query, check if at least there is one verified address
-        if (count($verified) < 1) {
-            return response()->json(['error' => "We can't verify the address of the Vendor whose product(s) you are trying to checkout. You can't proceed with this checkout"]);
-        }
+        // if (count($verified) < 1) {
+        //     return response()->json(['error' => "We can't verify the address of the Vendor whose product(s) you are trying to checkout. You can't proceed with this checkout"]);
+        // }
 
-        $result = $this->googleFindDistance($query);
+        // $result = $this->googleFindDistance($query);
 
-        return response()->json(['success' => true, "result" => $result]);
+        // return response()->json(['success' => true, "result" => $result]);
     }
 
 

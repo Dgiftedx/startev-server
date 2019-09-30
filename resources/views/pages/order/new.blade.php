@@ -36,8 +36,7 @@
                                         <th>Items</th>
                                         <th>Buyer</th>
                                         <th>Store</th>
-                                        <th>Venture</th>
-                                        <th class="text-nowrap">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -46,20 +45,17 @@
                                             @{{ order.batch_id }}
                                         </td>
                                         <td>
-                                           @{{ order.amount }}
+                                           @{{ order.items_total | number:0 }}
                                         </td>
                                         <td>
-                                            @{{ order.items }}
+                                            @{{ model.count(order.orders_business) }}
                                         </td>
                                         <td>@{{ order.buyer.name }}</td>
                                         <td>
-                                            @{{ order.store.name }}
+                                            @{{ order.store.store_name }}
                                         </td>
                                         <td>
-                                            @{{ order.venture.venture_name }}
-                                        </td>
-                                        <td class="text-nowrap">
-                                            <button type="button" ng-click="model.notify(order)" class="btn btn-circle btn-info">Notify Business</button>
+                                            <button type="button" ng-click="model.confirm(order)" class="btn btn-info">View Items</button>
                                         </td>
                                     </tr>
                                     </tbody>

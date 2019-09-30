@@ -22,4 +22,8 @@ mainApp.controller('adminNewOrderViewController', ['$rootScope','lodash','$scope
 
         $scope.model.loadOrdersIndex();
 
+        $scope.model.count = function(items) {
+            return lodash.size(items);
+        }
+
     }]);

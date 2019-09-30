@@ -451,22 +451,17 @@ class BusinessStoreController extends Controller
     {
         $data = $request->all();
 
-        $orders = UserBusinessOrder::where('identifier','=', $data['order_id'])->get();
+        $order = UserBusinessOrder::where('identifier','=', $data['order_id'])->first();
 
-        foreach ($orders as $order){
-            //perform action both on business order and originating store
-            UserBusinessOrder::find($order->id)->update(['status' => $data['action']]);
+        //perform action both on business order and originating store
+        UserBusinessOrder::find($order->id)->update(['status' => $data['action']]);
 
-            $origin = UserVentureOrder::where('store_id', '=', $order->store_id)
-                ->where('product_sku','=',$order->product_sku)
-                ->where('identifier', '=', $data['order_id'])->first();
+        $origin = UserVentureOrder::where('store_id', '=', $order->store_id)
+            ->where('product_sku','=',$order->product_sku)
+            ->where('identifier', '=', $data['order_id'])->first();
 
-            if ($origin) {
-                UserVentureOrder::find($origin->id)->update(['status' => $data['action']]);
-            }
-
-            //run specific action for order if being shipped or delivered
-
+        if ($origin) {
+            UserVentureOrder::find($origin->id)->update(['status' => $data['action']]);
         }
 
 
@@ -475,6 +470,8 @@ class BusinessStoreController extends Controller
         foreach ($invoices as $invoice) {
             UserInvoice::find($invoice->id)->update(['order_status' => $data['action']]);
         }
+
+        //update batch status
 
 
         return response()->json('success');

@@ -13,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BatchOrder;
 use Illuminate\Support\Facades\Storage;
 
 class UserStoreController extends Controller
@@ -509,6 +510,16 @@ class UserStoreController extends Controller
 
         return response()->json('success');
 
+    }
+
+
+    public function transactions($user_id)
+    {
+        $query = [
+            'store_id' => UserStore::storeId($user_id)
+        ];
+        $transactions = BatchOrder::with(['store','ordersStudent'])->byFilter($query)->get();
+        return response()->json(['success' => true, 'transactions' => $transactions]);
     }
 
 }

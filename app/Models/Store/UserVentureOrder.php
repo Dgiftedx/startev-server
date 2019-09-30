@@ -61,6 +61,11 @@ class UserVentureOrder extends Model
         return $this->belongsTo(UserVentureProduct::class, 'product_id');
     }
 
+    public function batch()
+    {
+        return $this->belongsTo(BatchOrder::class, 'batch_id', 'batch_id');
+    }
+
     public function scopeByFilter($query,$data){
         $whereClause=[];
         $whereParam=[];

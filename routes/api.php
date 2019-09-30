@@ -219,6 +219,7 @@ Route::group([
     Route::get('check-has-store/{user}','Store\UserStoreController@hasStore');
     Route::get('track-order/{Id}/{user}','Store\UserStoreController@trackOrder');
     Route::get('get-store-orders/{user}','Store\UserStoreController@storeOrders');
+    Route::get('store-get-transactions/{user_id}','Store\UserStoreController@transactions');
     Route::get('get-dashboard-data/{user}','Store\UserStoreController@dashboard');
     Route::get('get-store-settings/{user}','Store\UserStoreController@storeSettings');
     Route::get('get-single-order/{orderId}', 'Store\UserStoreController@singleOrder');

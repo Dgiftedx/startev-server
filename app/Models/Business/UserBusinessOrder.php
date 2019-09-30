@@ -2,6 +2,7 @@
 
 namespace App\Models\Business;
 
+use App\Models\BatchOrder;
 use App\Models\BusinessVenture;
 use App\Models\Buyer;
 use App\Models\Store\UserStore;
@@ -15,6 +16,7 @@ class UserBusinessOrder extends Model
     protected $fillable = [
         'identifier',
         'store_id',
+        'batch_id',
         'venture_id',
         'original_product_id',
         'name',
@@ -65,6 +67,11 @@ class UserBusinessOrder extends Model
     public function product()
     {
         return $this->belongsTo(UserVentureProduct::class,'product_sku');
+    }
+
+    public function batch()
+    {
+        return $this->belongsTo(BatchOrder::class, 'batch_id', 'batch_id');
     }
 
     public function scopeByFilter($query,$data){

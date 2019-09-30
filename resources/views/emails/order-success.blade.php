@@ -329,10 +329,10 @@
     <tbody>
     <tr style="vertical-align: top;" valign="top">
         <td style="word-break: break-word; vertical-align: top; border-collapse: collapse;" valign="top">
-            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color:#FFFFFF"><![endif]-->
+            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color:#052D3D"><![endif]-->
             <div style="background-color:transparent;">
                 <div class="block-grid two-up" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;;">
-                    <div style="border-collapse: collapse;display: table;width: 100%;background-color:transparent;">
+                    <div style="border-collapse: collapse;display: table;width: 100%;background-color:#052D3D;">
                         <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:620px"><tr class="layout-full-width" style="background-color:transparent"><![endif]-->
                         <!--[if (mso)|(IE)]><td align="center" width="310" style="background-color:transparent;width:310px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top:5px; padding-bottom:5px;"><![endif]-->
                         <div class="col num6" style="max-width: 320px; min-width: 310px; display: table-cell; vertical-align: top;;">
@@ -342,7 +342,7 @@
                                     <!--<![endif]-->
                                     <div align="left" class="img-container left autowidth" style="padding-right: 0px;padding-left: 0px;">
                                         <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 0px;padding-left: 0px;" align="left"><![endif]-->
-                                        <div style="font-size:1px;line-height:15px"> </div><img alt="Image" border="0" class="left autowidth" src="images/ecommerce-template_logo.png" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; border: 0; height: auto; float: none; width: 100%; max-width: 186px; display: block;" title="Image" width="186"/>
+                                        <div style="font-size:1px;line-height:15px"> </div><img alt="Image" border="0" class="left autowidth" src="{{ $message->embed(public_path() . '/email-assets/startev.png') }}" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; border: 0; height: auto; float: none; width: 100%; max-width: 186px; display: block;" title="Image" width="186"/>
                                         <div style="font-size:1px;line-height:15px"> </div>
                                         <!--[if mso]></td></tr></table><![endif]-->
                                     </div>
@@ -359,9 +359,9 @@
                                 <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 10px; padding-left: 10px;">
                                     <!--<![endif]-->
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top: 15px; padding-bottom: 15px; font-family: 'Times New Roman', Georgia, serif"><![endif]-->
-                                    <div style="color:#555555;font-family:TimesNewRoman, 'Times New Roman', Times, Baskerville, Georgia, serif;line-height:120%;padding-top:15px;padding-right:0px;padding-bottom:15px;padding-left:0px;">
-                                        <div style="font-size: 12px; line-height: 14px; font-family: TimesNewRoman, 'Times New Roman', Times, Baskerville, Georgia, serif; color: #555555;">
-                                            <p style="font-size: 14px; line-height: 16px; text-align: right; margin: 0;"><em>Month Year</em><br/></p>
+                                    <div style="color:#FFFFFF;font-family:TimesNewRoman, 'Times New Roman', Times, Baskerville, Georgia, serif;line-height:120%;padding-top:15px;padding-right:0px;padding-bottom:15px;padding-left:0px;">
+                                        <div style="font-size: 12px; line-height: 14px; font-family: TimesNewRoman, 'Times New Roman', Times, Baskerville, Georgia, serif; color: #FFFFFF;">
+                                            <p style="font-size: 14px; line-height: 16px; text-align: right; margin: 0;"><em>{{ $mailContent['subject'] }} </em><br/></p>
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->
@@ -410,6 +410,7 @@
                     </div>
                 </div>
             </div>
+            @if($mailContent['role'] !== 'venture')
             <div style="background-color:transparent;">
                 <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;;">
                     <div style="border-collapse: collapse;display: table;width: 100%;background-color:transparent;">
@@ -421,7 +422,8 @@
                                 <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
                                     <!--<![endif]-->
                                     <div align="center" class="img-container center autowidth" style="padding-right: 0px;padding-left: 0px;">
-                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 0px;padding-left: 0px;" align="center"><![endif]--><img align="center" alt="Image" border="0" class="center autowidth" src="images/okok.gif" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; border: 0; height: auto; float: none; width: 100%; max-width: 250px; display: block;" title="Image" width="250"/>
+                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 0px;padding-left: 0px;" align="center"><![endif]-->
+                                            <img align="center" alt="Image" border="0" class="center autowidth" src="{{ $message->embed(public_path() . '/email-assets/ok.png') }}" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; border: 0; height: 120px; float: none; width: 100%; max-width: 200px; display: block;" title="Image" width="200"/>
                                         <!--[if mso]></td></tr></table><![endif]-->
                                     </div>
                                     <!--[if (!mso)&(!IE)]><!-->
@@ -434,6 +436,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <div style="background-color:transparent;">
                 <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;;">
                     <div style="border-collapse: collapse;display: table;width: 100%;background-color:transparent;">
@@ -447,15 +450,32 @@
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 5px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
                                     <div style="color:#000000;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:10px;padding-bottom:5px;padding-left:10px;">
                                         <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #000000;">
-                                            <p style="font-size: 14px; line-height: 16px; text-align: center; margin: 0;"><strong><span style="font-size: 18px; line-height: 21px;">Thank you for placing your order</span></strong></p>
+                                            @if(isset($mailContent['role']) && $mailContent['role'] === 'buyer')
+                                            <p style="font-size: 14px; line-height: 16px; text-align: center; margin: 0;"><strong><span style="font-size: 18px; line-height: 21px;">Thank you {{ $mailContent['name'] }} for placing your order</span></strong></p>
                                             <p style="font-size: 14px; line-height: 16px; text-align: center; margin: 0;"><strong><span style="font-size: 18px; line-height: 21px;">with our store!</span></strong></p>
+                                            @endif
+
+                                            @if(isset($mailContent['role']) && $mailContent['role'] === 'store')
+                                            <p style="font-size: 14px; line-height: 16px; text-align: center; margin: 0;"><strong><span style="font-size: 18px; line-height: 21px;">{{ $mailContent['name'] }}, you have a new order from {{ $mailContent['buyer'] }} </span></strong></p>
+                                            @endif
+
+                                            @if(isset($mailContent['role']) && $mailContent['role'] === 'venture')
+                                            <p style="font-size: 14px; line-height: 16px; text-align: center; margin: 0;">
+                                                <span><strong>{{ $mailContent['name'] }}, You have a new order. Login to Startev to view order.</strong></span>
+                                               <ul>
+                                                   <li><strong>Buyer: {{ $mailContent['buyer'] }}</strong> </li>
+                                                   <li><strong>Venture: {{ $mailContent['venture'] }}</strong> </li>
+                                                   <li><strong>Store: {{ $mailContent['store']['store_name'] }}</strong></li>
+                                               </ul>
+                                            </p>
+                                            @endif
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 25px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
                                     <div style="color:#71777D;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:10px;padding-bottom:25px;padding-left:10px;">
                                         <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #71777D;">
-                                            <p style="font-size: 14px; line-height: 16px; text-align: center; margin: 0;">This email is to confirm your recent order.</p>
+                                            <p style="font-size: 14px; line-height: 16px; text-align: center; margin: 0;">This email is for confirmation</p>
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->
@@ -469,6 +489,10 @@
                     </div>
                 </div>
             </div>
+
+
+            @if(isset($mailContent['items']))
+
             <div style="background-color:transparent;">
                 <div class="block-grid mixed-two-up" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #134C75;;">
                     <div style="border-collapse: collapse;display: table;width: 100%;background-color:#134C75;">
@@ -515,54 +539,13 @@
                     </div>
                 </div>
             </div>
+
+
             <div style="background-color:transparent;">
                 <div class="block-grid mixed-two-up" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #FFFFFF;;">
-                    <div style="border-collapse: collapse;display: table;width: 100%;background-color:#FFFFFF;">
-                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:620px"><tr class="layout-full-width" style="background-color:#FFFFFF"><![endif]-->
-                        <!--[if (mso)|(IE)]><td align="center" width="413" style="background-color:#FFFFFF;width:413px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:15px; padding-bottom:0px;"><![endif]-->
-                        <div class="col num8" style="display: table-cell; vertical-align: top; min-width: 320px; max-width: 408px;;">
-                            <div style="width:100% !important;">
-                                <!--[if (!mso)&(!IE)]><!-->
-                                <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:15px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
-                                    <!--<![endif]-->
-                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
-                                    <div style="color:#000000;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:20px;padding-bottom:10px;padding-left:20px;">
-                                        <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #000000;">
-                                            <p style="font-size: 14px; line-height: 16px; margin: 0;"><span style="color: #000000; font-size: 14px; line-height: 16px;"><a href="https://beefree.io" style="text-decoration: none; color: #000000;" target="_blank">1 x Name of your product #1</a></span></p>
-                                        </div>
-                                    </div>
-                                    <!--[if mso]></td></tr></table><![endif]-->
-                                    <!--[if (!mso)&(!IE)]><!-->
-                                </div>
-                                <!--<![endif]-->
-                            </div>
-                        </div>
-                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-                        <!--[if (mso)|(IE)]></td><td align="center" width="206" style="background-color:#FFFFFF;width:206px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:15px; padding-bottom:0px;"><![endif]-->
-                        <div class="col num4" style="display: table-cell; vertical-align: top; max-width: 320px; min-width: 204px;;">
-                            <div style="width:100% !important;">
-                                <!--[if (!mso)&(!IE)]><!-->
-                                <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:15px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
-                                    <!--<![endif]-->
-                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
-                                    <div style="color:#000000;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:20px;padding-bottom:10px;padding-left:20px;">
-                                        <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #000000;">
-                                            <p style="font-size: 14px; line-height: 16px; margin: 0;">$300</p>
-                                        </div>
-                                    </div>
-                                    <!--[if mso]></td></tr></table><![endif]-->
-                                    <!--[if (!mso)&(!IE)]><!-->
-                                </div>
-                                <!--<![endif]-->
-                            </div>
-                        </div>
-                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-                        <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
-                    </div>
-                </div>
-            </div>
-            <div style="background-color:transparent;">
-                <div class="block-grid mixed-two-up" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #FFFFFF;;">
+
+                    @foreach ($mailContent['items'] as $product)
+
                     <div style="border-collapse: collapse;display: table;width: 100%;background-color:#FFFFFF;">
                         <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:620px"><tr class="layout-full-width" style="background-color:#FFFFFF"><![endif]-->
                         <!--[if (mso)|(IE)]><td align="center" width="413" style="background-color:#FFFFFF;width:413px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:0px;"><![endif]-->
@@ -574,7 +557,7 @@
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
                                     <div style="color:#000000;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:20px;padding-bottom:10px;padding-left:20px;">
                                         <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #000000;">
-                                            <p style="font-size: 14px; line-height: 16px; margin: 0;"><span style="color: #000000; font-size: 14px; line-height: 16px;"><a href="https://beefree.io" style="text-decoration: none; color: #000000;" target="_blank">1 x Name of your product #1</a></span></p>
+                                            <p style="font-size: 14px; line-height: 16px; margin: 0;"><span style="color: #000000; font-size: 14px; line-height: 16px;"><a href="#" style="text-decoration: none; color: #000000;" target="_blank">{{ $product->quantity }} x {{ $product->product->product_name}}</a></span></p>
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->
@@ -593,7 +576,51 @@
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
                                     <div style="color:#000000;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:20px;padding-bottom:10px;padding-left:20px;">
                                         <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #000000;">
-                                            <p style="font-size: 14px; line-height: 16px; margin: 0;">$300</p>
+                                            <p style="font-size: 14px; line-height: 16px; margin: 0;">NGN {{ number_format($product->amount) }}</p>
+                                        </div>
+                                    </div>
+                                    <!--[if mso]></td></tr></table><![endif]-->
+                                    <!--[if (!mso)&(!IE)]><!-->
+                                </div>
+                                <!--<![endif]-->
+                            </div>
+                        </div>
+                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                        <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
+                    </div>
+                    @endforeach
+
+                    <div style="border-collapse: collapse;display: table;width: 100%;background-color:#FFFFFF;">
+                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:620px"><tr class="layout-full-width" style="background-color:#FFFFFF"><![endif]-->
+                        <!--[if (mso)|(IE)]><td align="center" width="413" style="background-color:#FFFFFF;width:413px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:0px;"><![endif]-->
+                        <div class="col num8" style="display: table-cell; vertical-align: top; min-width: 320px; max-width: 408px;;">
+                            <div style="width:100% !important;">
+                                <!--[if (!mso)&(!IE)]><!-->
+                                <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
+                                    <!--<![endif]-->
+                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
+                                    <div style="color:#000000;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:20px;padding-bottom:10px;padding-left:20px;">
+                                        <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #000000;">
+                                            <p style="font-size: 14px; line-height: 16px; margin: 0;"><span style="color: #000000; font-size: 14px; line-height: 16px;"><a href="#" style="text-decoration: none; color: #000000;" target="_blank">Delivery Charge</a></span></p>
+                                        </div>
+                                    </div>
+                                    <!--[if mso]></td></tr></table><![endif]-->
+                                    <!--[if (!mso)&(!IE)]><!-->
+                                </div>
+                                <!--<![endif]-->
+                            </div>
+                        </div>
+                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                        <!--[if (mso)|(IE)]></td><td align="center" width="206" style="background-color:#FFFFFF;width:206px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:0px;"><![endif]-->
+                        <div class="col num4" style="display: table-cell; vertical-align: top; max-width: 320px; min-width: 204px;;">
+                            <div style="width:100% !important;">
+                                <!--[if (!mso)&(!IE)]><!-->
+                                <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
+                                    <!--<![endif]-->
+                                    <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
+                                    <div style="color:#000000;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:20px;padding-bottom:10px;padding-left:20px;">
+                                        <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #000000;">
+                                            <p style="font-size: 14px; line-height: 16px; margin: 0;">NGN {{ number_format($mailContent['total']['delivery_fee']) }}</p>
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->
@@ -607,41 +634,9 @@
                     </div>
                 </div>
             </div>
-            <div style="background-color:transparent;">
-                <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;;">
-                    <div style="border-collapse: collapse;display: table;width: 100%;background-color:transparent;">
-                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:620px"><tr class="layout-full-width" style="background-color:transparent"><![endif]-->
-                        <!--[if (mso)|(IE)]><td align="center" width="620" style="background-color:transparent;width:620px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
-                        <div class="col num12" style="min-width: 320px; max-width: 620px; display: table-cell; vertical-align: top;;">
-                            <div style="width:100% !important;">
-                                <!--[if (!mso)&(!IE)]><!-->
-                                <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
-                                    <!--<![endif]-->
-                                    <table border="0" cellpadding="0" cellspacing="0" class="divider" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign="top" width="100%">
-                                        <tbody>
-                                        <tr style="vertical-align: top;" valign="top">
-                                            <td class="divider_inner" style="word-break: break-word; vertical-align: top; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; border-collapse: collapse;" valign="top">
-                                                <table align="center" border="0" cellpadding="0" cellspacing="0" class="divider_content" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; border-top: 1px dotted #CCCCCC;" valign="top" width="100%">
-                                                    <tbody>
-                                                    <tr style="vertical-align: top;" valign="top">
-                                                        <td style="word-break: break-word; vertical-align: top; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; border-collapse: collapse;" valign="top"><span></span></td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <!--[if (!mso)&(!IE)]><!-->
-                                </div>
-                                <!--<![endif]-->
-                            </div>
-                        </div>
-                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-                        <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
-                    </div>
-                </div>
-            </div>
+            @endif
+
+            @if(isset($mailContent['total']))
             <div style="background-color:transparent;">
                 <div class="block-grid mixed-two-up" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #FFFFFF;;">
                     <div style="border-collapse: collapse;display: table;width: 100%;background-color:#FFFFFF;">
@@ -674,7 +669,8 @@
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 5px; padding-bottom: 5px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
                                     <div style="color:#000000;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:5px;padding-right:20px;padding-bottom:5px;padding-left:20px;">
                                         <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #000000;">
-                                            <p style="font-size: 14px; line-height: 16px; margin: 0;"><strong>$600</strong></p>
+                                            <p style="font-size: 14px; line-height: 16px; margin: 0;">@isset($mailContent['total'])
+                                                <strong>NGN {{ number_format($mailContent['total']['items_total']) }}</strong></p>@endisset
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->
@@ -688,6 +684,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <div style="background-color:transparent;">
                 <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 620px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;;">
                     <div style="border-collapse: collapse;display: table;width: 100%;background-color:transparent;">
@@ -733,23 +730,6 @@
                                 <!--[if (!mso)&(!IE)]><!-->
                                 <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
                                     <!--<![endif]-->
-                                    <table cellpadding="0" cellspacing="0" class="social_icons" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;" valign="top" width="100%">
-                                        <tbody>
-                                        <tr style="vertical-align: top;" valign="top">
-                                            <td style="word-break: break-word; vertical-align: top; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; border-collapse: collapse;" valign="top">
-                                                <table activate="activate" align="center" alignment="alignment" cellpadding="0" cellspacing="0" class="social_table" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: undefined; mso-table-tspace: 0; mso-table-rspace: 0; mso-table-bspace: 0; mso-table-lspace: 0;" to="to" valign="top">
-                                                    <tbody>
-                                                    <tr align="center" style="vertical-align: top; display: inline-block; text-align: center;" valign="top">
-                                                        <td style="word-break: break-word; vertical-align: top; padding-bottom: 5px; padding-right: 3px; padding-left: 3px; border-collapse: collapse;" valign="top"><a href="https://www.facebook.com/" target="_blank"><img alt="Facebook" height="32" src="images/facebook@2x.png" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; height: auto; float: none; border: none; display: block;" title="Facebook" width="32"/></a></td>
-                                                        <td style="word-break: break-word; vertical-align: top; padding-bottom: 5px; padding-right: 3px; padding-left: 3px; border-collapse: collapse;" valign="top"><a href="https://twitter.com/" target="_blank"><img alt="Twitter" height="32" src="images/twitter@2x.png" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; height: auto; float: none; border: none; display: block;" title="Twitter" width="32"/></a></td>
-                                                        <td style="word-break: break-word; vertical-align: top; padding-bottom: 5px; padding-right: 3px; padding-left: 3px; border-collapse: collapse;" valign="top"><a href="https://plus.google.com/" target="_blank"><img alt="Google+" height="32" src="images/googleplus@2x.png" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; height: auto; float: none; border: none; display: block;" title="Google+" width="32"/></a></td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
                                     <table border="0" cellpadding="0" cellspacing="0" class="divider" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign="top" width="100%">
                                         <tbody>
                                         <tr style="vertical-align: top;" valign="top">
@@ -788,9 +768,9 @@
                                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
                                     <div style="color:#555555;font-family:'Lato', Tahoma, Verdana, Segoe, sans-serif;line-height:120%;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
                                         <div style="font-size: 12px; line-height: 14px; font-family: 'Lato', Tahoma, Verdana, Segoe, sans-serif; color: #555555;">
-                                            <p style="font-size: 14px; line-height: 14px; text-align: center; margin: 0;"><span style="font-size: 12px;">Copyright © 2017 Mailup Inc. All rights reserved. </span><br/><span style="font-size: 12px; line-height: 14px;">You subscribed to our newsletter via our website, <a href="beefree.io" rel="noopener noreferrer" style="text-decoration: underline; color: #71777D;" target="_blank">beefree.io</a></span><br/></p>
+                                            <p style="font-size: 14px; line-height: 14px; text-align: center; margin: 0;"><span style="font-size: 12px;">Copyright © {{ date('Y') }} Startev Africa. All rights reserved. </span><br/><span style="font-size: 12px; line-height: 14px;">You subscribed to our newsletter via our website, <a href="startev.africa" rel="noopener noreferrer" style="text-decoration: underline; color: #71777D;" target="_blank">Startev</a></span><br/></p>
                                             <p style="font-size: 14px; line-height: 16px; text-align: center; margin: 0;"> <br/></p>
-                                            <p style="font-size: 14px; line-height: 14px; text-align: center; margin: 0;"><span style="font-size: 12px;"><a href="beefree.io" rel="noopener noreferrer" style="text-decoration: underline; color: #71777D;" target="_blank">Unsubscribe from this list</a></span></p>
+                                            <p style="font-size: 14px; line-height: 14px; text-align: center; margin: 0;"><span style="font-size: 12px;"><a href="startev.africa" rel="noopener noreferrer" style="text-decoration: underline; color: #71777D;" target="_blank">Unsubscribe from this list</a></span></p>
                                         </div>
                                     </div>
                                     <!--[if mso]></td></tr></table><![endif]-->
