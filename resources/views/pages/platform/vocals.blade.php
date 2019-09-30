@@ -52,7 +52,7 @@
                                             @{{ vocal.refToday }}
                                         </td>
                                         <td class="text-nowrap">
-{{--                                            <button type="button" ng-click="model.editStudent(user)" class="btn btn-circle btn-info"><i class="fa fa-edit"></i></button>--}}
+                                           <button type="button" ng-click="model.settle(vocal.id)" class="btn btn-circle btn-info" title="reset"><i class="fa fa-reply"></i></button>
                                             <button ng-click="model.deleteVocal(vocal)" type="button" class="btn btn-circle btn-danger"><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>

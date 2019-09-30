@@ -22,6 +22,14 @@ mainApp.controller('vocalsViewController', ['$rootScope','lodash','$scope','$loc
             return lodash.size(items);
         };
 
+        $scope.model.settle = function(vocalId) {
+            adminService.fetchData('/platform-vocals/settle/'+vocalId,
+            function(resp) {
+                adminService.alert(resp.data.message,"success");
+                $scope.model.getPlatformVocals();
+            });
+        }
+
         $scope.model.deleteVocal = function (vocal) {
             SweetAlert.show({
                 title: "Are you sure?",

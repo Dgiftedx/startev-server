@@ -23,14 +23,16 @@ class VocalsController extends Controller
         $todayStart = Carbon::now()->startOfDay()->toDateTimeString();
         $todayEnd = Carbon::now()->toDateTimeString();
 
-        $refs = VocalReferral::where('vocal_id', '=', $vocalId)->whereBetween('registered_on', [$todayStart, $todayEnd])->count();
+        $refs = VocalReferral::where('vocal_id', '=', $vocalId)->where('status','=','pending')->whereBetween('registered_on', [$todayStart, $todayEnd])->count();
 
        return $refs;
     }
 
     public function allVocals()
     {
-        $vocals = $this->vocal->with('registeredUsers')->orderBy('id','desc')->get();
+        $vocals = $this->vocal->with(['registeredUsers' => function($query) {
+            $query->where('status','=', 'pending');
+        }])->orderBy('id','desc')->get();
 
         foreach ($vocals as $vocal) {
             $vocal->refToday = $this->todayRef($vocal->id);
@@ -53,6 +55,19 @@ class VocalsController extends Controller
         $this->vocal->create($data);
 
         return response()->json(['success' => true ]);
+    }
+
+    public function resetVocal($vocalId)
+    {
+        $referrals = VocalReferral::where('vocal_id', '=', $vocalId)->where('status','=','pending')->get();
+        if(count($referrals) < 1) return response()->json(['success' => true, 'message' => "no data to refresh"]);
+
+        //continue
+        foreach($referrals as $referral) {
+            VocalReferral::find($referral->id)->update(['status' => 'settled']);
+        }
+
+        return response()->json(['success' => true, 'message' => "registration count refreshed"]);
     }
 
 

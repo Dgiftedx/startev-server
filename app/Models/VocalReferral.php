@@ -9,6 +9,7 @@ class VocalReferral extends Model
     protected $fillable = [
         'user_id',
         'vocal_id',
+        'status',
         'registered_on'
     ];
 
