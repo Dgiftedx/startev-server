@@ -108,9 +108,14 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('mail-manager/compose-view','Admin\ViewsController@compose')->name('compose');
 
     //Content Management
+    Route::get('manage-contents/get-adverts', 'ContentsManagerController@advertBanners');
+    Route::get('manage-contents/delete-advert/{id}', 'ContentsManagerController@removeAdvert');
+    Route::get('manage-contents/update-advert/{id}/{status}', 'ContentsManagerController@updateAdvert');
+    Route::post('manage-contents/upload-banner','ContentsManagerController@uploadBanner');
     Route::get('manage-contents/get-help-tips','ContentsManagerController@getHelpTips');
     Route::post('manage-contents/store-help-tip','ContentsManagerController@storeHelpTip');
     Route::get('manage-contents/delete-help-tip/{id}','ContentsManagerController@deleteHelpTip');
     Route::post('manage-contents/update-help-tip/{id}','ContentsManagerController@updateHelpTip');
     Route::get('manage-contents/help-tips-view','Admin\ViewsController@helpTips')->name('help tips');
+    Route::get('manage-contents/get-advert-banners','Admin\ViewsController@adverts')->name('adverts');
 });

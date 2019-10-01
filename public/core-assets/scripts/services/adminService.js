@@ -74,6 +74,37 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
 
 
 
+    function uploadBanner(url, data, onSuccess, onError) {
+
+        var formData = new FormData();
+
+        formData.append('link', data.link);
+        formData.append('banner', data.image);
+
+        $http.post(url, formData,
+            {
+                headers: { 'Content-Type': undefined},
+                //prevents serializing payload.  don't do it.
+                transformRequest: angular.identity
+            }
+        ).then(function (response) {
+            //console.log
+            if (response.data && response.data.success) {
+                onSuccess(response);
+            }
+            else {
+                onError(response);
+            }
+
+        }, function (response) {
+
+            onError(response);
+
+        });
+    }
+
+
+
     function addStudentAccount(dt, url, onSuccess, onError) {
         var formData = new FormData();
         //append form data
@@ -243,6 +274,7 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         alert : alert,
         offLoad : offLoad,
         fetchData : fetchData,
+        uploadBanner : uploadBanner,
         addAdminUser : addAdminUser,
         sendNormalData : sendNormalData,
         sendImageData : sendImageData,

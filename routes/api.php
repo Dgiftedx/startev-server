@@ -170,6 +170,7 @@ Route::group([
     //Get open Api Feeds
     Route::get('open-api-get-feed/{id}', 'OpenApiController@getSingleFeed');
 
+    Route::get('get-adverts','OpenApiController@getAdverts');
 
     //Contact List
     Route::get('get-user-contact-list/{id}', 'ContactListController@index');

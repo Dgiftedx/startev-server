@@ -28,6 +28,7 @@
     <link href="{{ asset('/core-assets/lib/coderty-loader.css') }}" rel="stylesheet">
     <link href="{{ asset('/core-assets/lib/ADM-dateTimePicker.css') }}" rel="stylesheet">
     <link href="{{ asset('/core-assets/lib/selectize.default.css') }}" rel="stylesheet">
+    <link href="{{ asset('/core-assets/lib/dropify/css/dropify.min.css') }}" rel="stylesheet">
     <!-- You can change the theme colors from here -->
     <link href="{{ asset('/core-assets/css/colors/default-dark.css') }}" id="theme" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -118,6 +119,7 @@
 <script src="{{ asset('/core-assets/lib/selectize.js') }}"></script>
 <script src="{{ asset('/core-assets/lib/ng-ckeditor.min.js') }}"></script>
 <script src="{{ asset('/core-assets/lib/sweetalert.min.js') }}"></script>
+<script src="{{ asset('/core-assets/lib/dropify/js/dropify.min.js') }}"></script>
 
 
 <!-- global AngularJS App to tap to -->

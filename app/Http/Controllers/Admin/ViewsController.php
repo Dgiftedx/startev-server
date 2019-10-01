@@ -86,4 +86,9 @@ class ViewsController extends Controller
     {
         return view('pages.contents.help-tips');
     }
+
+    public function adverts()
+    {
+        return view('pages.contents.adverts');
+    }
 }

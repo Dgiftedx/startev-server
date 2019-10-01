@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Advert;
 use App\Models\Broadcast\BroadcastSchedule;
 use App\Models\Business;
 use App\Models\BusinessVenture;
@@ -208,5 +209,11 @@ class OpenApiController extends Controller
         dd($string);
 
         return $string;
+    }
+
+    public function getAdverts()
+    {
+        $adverts = Advert::where('status','=','active')->get();
+        return response()->json(['success' => true, 'adverts' => $adverts]);
     }
 }
