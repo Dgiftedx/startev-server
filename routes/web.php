@@ -65,6 +65,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     //Ajax calls
     Route::get('admin/order/get-orders-index/{type}','Admin\OrdersController@index');
+    Route::get('admin/confirm-order/{id}','Admin\OrdersController@confirmOrder');
+    Route::get('admin/order/conclude-order/{id}', 'Admin\OrdersController@final');
 
 
     Route::get('get-platform-students', 'Admin\PlatformUsersController@platformStudents');

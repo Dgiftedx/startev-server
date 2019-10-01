@@ -236,7 +236,7 @@ Route::group([
 
     //////////////////////////////////////////////////////////////////////////////
     /// Business store routes starts
-    Route::post('store-manager/order-action','Store\BusinessStoreController@orderAction');
+    Route::get('store-manager/confirm-order/{id}','Store\BusinessStoreController@orderAction');
     Route::post('store-manager/add-product/{ventureId}/{userId}','Store\BusinessStoreController@addProduct');
     Route::get('store-manager/get-ventures/{userId}','Store\BusinessStoreController@getVentures');
     Route::post('store-manager/add-venture/{businessId}','Store\BusinessStoreController@addVenture');

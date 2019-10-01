@@ -16,8 +16,8 @@
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ route('admin new orders') }}">New Orders</a></li>
                         <li><a href="{{ route('admin confirmed orders') }}">Confirmed Orders</a></li>
-                        <li><a href="{{ route('admin delivered orders') }}">Delivered Orders</a></li>
-                        <li><a href="{{ route('admin cancelled orders') }}">Cancelled Orders</a></li>
+                        {{-- <li><a href="{{ route('admin delivered orders') }}">Delivered Orders</a></li> --}}
+                        {{-- <li><a href="{{ route('admin cancelled orders') }}">Cancelled Orders</a></li> --}}
                     </ul>
                 </li>
 

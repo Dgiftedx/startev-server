@@ -15,6 +15,8 @@ use App\Models\Business\UserBusinessProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BatchOrder;
+use App\Models\Store\UserVentureProduct;
 use Illuminate\Support\Facades\Storage;
 
 class BusinessStoreController extends Controller
@@ -315,9 +317,11 @@ class BusinessStoreController extends Controller
         // fetch single product
         $product = UserBusinessProduct::find($productId);
 
+        $toEffectVentures = UserVentureProduct::where('product_id','=',$product->id)->get();
+
+        $changesImages = [];
         //check if user uploaded replacement images
         if (isset($data['images'])) {
-
 
             if (count($data['images']) > 0) {
 
@@ -353,6 +357,11 @@ class BusinessStoreController extends Controller
 
         //Update record
         $product->update($data);
+
+        unset($data['product_commission']);
+        foreach($toEffectVentures as $product) {
+            UserVentureProduct::find($product->id)->update($data);
+        }
 
         return response()->json('success');
     }
@@ -447,34 +456,30 @@ class BusinessStoreController extends Controller
     }
 
 
-    public function orderAction( Request $request )
+    public function orderAction( $id )
     {
-        $data = $request->all();
+        $order = UserBusinessOrder::find($id);
+        $order->update(['status' => 'confirmed']);
 
-        $order = UserBusinessOrder::where('identifier','=', $data['order_id'])->first();
+        $ventureOrder = UserVentureOrder::where('identifier','=',$order->identifier)->first();
+        UserVentureOrder::find($ventureOrder->id)->update(['status' => 'confirmed']);
 
-        //perform action both on business order and originating store
-        UserBusinessOrder::find($order->id)->update(['status' => $data['action']]);
+        $batch = BatchOrder::where('batch_id','=', $order->batch_id)->first();
+        BatchOrder::find($batch->id)->update(['status' => 'confirmed']);
 
-        $origin = UserVentureOrder::where('store_id', '=', $order->store_id)
-            ->where('product_sku','=',$order->product_sku)
-            ->where('identifier', '=', $data['order_id'])->first();
-
-        if ($origin) {
-            UserVentureOrder::find($origin->id)->update(['status' => $data['action']]);
-        }
-
+        /**
+         * Wherever we need to send the payload to for delivery,
+         * it's done below and success response is returned to the server
+         */
 
         //update product invoices
-        $invoices = UserInvoice::where('order_id','=',$data['order_id'])->get();
-        foreach ($invoices as $invoice) {
-            UserInvoice::find($invoice->id)->update(['order_status' => $data['action']]);
-        }
+        // $invoices = UserInvoice::where('order_id','=',$data['order_id'])->get();
+        // foreach ($invoices as $invoice) {
+        //     UserInvoice::find($invoice->id)->update(['order_status' => $data['action']]);
+        // }
 
         //update batch status
-
-
-        return response()->json('success');
+        return response()->json(['success' => true ]);
     }
 
 }

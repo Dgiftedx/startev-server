@@ -24,7 +24,8 @@
                 <div class="card" id="main-list">
                     <div class="card-body" coderty-loading="model.cargando_main">
                         <h4 class="card-title">Manage Confirmed Orders</h4>
-                        <h6 class="card-subtitle">&nbsp;</h6>
+                        <h6 class="card-subtitle text-info">Orders listed below have been confirmed and set to "ready for pickup" by the business owners. <br/>
+                        The delivery button should only be clicked when delivery channel returns successful delivery notice</h6>
 
                         <div class="">
                             <div class="table-responsive">
@@ -32,10 +33,10 @@
                                     <thead>
                                     <tr>
                                         <th>Batch ID</th>
-                                        <th>Total Amount</th>
-                                        <th>Items</th>
+                                        <th>Order ID</th>
                                         <th>Buyer</th>
                                         <th>Store</th>
+                                        <th>Venture</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -45,17 +46,18 @@
                                             @{{ order.batch_id }}
                                         </td>
                                         <td>
-                                           @{{ order.items_total | number:0 }}
+                                           @{{ order.identifier }}
                                         </td>
                                         <td>
-                                            @{{ model.count(order.orders_business) }}
+                                            @{{ order.buyer?order.buyer.name:'N/A' }}
                                         </td>
-                                        <td>@{{ order.buyer.name }}</td>
+                                        <td>@{{ order.store.store_name }}</td>
                                         <td>
-                                            @{{ order.store.store_name }}
+                                            @{{ order.venture.venture_name }}
                                         </td>
                                         <td>
-                                            <button type="button" ng-click="model.view(order)" class="btn btn-info">View Items</button>
+                                            <button ng-if="order.status === 'confirmed'" button-spinner="model.finalizing" type="button" ng-click="model.conclude(order.id)" class="btn btn-sm waves-effect btn-info">Confirmed</button>
+                                            <button ng-if="order.status === 'delivered'" type="button" class="btn btn-sm waves-effect btn-success">Confirmed</button>
                                         </td>
                                     </tr>
                                     </tbody>
