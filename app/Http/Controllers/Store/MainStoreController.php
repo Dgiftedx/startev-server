@@ -19,6 +19,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendOrderNotification;
 use App\Models\BatchOrder;
+use App\Models\Setting;
+use App\Models\Transaction\VendorSettlement;
+use App\Repositories\OrderTransaction;
+use App\Repositories\PayStackVerifyTransaction;
 
 class MainStoreController extends Controller
 {
@@ -177,10 +181,10 @@ class MainStoreController extends Controller
         foreach($items as $item) {
             $mainProduct = UserBusinessProduct::find($item->original_product_id)->first();
             if($mainProduct->product_commission !== 0) {
-                $commission += ($item->amount * $mainProduct->product_commission / 100);
+                $commission += ($mainProduct->product_commission / 100) * $item->amount;
             }else{
                 //use default commission percentage i.e 10%
-                $commission += ($item->amount * 10 / 100);
+                $commission += (0.3 / 100) * $item->amount;
             }
         }
         return $commission;
@@ -254,10 +258,10 @@ class MainStoreController extends Controller
 
         $recipients['ventures'] = [];
 
-        foreach ($items as $item) {
-            $mainProduct = UserBusinessProduct::find($item->original_product_id)->first();
+        foreach ($items as $index => $item) {
+            $mainProduct = UserBusinessProduct::find($item->original_product_id);
 
-            //Fetch the business who owns the
+            //Fetch the business who owns the product
             $business = StoreHelperController::fetchBusinessId($mainProduct->venture_id);
             $recipients['ventures'][] = $mainProduct->venture_id;
 
@@ -271,21 +275,55 @@ class MainStoreController extends Controller
             $data['product_sku'] = $item->product_sku;
             $data['status'] = 'processing';
             $data['forwarded'] = 1;
+            $data['commission'] = $mainProduct->product_commission;
             $data['venture_id'] = $mainProduct->venture_id;
             //insert original product id
             $data['original_product_id'] = $item->original_product_id;
 
             //Forward orders to business
-            $saved = UserBusinessOrder::create($data);
+            $businessOrder = UserBusinessOrder::create($data);
 
-            //Forward orders to student from whose store this orders were placed.
+            //Forward orders to student from whose store this order is placed.
             UserVentureOrder::create($data);
+
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // Start Vendor Settlement Processes
+            ////////////////////////////////////////////////////////////////////////////////////
+
+            //use transaction reference to get payStack charge
+            $payStackCharge = (new PayStackVerifyTransaction)->verify($data['transaction_ref']);
+
+            //Pile request parameters for transaction calculations and settlements
+            $params = [
+                'amountTotal' => $businessOrder->amount, //amount
+                'starTev' => (new Setting)->value('STARTEV_PERCENTAGE_CHARGE'), //percentage
+                'commission' => $businessOrder->commission, //percentage
+                'payStack' => $payStackCharge //amount
+            ];
+
+            //Log delivery charges
+            if($index < 1) {
+                //Either batch or single order, only apply delivery charge to the first item
+                $params['delivery'] = $data['delivery_fee'];
+            }else{
+                $params['delivery'] = 0;
+            }
+
+            //Perform transaction breakdown
+            $result = (new OrderTransaction($params))->calculate();
+            $result['batch_id'] = $businessOrder->batch_id;
+            $result['order_id'] = $businessOrder->id;
+
+            $settlement = VendorSettlement::create($result);
+
+            UserBusinessOrder::find($businessOrder->id)->update(['vendor_settlement_id' => $settlement->id]);
 
             //fetch original product
             $originalProduct = UserVentureProduct::find($item->product_id);
 
             //set invoice data
-            $invoice['order_id'] = $saved->identifier;
+            $invoice['order_id'] = $businessOrder->identifier;
             $invoice['order_date'] = Carbon::now();
             $invoice['order_status'] = 'paid';
 
@@ -293,6 +331,7 @@ class MainStoreController extends Controller
                 'product_name' => $originalProduct->product_name,
                 'description' => $originalProduct->highlight,
                 'quantity' => $item->quantity,
+                'reference' => $data['transaction_ref'],
                 'unit_cost' => $originalProduct->product_price,
                 'total' => $item->amount,
             ];
@@ -358,7 +397,6 @@ class MainStoreController extends Controller
 
         //send to buyer
         dispatch( new SendOrderNotification($mailContent));
-
 
         //Prepare store contents
         $mailContent['email'] = $recipients['store']['email'];

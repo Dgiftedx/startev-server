@@ -7,6 +7,7 @@ use App\Models\BusinessVenture;
 use App\Models\Buyer;
 use App\Models\Store\UserStore;
 use App\Models\Store\UserVentureProduct;
+use App\Models\Transaction\VendorSettlement;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +27,8 @@ class UserBusinessOrder extends Model
         'product_sku',
         'buyer_id',
         'quantity',
+        'vendor_settlement_id',
+        'commission',
         'delivery_address',
         'transaction_ref',
         'amount',
@@ -72,6 +75,11 @@ class UserBusinessOrder extends Model
     public function batch()
     {
         return $this->belongsTo(BatchOrder::class, 'batch_id', 'batch_id');
+    }
+
+    public function settlement()
+    {
+        return $this->hasOne(VendorSettlement::class, 'vendor_settlement_id');
     }
 
     public function scopeByFilter($query,$data){

@@ -13,6 +13,7 @@ class UserVentureOrder extends Model
         'identifier',
         'venture_id',
         'original_product_id',
+        'commission',
         'name',
         'email',
         'phone',
