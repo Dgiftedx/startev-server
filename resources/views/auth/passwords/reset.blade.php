@@ -1,62 +1,54 @@
-@extends('layouts.app')
-
+@extends('layouts.authentication')
+@section('title', 'Forgot Password :: Startev Africa Admin')
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
 
-                        <input type="hidden" name="token" value="{{ $token }}">
+<div class="main-content- forget-password-area h-100vh">
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-sm-10 col-md-7 col-lg-5 mx-auto">
+                <!-- Middle Box -->
+                <div class="middle-box">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="font-22">Reset Password</h4>
+                            @if (session('status'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
+                            <!-- Form -->
+                            <form method="POST" action="{{ route('password.update') }}">
+                                @csrf
+                                <input type="hidden" name="token" value="{{ $token }}">
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                                <div class="form-group {{ $errors->has('email') ? 'has-danger' : '' }}">
+                                    <label class="float-left" for="emailaddress">Email address</label>
+                                    <input class="form-control {{ $errors->has('email') ? 'form-control-danger' : '' }}" name="email" type="email" value="{{ $email ?? old('email') }}" id="emailaddress" required="" autocomplete="email" autofocus>
+                                    @if($errors->has('email'))
+                                    <div class="form-control-feedback ml-2 text-danger" role="alert">{{ $errors->first('email') }}</div>
+                                    @endif
+                                </div>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
+                                <div class="form-group {{ $errors->has('password') ? 'has-danger' : '' }}">
+                                    <label class="float-left" for="password">Password</label>
+                                    <input class="form-control {{ $errors->has('password') ? 'form-control-danger' : '' }}" name="password" type="password" required="" id="password" autocomplete="new-password">
+                                    @if($errors->has('password'))
+                                    <div class="form-control-feedback ml-2 text-danger" role="alert">{{ $errors->first('password') }}</div>
+                                    @endif
+                                </div>
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                                <div class="form-group">
+                                    <label class="float-left" for="password_confirm">Confirm Password</label>
+                                    <input class="form-control" name="password_confirmation" type="password" required="" id="password_confirm" autocomplete="new-password">
+                                </div>
+
+                                <div class="btn-area">
+                                    <button type="submit" class="btn btn-rounded btn-outline-primary py-2 px-4 btn-block mt-15 text-white">Reset Password</button>
+                                </div>
+                            </form>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Reset Password') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

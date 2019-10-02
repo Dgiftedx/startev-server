@@ -1,22 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Manage Platform Users (Mentors) :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="verificationRequestsController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Verification Requests</li>
-                </ol>
-            </div>
-        </div>
-
+    <div ng-controller="verificationRequestsController">
 
         <div class="row">
             <div class="col-12">

@@ -1,29 +1,13 @@
 @extends('layouts.admin')
 @section('title', 'Manage Contents - Help Tips :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="advertsController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item">Content Management</li>
-                    <li class="breadcrumb-item active">Adverts</li>
-                </ol>
-            </div>
-        </div>
-
+    <div ng-controller="advertsController">
 
         <div class="row">
             <div class="col-12">
                 <div class="card" ng-if="model.showMain">
                     <div class="card-body" coderty-loading="model.cargando_main">
-                        <button ng-click="model.newBanner()" type="button" class="btn btn-info btn-sm waves-effect waves-light float-right">Add New</button>
+                        <button ng-click="model.newBanner()" type="button" class="btn btn-info btn-sm waves-effect float-right">Add New</button>
                         <h4 class="card-title">Adverts</h4>
                         <div class="">
                             <div class="table-responsive">
@@ -38,7 +22,7 @@
                                     <tbody>
                                     <tr ng-repeat="advert in model.adverts">
                                         <td>
-                                            <img src="/storage@{{ advert.path }}" alt="" height="70"/>
+                                            <img src="/storage@{{ advert.path }}" alt="" style="max-height: 60px;"/>
                                         </td>
                                         <td>
                                             @{{ advert.link }}

@@ -1,151 +1,119 @@
-<header class="topbar">
-    <nav class="navbar top-navbar navbar-expand-md navbar-light">
-        <!-- ============================================================== -->
-        <!-- Logo -->
-        <!-- ============================================================== -->
-        <div class="navbar-header">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                <!-- Logo icon -->
-                <b>
-                    <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
-                    <!-- Dark Logo icon -->
-                    <img src="{{ asset('/core-assets/logo/logo_small.png') }}" alt="homepage" class="dark-logo" />
-                </b>
-                <!--End Logo icon -->
-                <!-- Logo text -->
-                <span>
-                         <!-- dark Logo text -->
-                         <img src="{{ asset('/core-assets/logo/logo_small.png') }}" width="40" alt="homepage" class="dark-logo" />
-                    <!-- Light Logo text -->
-                         <img src="{{ asset('/core-assets/logo/logo_small.png') }}" width="180" class="light-logo" alt="homepage" />
-                </span>
-            </a>
-        </div>
-        <!-- ============================================================== -->
-        <!-- End Logo -->
-        <!-- ============================================================== -->
-        <div class="navbar-collapse">
-            <!-- ============================================================== -->
-            <!-- toggle and nav items -->
-            <!-- ============================================================== -->
-            <ul class="navbar-nav mr-auto">
-                <!-- This is  -->
-                <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
-                <li class="nav-item"> <a class="nav-link sidebartoggler hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
 
-            </ul>
-            <!-- ============================================================== -->
-            <!-- User profile and search -->
-            <!-- ============================================================== -->
-            <ul class="navbar-nav my-lg-0">
-                <!-- ============================================================== -->
-                <!-- Search -->
-                <!-- ============================================================== -->
-                <li class="nav-item hidden-xs-down search-box"> <a class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
-                    <form class="app-search">
-                        <input type="text" class="form-control" placeholder="Search & enter"> <a class="srh-btn"><i class="ti-close"></i></a> </form>
+ <!-- Top Header Area -->
+ <header class="top-header-area d-flex align-items-center justify-content-between">
+        <div class="left-side-content-area d-flex align-items-center">
+            <!-- Mobile Logo -->
+            <div class="mobile-logo mr-3 mr-sm-4">
+                <a href="{{ url('/admin') }}"><img src="{{ asset('/core-assets/logo/logo_small.png') }}" alt="Mobile Logo"></a>
+            </div>
+
+            <!-- Triggers -->
+            <div class="ecaps-triggers mr-1 mr-sm-3">
+                <div class="menu-collasped" id="menuCollasped">
+                    <i class="zmdi zmdi-menu"></i>
+                </div>
+                <div class="mobile-menu-open" id="mobileMenuOpen">
+                    <i class="zmdi zmdi-menu"></i>
+                </div>
+            </div>
+
+            <!-- Left Side Nav -->
+            <ul class="left-side-navbar d-flex align-items-center">
+                <li class="hide-phone app-search mr-15">
+                    <form role="search" class=""><input type="text" placeholder="Search..." class="form-control"> <button type="submit" class="mr-0"><i class="fa fa-search"></i></button></form>
                 </li>
-                <!-- ============================================================== -->
-                <!-- Comment -->
-                <!-- ============================================================== -->
-                {{--<li class="nav-item dropdown">--}}
-                    {{--<a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-message"></i>--}}
-                        {{--<div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>--}}
-                    {{--</a>--}}
-                    {{--<div class="dropdown-menu dropdown-menu-right mailbox animated bounceInDown">--}}
-                        {{--<ul>--}}
-                            {{--<li>--}}
-                                {{--<div class="drop-title">Notifications</div>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<div class="message-center">--}}
-                                    {{--<!-- Message -->--}}
-                                    {{--<a href="##">--}}
-                                        {{--<div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>--}}
-                                        {{--<div class="mail-contnet">--}}
-                                            {{--<h5>Luanch Admin</h5> <span class="mail-desc">Just see the my new admin!</span> <span class="time">9:30 AM</span> </div>--}}
-                                    {{--</a>--}}
-                                {{--</div>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a class="nav-link text-center" href="javascript:void(0);"> <strong>Check all notifications</strong> <i class="fa fa-angle-right"></i> </a>--}}
-                            {{--</li>--}}
-                        {{--</ul>--}}
-                    {{--</div>--}}
-                {{--</li>--}}
-                <!-- ============================================================== -->
-                <!-- End Comment -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- Messages -->
-                <!-- ============================================================== -->
-                {{--<li class="nav-item dropdown">--}}
-                    {{--<a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" id="2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-email"></i>--}}
-                        {{--<div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>--}}
-                    {{--</a>--}}
-                    {{--<div class="dropdown-menu mailbox dropdown-menu-right animated bounceInDown" aria-labelledby="2">--}}
-                        {{--<ul>--}}
-                            {{--<li>--}}
-                                {{--<div class="drop-title">You have 4 new messages</div>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<div class="message-center">--}}
-                                    {{--<!-- Message -->--}}
-                                    {{--<a href="##">--}}
-                                        {{--<div class="user-img"> <img src="/core-assets/images/users/1.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>--}}
-                                        {{--<div class="mail-contnet">--}}
-                                            {{--<h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:30 AM</span> </div>--}}
-                                    {{--</a>--}}
+            </ul>
+        </div>
 
-                                    {{--<!-- Message -->--}}
-                                    {{--<a href="##">--}}
-                                        {{--<div class="user-img"> <img src="/core-assets/images/users/4.jpg" alt="user" class="img-circle"> <span class="profile-status offline pull-right"></span> </div>--}}
-                                        {{--<div class="mail-contnet">--}}
-                                            {{--<h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:02 AM</span> </div>--}}
-                                    {{--</a>--}}
-                                {{--</div>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a class="nav-link text-center" href="javascript:void(0);"> <strong>See all e-Mails</strong> <i class="fa fa-angle-right"></i> </a>--}}
-                            {{--</li>--}}
-                        {{--</ul>--}}
-                    {{--</div>--}}
-                {{--</li>--}}
-                <!-- ============================================================== -->
-                <!-- End Messages -->
-                <!-- ============================================================== -->
+        <div class="right-side-navbar d-flex align-items-center justify-content-end">
+            <!-- Mobile Trigger -->
+            <div class="right-side-trigger" id="rightSideTrigger">
+                <i class="ti-align-left"></i>
+            </div>
 
-                <!-- ============================================================== -->
-                <!-- Profile -->
-                <!-- ============================================================== -->
+            <!-- Top Bar Nav -->
+            <ul class="right-side-content d-flex align-items-center">
+                <!-- Full Screen Mode -->
+                <li class="full-screen-mode ml-1">
+                    <a href="javascript:" id="fullScreenMode"><i class="zmdi zmdi-fullscreen"></i></a>
+                </li>
+
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ auth()->guard('admin')->user()->avatar ? asset(auth()->guard('admin')->user()->avatar) : asset('/core-assets/defaults/avatar.jpg') }}" alt="user" class="profile-pic" /></a>
-                    <div class="dropdown-menu dropdown-menu-right animated flipInY">
-                        <ul class="dropdown-user">
-                            <li>
-                                <div class="dw-user-box">
-                                    <div class="u-img"><img src="{{ auth()->guard('admin')->user()->avatar ? asset(auth()->guard('admin')->user()->avatar) : asset('/core-assets/defaults/avatar.jpg') }}" alt="user"></div>
-                                    <div class="u-text">
-                                        <h4>{{ auth()->guard('admin')->user()->name }}</h4>
-                                        <p class="text-muted">{{ auth()->guard('admin')->user()->email }}</p><a href="{{ route('profile') }}" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon_globe-2" aria-hidden="true"></i></button>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <!-- Top Message Area -->
+                        <div class="top-message-area">
+                            <!-- Heading -->
+                            <div class="top-message-heading">
+                                <div class="heading-title">
+                                    <h6>Messages</h6>
                                 </div>
-                            </li>
-                            {{--<li role="separator" class="divider"></li>--}}
-                            {{--<li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>--}}
-                            <li role="separator" class="divider"></li>
-                            <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Logout</a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            </li>
-                        </ul>
+                                <span>1 New</span>
+                            </div>
+                            <div class="message-box" id="messageBox">
+                                <a href="#" class="dropdown-item">
+                                    <i class="zmdi zmdi-email-open"></i>
+                                    <span class="message-text">
+                                        <span>6-hour video course on Angular</span>
+                                        <span>3 min ago</span>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon_lightbulb_alt" aria-hidden="true"></i> <span class="active-status"></span></button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <!-- Top Notifications Area -->
+                        <div class="top-notifications-area">
+                            <!-- Heading -->
+                            <div class="notifications-heading">
+                                <div class="heading-title">
+                                    <h6>Notifications</h6>
+                                </div>
+                                <span>2 New</span>
+                            </div>
+
+                            <div class="notifications-box" id="notificationsBox">
+                                <a href="#" class="dropdown-item"><i class="ti-face-smile bg-success"></i><span>We've got something for you!</span></a>
+                                <a href="#" class="dropdown-item"><i class="zmdi zmdi-notifications-active bg-danger"></i><span>Domain names expiring on Tuesday</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{ auth()->guard('admin')->user()->avatar ? asset(auth()->guard('admin')->user()->avatar) : asset('/core-assets/defaults/avatar.jpg') }}" alt=""/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <!-- User Profile Area -->
+                        <div class="user-profile-area">
+                            <div class="user-profile-heading">
+                                <!-- Thumb -->
+                                <div class="profile-thumbnail">
+                                        <img src="{{ auth()->guard('admin')->user()->avatar ? asset(auth()->guard('admin')->user()->avatar) : asset('/core-assets/defaults/avatar.jpg') }}" alt=""/>
+                                </div>
+                                <!-- Profile Text -->
+                                <div class="profile-text">
+                                    <h6>{{ auth()->guard('admin')->user()->name }}</h6>
+                                    <span>{{ auth()->guard('admin')->user()->email }}</span>
+                                </div>
+                            </div>
+                            <a href="{{ route('profile') }}" class="dropdown-item"><i class="ti-user text-default" aria-hidden="true"></i> My profile</a>
+                            <a href="#" class="dropdown-item"><i class="ti-settings text-default" aria-hidden="true"></i> General settings</a>
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();" class="dropdown-item">
+                            <i class="ti-unlink text-warning" aria-hidden="true"></i> Sign-out</a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
                     </div>
                 </li>
             </ul>
         </div>
-    </nav>
-</header>
-<!-- ============================================================== -->
-<!-- End Topbar header -->
-<!-- ============================================================== -->
+    </header>

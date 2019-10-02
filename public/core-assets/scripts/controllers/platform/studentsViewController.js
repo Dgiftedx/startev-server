@@ -123,6 +123,7 @@ mainApp.controller('studentsViewController', ['$rootScope','lodash','$scope','$l
             $scope.model.studentData.id = user.id;
             $scope.model.studentData.name = user.name;
             $scope.model.studentData.email = user.email;
+            $scope.model.studentData.phone = user.phone;
             $scope.model.studentData.address = user.address;
             $scope.model.studentData.institution = user.roleData.data.institution;
             $scope.model.studentData.careerPath = lodash.findLast($scope.model.fields, ['name', user.roleData.data.careerPath]);

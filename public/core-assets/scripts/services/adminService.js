@@ -110,6 +110,7 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         //append form data
         formData.append('name', dt.name);
         formData.append('email', dt.email);
+        formData.append('phone', dt.phone);
         formData.append('password', dt.password);
         formData.append('institution', dt.institution);
         formData.append('avatar', dt.avatar);

@@ -1,22 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Manage Platform Users (Businesses) :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="businessesViewController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Platform Businesses</li>
-                </ol>
-            </div>
-        </div>
-
+    <div ng-controller="businessesViewController">
         <div class="row">
             <div class="col-12">
                 <div class="card" id="main-list">
@@ -47,7 +32,7 @@
                                             @{{ business.name }}<br/>
                                         </td>
                                         <td>@{{ business.email }}</td>
-                                        <td>@{{ user.phone?user.phone:'N/A' }}</td>
+                                        <td>@{{ business.roleData?business.roleData.data.phone:'N/A' }}</td>
                                         <td class="text-nowrap">
                                             <button type="button" ng-click="model.editBusiness(business)" class="btn btn-circle btn-info"><i class="fa fa-edit"></i></button>
                                             @role('super')

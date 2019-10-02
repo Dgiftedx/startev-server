@@ -1,21 +1,18 @@
 @extends('layouts.error')
+@section('title',"404")
 @section('content')
 
-    <!-- ============================================================== -->
-    <!-- Main wrapper - style you can find in pages.scss -->
-    <!-- ============================================================== -->
-    <section id="wrapper" class="error-page">
-        <div class="error-box">
-            <div class="error-body text-center">
-                <h1 class="text-warning">404</h1>
-                <h3 class="text-uppercase">Page Not Found !</h3>
-                <p class="text-muted m-t-30 m-b-30">{{ _('YOU SEEM TO BE TRYING TO FIND HIS WAY HOME') }}</p>
-                <a href="https://startev.africa" target="_self" class="btn btn-warning btn-rounded waves-effect waves-light m-b-40">{{ _('Back to home') }}</a> </div>
-            <footer class="footer text-center">© {{ date('Y') }} {{ _('Startev Africa') }}.</footer>
+    <!-- Error Page Area -->
+    <div class="error-page-area">
+        <!-- Error Content -->
+        <div class="error-content text-center py-5 px-4">
+            <!-- Error Thumb -->
+            <div class="error-thumb">
+                <img src="{{ asset('/base-assets/img/bg-img/1.png') }}" alt="">
+            </div>
+            <h2>Opps! This page Could Not Be Found!</h2>
+            <p>Sorry bit the page you are looking for does not exist, have been removed or name changed</p>
+            <a class="btn btn-rounded btn-primary mt-30" href="{{ env('APP_URL') }}">Back To Home</a>
         </div>
-    </section>
-    <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-
+    </div>
 @endsection

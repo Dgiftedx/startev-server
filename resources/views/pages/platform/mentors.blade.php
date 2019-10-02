@@ -1,23 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Manage Platform Users (Mentors) :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="mentorsViewController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Platform Mentors</li>
-                </ol>
-            </div>
-        </div>
-
-
+    <div ng-controller="mentorsViewController">
         <div class="row">
             <div class="col-12">
                 <div class="card" id="main-list">
@@ -99,6 +83,12 @@
                                                     <label for="email" class="col-3 col-form-label">Email</label>
                                                     <div class="col-9">
                                                         <input ng-model="model.mentorData.email" id="email" class="form-control" type="email" placeholder="Email Address">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="phone" class="col-3 col-form-label">Phone</label>
+                                                    <div class="col-9">
+                                                        <input ng-model="model.mentorData.phone" id="phone" class="form-control" type="text" placeholder="Phone Number">
                                                     </div>
                                                 </div>
 

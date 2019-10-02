@@ -2,76 +2,69 @@
 @section('title', 'Login :: Startev Africa Admin')
 @section('content')
 
-    <!-- ============================================================== -->
-    <!-- Main wrapper - style you can find in pages.scss -->
-    <!-- ============================================================== -->
-    <section id="wrapper">
-        <div class="login-register" style="background-image:url(/core-assets/images/startev-pg3.jpg);">
-            <div class="login-box card">
-                <div class="card-body">
-                    <div class="text-center bg-secondary mb-2">
-                        <img src="{{ asset('/core-assets/logo/logo_small.png') }}" width="170"/>
-                    </div>
-                    <form class="form-horizontal form-material" id="loginform" method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <h3 class="box-title text-center mb-3">Admin Login In</h3>
-                        <div class="form-group {{ $errors->has('email') ? 'has-danger' : '' }}">
-                            <div class="col-xs-12">
-                                <input class="form-control {{ $errors->has('email') ? 'form-control-danger' : '' }}" type="email"  name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Email Address">
-                                @if($errors->has('email'))
-                                <div class="form-control-feedback" role="alert">{{ $errors->first('email') }}</div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group {{ $errors->has('password') ? 'has-danger' : '' }}">
-                            <div class="col-xs-12">
-                                <input class="form-control {{ $errors->has('password') ? 'form-control-danger' : '' }}" type="password" name="password" required autocomplete="current-password" placeholder="Password">
-                                @if($errors->has('password'))
-                                <div class="form-control-feedback" role="alert">{{ $errors->first('password') }}</div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <div class="checkbox checkbox-info float-left p-t-0">
-                                    <input id="checkbox-signup" type="checkbox" class="filled-in chk-col-light-blue" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                    <label for="checkbox-signup"> {{ _('Remember me') }} </label>
+<div class="main-content- h-100vh">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center justify-content-center">
+            <div class="col-sm-10 col-lg-8">
+                <!-- Middle Box -->
+                <div class="middle-box">
+                    <div class="card mb-0">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <div class="xs-d-none">
+                                        <img src="{{ asset('/base-assets/img/bg-img/6.png') }}" alt="">
+                                    </div>
                                 </div>
-                                @if (Route::has('password.request'))
-                                <a href="javascript:void(0)" id="to-recover" class="text-muted float-right"><i class="fa fa-lock m-r-5"></i> {{ _('Forgot pwd?') }}</a>
-                                @endif
+
+                                <div class="col-md-6">
+                                    <!-- Logo -->
+                                    <div class="card-body-login bg-dark mb-30">
+                                        <img src="{{ asset('/core-assets/logo/logo.png') }}" alt="">
+                                    </div>
+
+                                    <form method="POST" action="{{ route('login') }}">
+                                        @csrf
+                                        <div class="form-group {{ $errors->has('email') ? 'has-danger' : '' }}">
+                                            <label class="float-left" for="emailaddress">Email address</label>
+                                            <input class="form-control {{ $errors->has('email') ? 'form-control-danger' : '' }}" name="email" type="email" id="emailaddress" autocomplete="off" required="" placeholder="Enter your email">
+                                            @if($errors->has('email'))
+                                            <div class="form-control-feedback ml-2 text-danger" role="alert">{{ $errors->first('email') }}</div>
+                                            @endif
+                                        </div>
+
+
+                                        <div class="form-group {{ $errors->has('password') ? 'has-danger' : '' }}">
+                                            <a href="{{ route('password.request') }}" class="text-dark float-right"><span class="font-12 text-primary">Forgot your password?</span></a>
+                                            <label class="float-left" for="password">Password</label>
+                                            <input class="form-control {{ $errors->has('password') ? 'form-control-danger' : '' }}" name="password" type="password" required="" autocomplete="new-password" id="password" placeholder="Enter your password">
+                                            @if($errors->has('password'))
+                                            <div class="form-control-feedback ml-2 text-danger" role="alert">{{ $errors->first('password') }}</div>
+                                            @endif
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <div class="custom-control custom-checkbox pl-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" name="remember" id="customCheck1" {{ old('remember') ? 'checked' : '' }}>
+                                                    <label class="custom-control-label" for="customCheck1"><span class="font-16">{{ _('Remember me') }}</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group mb-0 text-center">
+                                            <button class="btn btn-primary btn-block" type="submit"> Log In </button>
+                                        </div>
+
+                                    </form>
+
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group text-center">
-                            <div class="col-xs-12 p-b-20">
-                                <button class="btn btn-block btn-info waves-effect waves-light btn-rounded" type="submit">Log In</button>
-                            </div>
-                        </div>
-                    </form>
-                    <form class="form-horizontal" id="recoverform" method="POST" action="{{ route('password.email') }}">
-                        <div class="form-group ">
-                            <div class="col-xs-12">
-                                <h3>{{ _('Recover Password') }}</h3>
-                                <p class="text-muted">{{ _('Enter your Email and instructions will be sent to you!') }} </p>
-                            </div>
-                        </div>
-                        <div class="form-group {{ $errors->has('email') ? 'has-danger' : '' }}">
-                            <div class="col-xs-12">
-                                <input class="form-control {{ $errors->has('email') ? 'form-control-danger' : '' }}" type="email"  name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Email">
-                                @if($errors->has('email'))
-                                <div class="form-control-feedback" role="alert">{{ $errors->first('email') }}</div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group text-center m-t-20">
-                            <div class="col-xs-12">
-                                <button class="btn btn-info btn-rounded btn-block waves-effect waves-light mb-3" type="submit">{{ __('Send Password Reset Link') }}</button>
-                                <a href="javascript:;" class="btn btn-warning btn-sm waves-effect" id="to-loginform">Go back</a>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 @endsection

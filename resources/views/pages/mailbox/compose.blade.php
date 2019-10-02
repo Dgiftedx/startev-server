@@ -1,21 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Mail Manager - Compose :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="composeController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active">Home</li>
-                </ol>
-            </div>
-        </div>
-
+    <div ng-controller="composeController">
         <div class="row">
             <!-- Column -->
             <div class="col-xlg-2 col-lg-3 col-md-4">
@@ -109,7 +95,7 @@
                             {{--<input name="file" type="file" multiple />--}}
                         {{--</div>--}}
                     {{--</form>--}}
-                    <button ng-click="model.sendMail()" type="submit" class="btn btn-success m-t-20"><i class="far fa-envelope"></i> Send</button>
+                    <button ng-click="model.sendMail()" type="submit" class="btn btn-success m-t-20"><i class="zmdi zmdi-save"></i> Send</button>
                     <button ng-click="model.clearForm()" class="btn btn-inverse m-t-20"><i class="fa fa-times"></i> Discard</button>
                 </div>
             </div>

@@ -1,72 +1,50 @@
 @extends('layouts.admin')
 @section('title', 'All Admin Users :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="adminUserViewController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Admin users</li>
-                </ol>
-            </div>
-        </div>
-
-
+    <div ng-controller="adminUserViewController">
         <div class="row">
             <div class="col-12">
                 <div class="card" id="main-list">
                     <div class="card-body" coderty-loading="model.cargando_main">
                         <h4 class="card-title">Admin Users</h4>
-                        <h6 class="card-subtitle">You can manage users and also assign roles. This does not include super administrators</h6>
-
                         <div class="float-right mb-5">
-                            <button ng-click="model.triggerUserForm('add')" type="button" class="btn waves-effect waves-light btn-rounded btn-success">Add New User</button>
+                            <button ng-click="model.triggerUserForm('add')" type="button" class="btn waves-effect btn-rounded btn-success"> <i class="ti-plus"></i> Add New User</button>
                         </div>
+                        <div class="table-responsive">
+                            <table datatable="ng" class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Avatar</th>
+                                    <th>Full Name</th>
+                                    <th>email</th>
+                                    <th>Role</th>
+                                    <th class="text-nowrap">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="user in model.users">
+                                    <td>
+                                        <span class="round"><img src="@{{ user.avatar?user.avatar :'/core-assets/defaults/avatar.jpg' }}" alt="user" width="50"></span>
+                                    </td>
+                                    <td>
+                                        @{{ user.name }}<br/>
+                                        <small class="text-muted">username: @{{ user.username }}</small>
+                                    </td>
+                                    <td>@{{ user.email }}</td>
+                                    <td>
+                                        <span ng-repeat="role in user.roles" class="badge badge-success">@{{ role.name }}</span>
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <button type="button" ng-click="model.editUser(user)" class="btn btn-circle btn-info"><i class="fa fa-edit"></i></button>
+                                        @role('super')
+                                        <button ng-click="model.deleteAdminUser(user)" type="button" class="btn btn-circle btn-danger"><i class="fa fa-trash"></i></button>
+                                        @endrole
+                                    </td>
 
+                                </tr>
 
-                        <div class="">
-                            <div class="table-responsive">
-                                <table datatable="ng" class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>Avatar</th>
-                                        <th>Full Name</th>
-                                        <th>email</th>
-                                        <th>Role</th>
-                                        <th class="text-nowrap">Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="user in model.users">
-                                        <td>
-                                            <span class="round"><img src="@{{ user.avatar?user.avatar :'/core-assets/defaults/avatar.jpg' }}" alt="user" width="50"></span>
-                                        </td>
-                                        <td>
-                                            @{{ user.name }}<br/>
-                                            <small class="text-muted">username: @{{ user.username }}</small>
-                                        </td>
-                                        <td>@{{ user.email }}</td>
-                                        <td>
-                                            <span ng-repeat="role in user.roles" class="label label-success">@{{ role.name }}</span>
-                                        </td>
-                                        <td class="text-nowrap">
-                                            <button type="button" ng-click="model.editUser(user)" class="btn btn-circle btn-info"><i class="fa fa-edit"></i></button>
-                                            @role('super')
-                                            <button ng-click="model.deleteAdminUser(user)" type="button" class="btn btn-circle btn-danger"><i class="fa fa-trash"></i></button>
-                                            @endrole
-                                        </td>
-
-                                    </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

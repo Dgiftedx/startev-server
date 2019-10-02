@@ -1,27 +1,10 @@
 @extends('layouts.admin')
 @section('title', 'All Admin Users :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="adminNewOrderViewController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item">Orders</li>
-                    <li class="breadcrumb-item active">New Orders</li>
-                </ol>
-            </div>
-        </div>
-
-
+    <div ng-controller="adminNewOrderViewController">
         <div class="row">
             <div class="col-12">
-                <div class="card" ng-if="model.showMain">
+                <div class="card animated fadeInRight" ng-if="model.showMain">
                     <div class="card-body" coderty-loading="model.cargando_main">
                         <h4 class="card-title">Manage New Orders</h4>
                         <h6 class="card-subtitle">&nbsp;</h6>
@@ -48,7 +31,7 @@
                                            @{{ order.items_total | number:0 }}
                                         </td>
                                         <td>
-                                            @{{ model.count(order.orders_business) }}
+                                            <span class="p2 badge-pill badge-primary">@{{ model.count(order.orders_business) }}</span>
                                         </td>
                                         <td>@{{ order.buyer.name }}</td>
                                         <td>
@@ -65,7 +48,7 @@
                     </div>
                 </div>
 
-                <div class="card" ng-if="model.showDetails">
+                <div class="card animated fadeInLeft" ng-if="model.showDetails">
                     <div class="card-body" coderty-loading="model.cargando_main">
                         <h4 class="card-title">Viewing order for <strong>#@{{ model.currentOrder.batch_id }}</strong></h4>
                         <h6 class="card-subtitle">&nbsp;</h6>
@@ -104,6 +87,9 @@
                                         <td>Store</td>
                                         <td class="text-danger"><strong>@{{ model.currentOrder.store.store_name }}</strong></td>
                                     </tr>
+                                    <tr>
+                                        <td class="text-center" colspan="2"><strong>Products</strong></td>
+                                    </tr>
                                 </table>
 
                                 <table class="table" ng-repeat="item in model.currentOrder.orders_business">
@@ -113,7 +99,7 @@
                                     </tr>
                                     <tr>
                                         <td>Commission</td>
-                                        <td>@{{ item.main_product.product_commission }}</td>
+                                        <td>@{{ item.main_product.product_commission }}%</td>
                                     </tr>
                                     <tr>
                                         <td>Amount</td>
@@ -138,7 +124,7 @@
                                 </table>
                             </div>
 
-                            <button type="button" ng-click="model.close();" class="btn btn-sm- btn-primary waves-effect">Go Back</button>
+                            <button type="button" ng-click="model.close();" class="btn btn-sm btn-primary waves-effect">Go Back</button>
                         </div>
                     </div>
                 </div>

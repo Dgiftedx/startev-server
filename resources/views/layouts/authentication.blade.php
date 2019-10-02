@@ -5,21 +5,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Startev Africa Admin">
     <meta name="author" content="Startev Africa">
     <!-- Favicon icon -->
     <link rel="icon" sizes="16x16" href="{{ asset('/favicon.ico') }}">
     <title>@yield('title')</title>
     <!-- Bootstrap Core CSS -->
-    <link href="{{ asset('/core-assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <!-- page css -->
-    <link href="{{ asset('/core-assets/css/pages/login-register-lock.css') }}" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{{ asset('/core-assets/css/style.css') }}" rel="stylesheet">
 
-    <!-- You can change the theme colors from here -->
-    <link href="{{ asset('/core-assets/css/colors/default-dark.css') }}" id="theme" rel="stylesheet">
+    <link href="{{ asset('/base-assets/style.css') }}" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -27,49 +22,25 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body class="card-no-border">
-<!-- ============================================================== -->
-<!-- Preloader - style you can find in spinners.css -->
-<!-- ============================================================== -->
-<div class="preloader">
-    <div class="loader">
-        <div class="loader__figure"></div>
-        <p class="loader__label">{{ _('Startev Africa') }}</p>
-    </div>
-</div>
+<body class="dark-color-overlay bg-img" style="background-image: url(/base-assets/img/startev-pg3.jpg);">
+
+ <!-- Preloader -->
+ <div id="preloader"></div>
 
 @yield('content')
 
 <!-- ============================================================== -->
 <!-- End Wrapper -->
 <!-- ============================================================== -->
-<!-- ============================================================== -->
-<!-- All Jquery -->
-<!-- ============================================================== -->
-<script src="{{ asset('/core-assets/plugins/jquery/jquery.min.js') }}"></script>
-<!-- Bootstrap tether Core JavaScript -->
-<script src="{{ asset('/core-assets/plugins/bootstrap/js/popper.min.js') }}"></script>
-<script src="{{ asset('/core-assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
-<!--Custom JavaScript -->
-<script type="text/javascript">
-    $(function() {
-        $(".preloader").fadeOut();
-    });
-    $(function() {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
-    // ==============================================================
-    // Login and Recover Password
-    // ==============================================================
-    $('#to-recover').on("click", function() {
-        $("#loginform").slideUp();
-        $("#recoverform").fadeIn();
-    });
 
-    $('#to-loginform').on("click", function() {
-        $("#recoverform").slideUp();
-        $("#loginform").fadeIn();
-    });
-</script>
+    <!-- Must needed plugins to the run this Template -->
+    <script src="{{ asset('/base-assets/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('/base-assets/js/popper.min.js') }}"></script>
+    <script src="{{ asset('/base-assets/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('/base-assets/js/bundle.js') }}"></script>
+
+    <!-- Active JS -->
+    <script src="{{ asset('/base-assets/js/default-assets/active.js') }}"></script>
+
 </body>
 </html>

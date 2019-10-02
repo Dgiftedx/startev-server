@@ -1,23 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'View Platform Focals :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="vocalsViewController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item active">platform Focals</li>
-                </ol>
-            </div>
-        </div>
-
-
+    <div ng-controller="vocalsViewController">
         <div class="row">
             <div class="col-12">
                 <div class="card" id="main-list">

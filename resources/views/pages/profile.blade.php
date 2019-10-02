@@ -1,29 +1,14 @@
 @extends('layouts.admin')
 @section('title', 'My Profile :: Startev Africa')
 @section('content')
-    <div class="container-fluid" ng-controller="profileController">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h3 class="text-themecolor">Startev Admin</h3>
-            </div>
-            <div class="col-md-7 align-self-center">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active">Home</li>
-                </ol>
-            </div>
-        </div>
-
+    <div ng-controller="profileController">
         <div class="row">
             <!-- Column -->
             <div class="col-lg-4 col-xlg-3 col-md-5">
                 <div class="card">
                     <div class="card-body text-center">
                         <div class="m-t-30"> <img id="avatar_preview" src="@{{ model.profile.avatar?model.profile.avatar:'/core-assets/defaults/avatar.jpg' }}" class="img-circle" width="150">
-                            <h4 class="card-title m-t-10">@{{ model.profile.name }}</h4>
-                            <h6 class="card-subtitle">Startev Staff</h6>
+                            <h4 class="card-title mt-3">@{{ model.profile.name }}</h4>
                             <label for="avatar_upload" class="custom-file-upload waves-effect">
                                 <i class="fa fa-camera"></i> Change Avatar
                             </label>
@@ -35,15 +20,11 @@
                     <div class="card-body">
                         <small class="text-muted">Email address </small>
                         <h6>@{{ model.profile.email }}</h6>
-                        <small class="text-muted p-t-30 db">Phone</small>
+                        <small class="text-muted">Phone</small>
                         <h6>@{{ model.profile.official_phone }}</h6>
-                        <small class="text-muted p-t-30 db">Address</small>
+                        <small class="text-muted">Address</small>
                         <h6>@{{ model.profile.address }}</h6>
-                        <small class="text-muted p-t-30 db">Social Profile</small>
-                        <br>
-                        <button class="btn btn-circle btn-secondary"><i class="fab fa-facebook-f"></i></button>
-                        <button class="btn btn-circle btn-secondary"><i class="fab fa-twitter"></i></button>
-                        <button class="btn btn-circle btn-secondary"><i class="fab fa-youtube"></i></button>
+                        <small class="text-muted">Social Profile</small>
                     </div>
                 </div>
             </div>
