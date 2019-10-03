@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Advert;
+use App\Models\Bank;
 use App\Models\Broadcast\BroadcastSchedule;
 use App\Models\Business;
 use App\Models\BusinessVenture;
@@ -10,6 +11,7 @@ use App\Models\Feed;
 use App\Models\Student;
 use App\Models\User;
 use App\Repositories\GuzzleCall;
+use App\Repositories\VerifyAccountNumber;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
@@ -31,6 +33,13 @@ class OpenApiController extends Controller
         $result['businesses'] = count(HelperController::businessIds());
 
         return $result;
+    }
+
+
+    public function banks()
+    {
+        $banks = Bank::all();
+        return response($banks);
     }
 
     public function getSingleFeed( $id )

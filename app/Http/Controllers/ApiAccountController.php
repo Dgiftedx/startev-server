@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Store\StoreHelperController;
 use App\Models\Business;
 use App\Models\CareerPath;
 use App\Models\City;
@@ -10,10 +11,13 @@ use App\Models\Graduate;
 use App\Models\Mentor;
 use App\Models\Partnership;
 use App\Models\State;
+use App\Models\Store\UserStore;
 use App\Models\Student;
 use App\Models\Trainee;
 use App\Models\User;
 use App\Models\VerificationRequest;
+use App\Repositories\PayStackCustomer;
+use App\Repositories\VerifyAccountNumber;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +46,45 @@ class ApiAccountController extends Controller
         $this->url = url('/');
     }
 
+
+    public function verifyAccountNumber( Request $request )
+    {
+        $data = $request->all();
+        $verified = (new VerifyAccountNumber)->verify($data['account_number'], $data['bank_code']);
+        if(count($verified) > 0) {
+            return response()->json(['success' => true, 'data' => $verified]);
+        }
+
+        return response()->json(['success' => false]);
+    }
+
+    public function addAccountDetails( Request $request )
+    {
+        $data = $request->all();
+
+
+        $userID = $data['user_id'];
+        $user = $this->user->find($userID);
+
+        unset($data['user_id']);
+
+        $name = explode(" ", $user->name);
+        $payload = [
+            'first_name' => $name[0],
+            'last_name' => $name[1],
+            'email' => $user->email,
+            'phone' => $user->phone?$user->phone:'N/A'
+        ];
+
+        $result = (new PayStackCustomer)->create($payload);
+        $data['payment_id'] = $result['data']['customer_code'];
+
+        $userStore = UserStore::find(UserStore::storeId($userID));
+        $userStore->update($data);
+
+        $update = StoreHelperController::userStore($userID);
+        return response()->json($update);
+    }
 
 
     public function submitVerification( Request $request )

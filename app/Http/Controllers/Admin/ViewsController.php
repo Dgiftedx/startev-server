@@ -96,4 +96,10 @@ class ViewsController extends Controller
     {
         return view('pages.transactions');
     }
+
+
+    public function sideData()
+    {
+        return view('pages.settings.site-data');
+    }
 }

@@ -73,6 +73,13 @@
                                 <li><a href="{{ route('adverts') }}">Manage Adverts</a></li>
                         </ul>
                     </li>
+
+                    <li class="treeview {{ $route === 'help tips' || $route === 'adverts' ? 'active' : '' }}">
+                        <a href="javascript:void(0)"><i class="icon_cog"></i> <span>General Settings</span> <i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                                <li><a href="{{ route('site data') }}">Site Data</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </nav>
         </div>

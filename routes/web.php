@@ -125,4 +125,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('manage-contents/update-help-tip/{id}','ContentsManagerController@updateHelpTip');
     Route::get('manage-contents/help-tips-view','Admin\ViewsController@helpTips')->name('help tips');
     Route::get('manage-contents/get-advert-banners','Admin\ViewsController@adverts')->name('adverts');
+
+
+    //site Data
+    Route::get('/general-settings/reload-banks','Admin\SettingsController@reloadBanks');
+    Route::get('/general-settings/fetch-site-data','Admin\SettingsController@siteData');
+    Route::get('general-settings/site-data-view', 'Admin\ViewsController@sideData')->name('site data');
+
 });
