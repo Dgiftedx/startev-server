@@ -101,7 +101,7 @@ class OrderTransaction
 
     public function calEscrowed()
     {
-        return ($this->calCommission() + $this->calPayStack() + $this->calStarTev() + $this->delivery);
+        return ($this->calCommission() + $this->calStarTev() + $this->delivery);
     }
 
 }

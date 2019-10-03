@@ -132,8 +132,9 @@ class UserStoreController extends Controller
     public function storeOrders( $userId )
     {
         $query = ['store_id' => UserStore::storeId($userId)];
-        $orders = StoreHelperController::getOrders($query);
-        return response()->json($orders);
+//        $orders = StoreHelperController::getOrders($query);
+        $orders = BatchOrder::with(['store','ordersStudent','ordersStudent.venture','buyer','ordersStudent.product'])->byFilter($query)->get();
+        return response()->json(['orders' => $orders]);
     }
 
     public function singleOrder( $orderId )
@@ -226,10 +227,11 @@ class UserStoreController extends Controller
 
         foreach ($products as $product){
             //Attach user store ID
-            $product->store_id = UserStore::storeId($data['user_id']);
+            $store_id = UserStore::storeId($data['user_id']);
+            $product->store_id = $store_id;
             //create product copy into user store
 
-            if (!UserVentureProduct::where('product_id', '=', $product->id)->exists()) {
+            if (!UserVentureProduct::where('product_id', '=', $product->id)->where('store_id','=',$store_id)->exists()) {
                 UserVentureProduct::create([
                     'store_id' => $product->store_id,
                     'venture_id' => $partnership->venture_id,

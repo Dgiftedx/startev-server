@@ -36,11 +36,11 @@ class DashboardController extends Controller
 
 
         foreach($unpaidRaw as $settlement){
-            $unpaidEscrowed += ($settlement->escrowed - $settlement->paystack_charge); //at checkout, paystack has been paid
+            $unpaidEscrowed += $settlement->escrowed; //at checkout, paystack has been paid
         }
 
         foreach($unpaidRaw as $settlement)  {
-            $unpaidSettlements += (($settlement->escrowed + $settlement->business_payout) - $settlement->paystack_charge);
+            $unpaidSettlements += ($settlement->escrowed + $settlement->business_payout);
         }
 
         $totalPayoutRaw = $unpaidRaw = VendorSettlement::where('status', '=','paid')->pluck('total')->toArray();

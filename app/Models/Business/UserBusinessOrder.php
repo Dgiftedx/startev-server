@@ -72,6 +72,7 @@ class UserBusinessOrder extends Model
         return $this->belongsTo(UserVentureProduct::class,'product_sku');
     }
 
+
     public function batch()
     {
         return $this->belongsTo(BatchOrder::class, 'batch_id', 'batch_id');
@@ -79,7 +80,7 @@ class UserBusinessOrder extends Model
 
     public function settlement()
     {
-        return $this->hasOne(VendorSettlement::class, 'vendor_settlement_id');
+        return $this->hasOne(VendorSettlement::class, 'id');
     }
 
     public function scopeByFilter($query,$data){

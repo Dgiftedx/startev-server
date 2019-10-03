@@ -217,8 +217,10 @@ class MainStoreController extends Controller
                 $data['buyer_id'] = $user->id;
                 $data['name'] = $user->name?$user->name:null;
                 $data['email'] = $user->email?$user->email:null;
-                $data['phone'] = $user->phone?$user->phone:null;
-                $data['location'] = $user->address?$user->address:null;
+//                $data['phone'] = $data['phone'];
+//                $data['location'] = $user->address?$user->address:null;
+                $data['location'] = $data['delivery_address'];
+                User::find($user->id)->update(['phone' => $data['phone'], 'address' => $data['delivery_address']]);
             }
         }
 

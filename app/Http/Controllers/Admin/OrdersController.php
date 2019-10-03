@@ -53,7 +53,7 @@ class OrdersController extends Controller
         //     return [];
         // });
 
-        $orders =  UserBusinessOrder::with(['store','mainProduct','buyer','venture'])->byFilter($query)->get();
+        $orders =  UserBusinessOrder::with(['store','mainProduct','buyer','venture','settlement'])->byFilter($query)->get();
 
         return response()->json(['success' => true, 'orders' => $orders]);
 

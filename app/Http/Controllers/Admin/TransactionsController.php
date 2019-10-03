@@ -20,7 +20,6 @@ class TransactionsController extends Controller
     public function index( Request $request )
     {
         $query = $request->all();
-        $settlements = [];
 
         if ($query['status'] === 'all'){
             $settlements  = $this->settlement->with(['order','order.buyer','order.venture','order.store','order.mainProduct'])->get();

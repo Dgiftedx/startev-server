@@ -2,6 +2,7 @@ mainApp.controller('adminConfirmedOrderViewController', ['$rootScope','lodash','
     function ($rootScope,lodash, $scope, $location, $window, $timeout,SweetAlert,moment, adminService) {
 
         $scope.model = {};
+        $scope.model.currentTransaction = {};
         $scope.model.cargando_main = true;
         $scope.model.finalizing = false;
 
@@ -15,7 +16,7 @@ mainApp.controller('adminConfirmedOrderViewController', ['$rootScope','lodash','
                     $scope.model.cargando_main = false;
                 },
                 function () {
-                    console.log("An error occurred");
+                    //
                 }
             );
         };
@@ -34,5 +35,14 @@ mainApp.controller('adminConfirmedOrderViewController', ['$rootScope','lodash','
                     $scope.model.finalizing = false;
                 }
             )
+        };
+
+
+        $scope.model.view = function (order) {
+            $scope.model.currentTransaction = order;
+            console.log(order);
+            //open up modal box
+            //open modal box;
+            $('#detailsModal').modal('show');
         }
     }]);
