@@ -125,7 +125,7 @@ class ApiVentureController extends Controller
 
     public function singleVenture($identifier)
     {
-        $venture = BusinessVenture::with('business')->with('business.user')->where('identifier','=', $identifier)->first();
+        $venture = BusinessVenture::with(['business','business.user','products'])->where('identifier','=', $identifier)->first();
         $venturePartners = Partnership::where('venture_id','=',$venture->id)->where('business_id','=',$venture->business_id)->get();
         $data = [
             'venturePartners' => $venturePartners,
@@ -210,6 +210,33 @@ class ApiVentureController extends Controller
     }
 
 
+
+    public function rejectPartnership( Request $request )
+    {
+        $input = $request->all();
+
+        $user = $this->user->find($input['user_id']);
+        $record = Partnership::find($input['partner_id']);
+
+        //Update partnership data with referral link
+        $record->update([
+            'status' => 'rejected'
+        ]);
+
+        $partners = Partnership::where('business_id','=',$record->business_id)->with('venture')->with('user')->get();
+
+        $venture = BusinessVenture::where('id','=', $record->venture_id)->first();
+        $mailContent['message'] = "Your partnership request with <strong>{$venture->venture_name}</strong> has been <b style=\"color: #f00800\">Rejected</b>.";
+        $mailContent['to'] = $user->email;
+        $mailContent['subject'] = "Partnership Update";
+
+        //send mail notification
+        dispatch(new SendEmailNotification($mailContent));
+
+        return response()->json($partners);
+    }
+
+
     public function searchVenture( Request $request )
     {
         $searchTerms = $request->get('query');
@@ -229,6 +256,6 @@ class ApiVentureController extends Controller
             $ventures = BusinessVenture::with('business')->with('business.user')->whereIn('id', $searchIds)->get();
         }
 
-        return response()->json($ventures); 
+        return response()->json($ventures);
     }
 }

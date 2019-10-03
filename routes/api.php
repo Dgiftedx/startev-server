@@ -133,6 +133,7 @@ Route::group([
     Route::get('single-venture/{identifier}','ApiVentureController@singleVenture');
     Route::post('apply-to-partner','ApiVentureController@applyToPartner');
     Route::post('accept-partnership','ApiVentureController@acceptPartnership');
+    Route::post('reject-partnership','ApiVentureController@rejectPartnership');
 
 
     //Publication
