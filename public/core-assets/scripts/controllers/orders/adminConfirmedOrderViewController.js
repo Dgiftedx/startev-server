@@ -4,12 +4,13 @@ mainApp.controller('adminConfirmedOrderViewController', ['$rootScope','lodash','
         $scope.model = {};
         $scope.model.cargando_main = true;
         $scope.model.finalizing = false;
+
+
         $scope.model.loadOrdersIndex = function () {
 
             adminService.fetchData(
                 '/admin/order/get-orders-index/confirmed',
                 function (resp) {
-                    console.log(resp.data);
                     $scope.model.orders = resp.data.orders;
                     $scope.model.cargando_main = false;
                 },
@@ -20,7 +21,6 @@ mainApp.controller('adminConfirmedOrderViewController', ['$rootScope','lodash','
         };
 
         $scope.model.loadOrdersIndex();
-
 
 
         $scope.model.conclude = function(id){

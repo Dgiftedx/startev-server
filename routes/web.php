@@ -45,6 +45,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     });
 
 
+    //Transactions
+    Route::get('view-transactions', 'Admin\ViewsController@transactions')->name('all transactions');
+   Route::get('/transaction/get-index', 'Admin\TransactionsController@index');
+
+
     //users management
     Route::get('get-admin-users', 'Admin\AdminUsersController@all');
     Route::get('delete-admin/{id}', 'Admin\AdminUsersController@destroy');

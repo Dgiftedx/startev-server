@@ -74,7 +74,9 @@
 <script src="{{ asset('/base-assets/js/default-assets/datatable-responsive.min.js') }}"></script>
 <script src="{{ asset('/base-assets/js/default-assets/responsive.bootstrap4.min.js') }}"></script>
 {{-- <script src="{{ asset('/base-assets/js/default-assets/demo.datatable-init.js') }}"></script> --}}
+
 <!-- Chart JS -->
+<script src="{{ asset('/base-assets/js/default-assets/toastr.js') }}"></script>
 <script src="{{ asset('/base-assets/lib/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('/base-assets/lib/printThis.js') }}"></script>
 <script src="{{ asset('/base-assets/lib/toast.min.js') }}"></script>
@@ -107,8 +109,8 @@
 
 
 <!-- global AngularJS App to tap to -->
-<script src="{{ asset('/base-assets/scripts/main.js') }}"></script>
-<script src="{{ asset('/base-assets/scripts/services/adminService.js') }}"></script>
+<script src="{{ asset('/core-assets/scripts/main.js') }}"></script>
+<script src="{{ asset('/core-assets/scripts/services/adminService.js') }}"></script>
 @yield('footerScript')
 </body>
 </html>

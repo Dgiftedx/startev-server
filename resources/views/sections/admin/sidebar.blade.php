@@ -26,6 +26,7 @@
                     </li>
                     <li class="{{ $route === 'home' ? 'active' : '' }}"><a href="{{ route('home') }}"><i class="icon_lifesaver"></i> <span>Dashboard</span></a></li>
                     <li><a href="{{ route('admin users') }}"><i class="icon_contacts"></i> <span>Admin Users</span></a></li>
+                    <li><a href="{{ route('all transactions') }}"><i class="icon_briefcase"></i> <span>Transactions</span></a></li>
                     <li class="treeview {{ $route === 'admin new orders' || $route === 'admin confirmed orders' ? 'active' : '' }}">
                         <a href="javascript:void(0)"><i class="icon_cart_alt"></i> <span>Manage Orders</span> <i class="fa fa-angle-right"></i></a>
                         <ul class="treeview-menu">

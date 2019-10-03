@@ -7,6 +7,8 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         return new Toast({message : $message, type: $type});
     }
 
+
+
     function fetchData(url, onSuccess, onError) {
         $http.get(url
         ).then(function (response) {

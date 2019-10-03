@@ -91,4 +91,9 @@ class ViewsController extends Controller
     {
         return view('pages.contents.adverts');
     }
+
+    public function transactions()
+    {
+        return view('pages.transactions');
+    }
 }

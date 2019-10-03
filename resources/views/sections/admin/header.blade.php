@@ -38,52 +38,52 @@
                     <a href="javascript:" id="fullScreenMode"><i class="zmdi zmdi-fullscreen"></i></a>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon_globe-2" aria-hidden="true"></i></button>
+{{--                <li class="nav-item dropdown">--}}
+{{--                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon_globe-2" aria-hidden="true"></i></button>--}}
 
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <!-- Top Message Area -->
-                        <div class="top-message-area">
-                            <!-- Heading -->
-                            <div class="top-message-heading">
-                                <div class="heading-title">
-                                    <h6>Messages</h6>
-                                </div>
-                                <span>1 New</span>
-                            </div>
-                            <div class="message-box" id="messageBox">
-                                <a href="#" class="dropdown-item">
-                                    <i class="zmdi zmdi-email-open"></i>
-                                    <span class="message-text">
-                                        <span>6-hour video course on Angular</span>
-                                        <span>3 min ago</span>
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+{{--                    <div class="dropdown-menu dropdown-menu-right">--}}
+{{--                        <!-- Top Message Area -->--}}
+{{--                        <div class="top-message-area">--}}
+{{--                            <!-- Heading -->--}}
+{{--                            <div class="top-message-heading">--}}
+{{--                                <div class="heading-title">--}}
+{{--                                    <h6>Messages</h6>--}}
+{{--                                </div>--}}
+{{--                                <span>1 New</span>--}}
+{{--                            </div>--}}
+{{--                            <div class="message-box" id="messageBox">--}}
+{{--                                <a href="#" class="dropdown-item">--}}
+{{--                                    <i class="zmdi zmdi-email-open"></i>--}}
+{{--                                    <span class="message-text">--}}
+{{--                                        <span>6-hour video course on Angular</span>--}}
+{{--                                        <span>3 min ago</span>--}}
+{{--                                    </span>--}}
+{{--                                </a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </li>--}}
 
-                <li class="nav-item dropdown">
-                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon_lightbulb_alt" aria-hidden="true"></i> <span class="active-status"></span></button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <!-- Top Notifications Area -->
-                        <div class="top-notifications-area">
-                            <!-- Heading -->
-                            <div class="notifications-heading">
-                                <div class="heading-title">
-                                    <h6>Notifications</h6>
-                                </div>
-                                <span>2 New</span>
-                            </div>
+{{--                <li class="nav-item dropdown">--}}
+{{--                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon_lightbulb_alt" aria-hidden="true"></i> <span class="active-status"></span></button>--}}
+{{--                    <div class="dropdown-menu dropdown-menu-right">--}}
+{{--                        <!-- Top Notifications Area -->--}}
+{{--                        <div class="top-notifications-area">--}}
+{{--                            <!-- Heading -->--}}
+{{--                            <div class="notifications-heading">--}}
+{{--                                <div class="heading-title">--}}
+{{--                                    <h6>Notifications</h6>--}}
+{{--                                </div>--}}
+{{--                                <span>2 New</span>--}}
+{{--                            </div>--}}
 
-                            <div class="notifications-box" id="notificationsBox">
-                                <a href="#" class="dropdown-item"><i class="ti-face-smile bg-success"></i><span>We've got something for you!</span></a>
-                                <a href="#" class="dropdown-item"><i class="zmdi zmdi-notifications-active bg-danger"></i><span>Domain names expiring on Tuesday</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+{{--                            <div class="notifications-box" id="notificationsBox">--}}
+{{--                                <a href="#" class="dropdown-item"><i class="ti-face-smile bg-success"></i><span>We've got something for you!</span></a>--}}
+{{--                                <a href="#" class="dropdown-item"><i class="zmdi zmdi-notifications-active bg-danger"></i><span>Domain names expiring on Tuesday</span></a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </li>--}}
 
                 <li class="nav-item dropdown">
                     <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

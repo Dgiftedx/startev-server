@@ -13,8 +13,8 @@
                             </div>
 
                             <div class="total-profit">
-                                <h6>New Orders</h6>
-                                <div class="font-30 font-weight-bold">0</div>
+                                <h6>Total Payout</h6>
+                                <div class="font-30 font-weight-bold">NGN @{{ model.stats.total_payout | number:0 }}</div>
                             </div>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
 
                             <div class="total-profit">
                                 <h6>Today's Sales</h6>
-                                <div class="font-30 font-weight-bold">0</div>
+                                <div class="font-30 font-weight-bold">NGN @{{ model.stats.today_sales | number:0 }}</div>
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
 
                             <div class="total-profit">
                                 <h6>Pending Settlements</h6>
-                                <div class="font-30 font-weight-bold">0</div>
+                                <div class="font-30 font-weight-bold">NGN @{{ model.stats.unpaid_settlements | number:0 }}</div>
                             </div>
                         </div>
                     </div>
@@ -67,8 +67,8 @@
                             </div>
 
                             <div class="total-profit">
-                                <h6>Unpaid Escrows</h6>
-                                <div class="font-30 font-weight-bold">0</div>
+                                <h6>Unpaid Escrowed</h6>
+                                <div class="font-30 font-weight-bold">NGN @{{ model.stats.unpaid_escrowed | number:0 }}</div>
                             </div>
                         </div>
                     </div>

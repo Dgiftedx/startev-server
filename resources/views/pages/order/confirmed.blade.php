@@ -2,7 +2,7 @@
 @section('title', 'All Admin Users :: Startev Africa')
 @section('content')
 
-    <div class="row">
+    <div class="row" ng-controller="adminConfirmedOrderViewController">
         <div class="col-12">
             <div class="card" id="main-list">
                 <div class="card-body" coderty-loading="model.cargando_main">

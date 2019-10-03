@@ -12,6 +12,18 @@ class VendorSettlement extends Model
 
     public function order()
     {
-        return $this->belongsTo(UserBusinessOrder::class, 'vendor_settlement_id');
+        return $this->belongsTo(UserBusinessOrder::class, 'order_id', 'vendor_settlement_id');
+    }
+
+    public function scopeByFilter($query,$data){
+        $whereClause=[];
+        $whereParam=[];
+        foreach($data as $k=>$v){
+            $whereClause[]=$k.'=?';
+            $whereParam[]=$v;
+        }
+        $whereClause=implode(' and ',$whereClause);
+        $result= $query->whereRaw($whereClause,$whereParam); //Collect the result using ->first() or ->get()
+        return ($result);
     }
 }
