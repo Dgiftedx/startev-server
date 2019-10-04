@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                             <a href="{{ route('profile') }}" class="dropdown-item"><i class="ti-user text-default" aria-hidden="true"></i> My profile</a>
-                            <a href="#" class="dropdown-item"><i class="ti-settings text-default" aria-hidden="true"></i> General settings</a>
+                            <a href="{{ route('site data') }}" class="dropdown-item"><i class="ti-settings text-default" aria-hidden="true"></i> General settings</a>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();" class="dropdown-item">
                             <i class="ti-unlink text-warning" aria-hidden="true"></i> Sign-out</a>
