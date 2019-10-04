@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
+use App\Models\Business\UserBusinessOrder;
+use App\Models\BusinessSettlementBatch;
+use App\Models\BusinessVenture;
 use App\Models\CareerPath;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Industry;
 use App\Models\State;
+use App\Models\Store\UserStore;
+use App\Models\StoreSettlementBatch;
 use App\Models\Trainee;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -109,7 +115,69 @@ class ApiCommonController extends Controller
             'following' => $user->followings()->get(),
             'mentors' => HelperController::mentors()
         ];
-        
+
         return response()->json(['profile' => $profile]);
+    }
+
+    //=======================================================================
+    // Store Settlements
+    //=======================================================================
+    public function storeSettlements($id)
+    {
+        $store = UserStore::where('user_id', '=', $id)->first();
+
+        $result = StoreSettlementBatch::with(['store'])
+        ->where('store_id','=', $store->id)->orderBy('id','desc')->get();
+        return response()->json(['success' => true, 'result' => $result ]);
+    }
+
+
+    public function storeSettlementItems($id)
+    {
+        $result = [];
+
+        $settlement = StoreSettlementBatch::find($id);
+        $raw = json_decode($settlement->settlement_reference);
+        foreach($raw as $key => $r){
+            if($key !== 'total') {
+                $result[] = [
+                    'order' => UserBusinessOrder::find($r->order_id),
+                    'payout' => $r->payout
+                ];
+            }
+        }
+        return response()->json(['success' => true, 'items' => $result ]);
+    }
+
+    //========================================================================
+    // Business Settlements
+    //========================================================================
+    public function businessSettlements($id)
+    {
+        $business = Business::where('user_id', '=', $id)->first();
+
+        $result = BusinessSettlementBatch::with(['business','business.user'])
+        ->where('business_id','=', $business->id)->orderBy('id','desc')->get();
+        return response()->json(['success' => true, 'result' => $result ]);
+    }
+
+    public function settlementItems($id)
+    {
+        $result = [];
+
+        $settlement = BusinessSettlementBatch::find($id);
+        $raw = json_decode($settlement->orders_pile);
+        foreach($raw as $key => $r){
+
+            if($key !== 'total') {
+                $result[] = [
+                    'venture' => BusinessVenture::find($r->venture_id),
+                    'order' => UserBusinessOrder::find($r->order_id),
+                    'payout' => $r->payout
+                ];
+            }
+        }
+
+        return response()->json(['success' => true, 'items' => $result ]);
     }
 }

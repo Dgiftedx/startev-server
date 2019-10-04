@@ -208,6 +208,7 @@ Route::group([
     Route::get('get-audio-session/{target}', 'Chat\AudioSessionController@getSession');
     Route::get('pick-audio-session/{id}', 'Chat\AudioSessionController@pickSession');
     Route::get('get-audio-host-session/{host}', 'Chat\AudioSessionController@getHostSession');
+
 });
 
 
@@ -215,6 +216,12 @@ Route::group([
     'middleware' => ['api'],
     'prefix' => 'store'
 ], function () {
+
+    //Settlements
+    Route::get('payout/get-business-settlements/{id}','ApiCommonController@businessSettlements');
+    Route::get('payout/get-business-settlement-items/{id}', 'ApiCommonController@settlementItems');
+    Route::get('payout/get-store-settlements/{id}','ApiCommonController@storeSettlements');
+    Route::get('payout/get-store-settlement-items/{id}', 'ApiCommonController@storeSettlementItems');
 
 
     //////////////////////////////////////////////////////////////////////////////
