@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card animated fadeInRight" ng-if="model.showMain">
                     <div class="card-body" coderty-loading="model.cargando_main">
-                        <h4 class="card-title">Manage New Orders</h4>
+                        <h4 class="card-title">Manage Orders</h4>
                         <h6 class="card-subtitle">&nbsp;</h6>
 
                         <div class="">
@@ -115,7 +115,7 @@
                                         <td>Venture</td>
                                         <td class="text-danger"><strong>@{{ item.venture.venture_name }}</strong></td>
                                     </tr>
-                                    <tr ng-if="item.status !== 'confirm'">
+                                    <tr ng-if="item.status !== 'confirm' && item.status !== 'delivered'">
                                         <td colspan="2"><button ng-click="model.confirmOrder(item)" type="button" class="btn btn-sm btn-success">Confirm</button></td>
                                     </tr>
                                     <tr>

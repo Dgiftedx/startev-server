@@ -24,9 +24,8 @@ class OrdersController extends Controller
          */
 
         if($type === 'new') {
-            $query['status'] = 'pending';
             //fetch result using the parameters
-            $orders = BatchOrder::with(['store','buyer','ordersBusiness','ordersBusiness.venture','ordersBusiness.mainProduct'])->byFilter($query)->get();
+            $orders = BatchOrder::with(['store','buyer','ordersBusiness','ordersBusiness.venture','ordersBusiness.mainProduct'])->get();
             return response()->json(['success' => true, 'orders' => $orders]);
         }
 
@@ -83,13 +82,12 @@ class OrdersController extends Controller
 
     public function final($id)
     {
-        /**
-         * Here: necessary disbursement is done and all required settlements.
-         * Paystack percentage is sent,
-         * Student's commission is logged or have been logged,
-         * Businesses accounts get credited,
-         * Startev percentage is deducted and credited.
-         */
+         //set status of all others to delivered;
+        $businessOrder = UserBusinessOrder::find($id);
+         $businessOrder->update(['status' => 'delivered']);
+
+         $ventureOrder = UserVentureOrder::where('identifier', '=', $businessOrder->identifier)->first();
+         UserVentureOrder::find($ventureOrder->id)->update(['status' => 'delivered']);
 
          return response()->json(['success' => true ]);
     }

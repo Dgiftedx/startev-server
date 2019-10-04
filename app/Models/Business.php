@@ -12,18 +12,7 @@ class Business extends Model implements Searchable
      * Mass fillable
      * @var array
      */
-    protected $fillable = [
-        'user_id',
-        'name',
-        'description',
-        'services',
-        'phone',
-        'website',
-        'social_handle',
-        'partnership_terms',
-        'verified',
-        'verification_status'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * json to array

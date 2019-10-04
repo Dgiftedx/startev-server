@@ -7,6 +7,11 @@ use App\Models\Feed;
 use App\Models\User;
 use App\Repositories\OrderTransaction;
 use App\Repositories\PayStackVerifyTransaction;
+use App\Repositories\ProcessBusinessPayout;
+use App\Repositories\ProcessBusinessPayoutData;
+use App\Repositories\ProcessStorePayout;
+use App\Repositories\RequestBusinessPayout;
+use App\Repositories\StoreIncrement;
 use Symfony\Component\HttpFoundation\Request;
 
 class TestController extends Controller
@@ -31,34 +36,41 @@ class TestController extends Controller
         return "success";
     }
 
-    public function runTransactions( Request $request )
+    public function payBusiness()
+    {
+        /**
+         * Gathers all business orders that has been
+         * delivered  but yet paid, with reference
+         * to it's settlement split.
+         * group and save batch for bulk payout
+         */
+        //  $process = (new RequestBusinessPayout);
+        $process = [1];
+
+         /**
+          * Process the bulk payout taking values from business
+          * settlement batches.
+          */
+
+          $success = (new ProcessBusinessPayoutData)->payout($process);
+
+          dd($success);
+
+         return response()->json($process);
+    }
+
+
+    public function payStores()
     {
 
-        $reference = '45faf737-7a71-a107-7a89-fffccedc09b3';
-        //use transaction reference to get payStack charge and percentage
-        $payStackCharge = (new PayStackVerifyTransaction)->verify($reference);
+        // $increment = (new StoreIncrement)->run();
+        $payoutIds = [1,2];
 
-        //Pile request parameters
-        $params = [
-            'amountTotal' => 100000,
-            'starTev' => 5,
-            'commission' => 4,
-            'delivery' => 500,
-            'payStack' => $payStackCharge //percent
-        ];
+        $success = (new ProcessStorePayout)->payout($payoutIds);
 
-        //Perform transaction breakdown
-        $result = (new OrderTransaction($params))->calculate();
+        dd($success);
 
-        //Pile response parameters
-        $response = [
-            'success' => true,
-            'message' => 'reached',
-            'result' => $result
-        ];
-
-        //return response
-        return response()->json($response);
+         return response()->json($success);
     }
 
 

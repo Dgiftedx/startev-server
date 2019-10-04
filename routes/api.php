@@ -57,6 +57,7 @@ Route::group([
     Route::get('get-banks','OpenApiController@banks');
     Route::post('verify-account-number','ApiAccountController@verifyAccountNumber');
     Route::post('add-account-details','ApiAccountController@addAccountDetails');
+    Route::post('add-business-account-details','ApiAccountController@addBusinessAccountDetails');
     Route::get('get-landing-stats', 'OpenApiController@landingStats');
     Route::get('get-profile','ApiAccountController@profile');
     Route::get('get-my-feeds/{id}','ApiFeedsController@myFeeds');

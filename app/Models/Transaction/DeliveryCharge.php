@@ -21,4 +21,9 @@ class DeliveryCharge extends Model
     {
         return $this->belongsTo(UserBusinessOrder::class, 'order_id');
     }
+
+    public function settlement()
+    {
+        return $this->belongsTo(VendorSettlement::class, 'vendor_settlement_id');
+    }
 }

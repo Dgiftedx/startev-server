@@ -20,6 +20,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SendOrderNotification;
 use App\Models\BatchOrder;
 use App\Models\Setting;
+use App\Models\StoreSettlementBatch;
 use App\Models\Transaction\VendorSettlement;
 use App\Repositories\OrderTransaction;
 use App\Repositories\PayStackVerifyTransaction;
@@ -252,6 +253,14 @@ class MainStoreController extends Controller
         $storeOwner = (new User)->find($store->user_id);
         $recipients['store'] = ['email' => $storeOwner->email, 'store_name' => $store->store_name];
 
+        $settlementBatch['store_id'] = $store->id;
+        $settlementBatch['counter'] = 1;
+        $settlementBatch['active'] = 1;
+        //if there is no existing opening, create a new batch.
+        if(!StoreSettlementBatch::where('store_id','=',$store->id)->where('active','=',1)->exists()){
+            StoreSettlementBatch::create($settlementBatch);
+        }
+
 
         //Calculate total student's commission and save alongside with batch details
         $batch['total_student_commission'] = $this->calculateStudentCommission($items);
@@ -304,20 +313,20 @@ class MainStoreController extends Controller
                 'payStack' => $payStackCharge //amount
             ];
 
-            //Log delivery charges
-            if($index < 1) {
-                //Either batch or single order, only apply delivery charge to the first item
-                $params['delivery'] = $data['delivery_fee'];
-            }else{
-                $params['delivery'] = 0;
-            }
-
             //Perform transaction breakdown
             $result = (new OrderTransaction($params))->calculate();
             $result['batch_id'] = $businessOrder->batch_id;
             $result['order_id'] = $businessOrder->id;
+            $result['store_id'] = $businessOrder->store_id;
 
+            //Log settlement split
             $settlement = VendorSettlement::create($result);
+
+            //Log delivery charge
+            $deliveryCharge['order_id'] = $businessOrder->id;
+            $deliveryCharge['batch_id'] = $businessOrder->batch_id;
+            $deliveryCharge['vendor_settlement_id'] = $settlement->id;
+            $deliveryCharge['amount'] = $settlement->delivery;
 
             UserBusinessOrder::find($businessOrder->id)->update(['vendor_settlement_id' => $settlement->id]);
 

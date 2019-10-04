@@ -58,6 +58,33 @@ class ApiAccountController extends Controller
         return response()->json(['success' => false]);
     }
 
+    public function addBusinessAccountDetails( Request $request )
+    {
+        $data = $request->all();
+
+
+        $userID = $data['user_id'];
+        $business = Business::where('user_id', '=', $userID)->first();
+        $user = $this->user->find($userID);
+
+        unset($data['user_id']);
+
+        $name = explode(" ", $user->name);
+        $payload = [
+            'first_name' => $name[0],
+            'last_name' => $name[1],
+            'email' => $user->email,
+            'phone' => $user->phone?$user->phone:'N/A'
+        ];
+
+        $result = (new PayStackCustomer)->create($payload);
+        $data['payment_id'] = $result['data']['customer_code'];
+
+        Business::find($business->id)->update($data);
+
+        return response()->json(['success' => true ]);
+    }
+
     public function addAccountDetails( Request $request )
     {
         $data = $request->all();

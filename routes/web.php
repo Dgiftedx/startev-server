@@ -14,7 +14,8 @@
 //Route::get('send-mail','HelperController@sendVerificationMail');
 Route::get('download-file', 'DownloadController@download');
 Route::get('send-mail', 'TestController@sendMail');
-Route::get('run-transaction-test','TestController@runTransactions');
+Route::get('pay-business','TestController@payBusiness');
+Route::get('pay-stores','TestController@payStores');
 
 //Download schedule
 Route::get('download-broadcast-schedules/{id}', 'OpenApiController@downloadScheduleReport');
@@ -131,5 +132,13 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/general-settings/reload-banks','Admin\SettingsController@reloadBanks');
     Route::get('/general-settings/fetch-site-data','Admin\SettingsController@siteData');
     Route::get('general-settings/site-data-view', 'Admin\ViewsController@sideData')->name('site data');
+
+
+    //Payout Overview
+    Route::get('/payouts/index','Admin\PayoutsController@index');
+    Route::get('/payouts/items','Admin\PayoutsController@items');
+    Route::get('/payouts/store-view', 'Admin\ViewsController@storePayoutView')->name('store payout');
+    Route::get('/payouts/delivery-view', 'Admin\ViewsController@deliveryPayoutView')->name('delivery payout');
+    Route::get('/payouts/business-view', 'Admin\ViewsController@businessPayoutView')->name('business payout');
 
 });

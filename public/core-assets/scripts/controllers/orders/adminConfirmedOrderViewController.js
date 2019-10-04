@@ -25,14 +25,14 @@ mainApp.controller('adminConfirmedOrderViewController', ['$rootScope','lodash','
 
 
         $scope.model.conclude = function(id){
-            $scope.model.finalizing = true;
+            // $scope.model.finalizing = true;
 
             adminService.fetchData(
                 '/admin/order/conclude-order/'+id,
                 function(resp) {
                     adminService.alert("All settlements has been done. Order process completed.");
                     $scope.model.loadOrdersIndex();
-                    $scope.model.finalizing = false;
+                    // $scope.model.finalizing = false;
                 }
             )
         };

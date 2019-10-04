@@ -102,4 +102,19 @@ class ViewsController extends Controller
     {
         return view('pages.settings.site-data');
     }
+
+    public function storePayoutView()
+    {
+        return view('pages.payouts.store');
+    }
+
+    public function deliveryPayoutView()
+    {
+        return view('pages.payouts.delivery');
+    }
+
+    public function businessPayoutView()
+    {
+        return view('pages.payouts.business');
+    }
 }
