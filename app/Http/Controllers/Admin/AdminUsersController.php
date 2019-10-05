@@ -23,7 +23,9 @@ class AdminUsersController extends Controller
         $this->middleware('auth:admin');
     }
 
-
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function all()
     {
         $superAdministrators = $this->admin->role('super')->pluck('id')->toArray();
@@ -36,7 +38,10 @@ class AdminUsersController extends Controller
         return response()->json(['success' => true, 'users' => $users, 'roles' => $roles]);
     }
 
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function storeAdmin( Request $request )
     {
         $data = $request->all();
@@ -46,7 +51,6 @@ class AdminUsersController extends Controller
         }
 
         $data['slug'] = uniqid(rand(), true);
-//        $data['password'] = bcrypt($data['password']);
 
         if (isset($data['avatar']) && $data['avatar'] !== 'undefined') {
 
@@ -74,6 +78,11 @@ class AdminUsersController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateAdmin( Request $request, $id )
     {
         $data = $request->all();
@@ -112,6 +121,10 @@ class AdminUsersController extends Controller
     }
 
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id )
     {
         $user = $this->admin->find($id);
@@ -122,4 +135,5 @@ class AdminUsersController extends Controller
         $user->delete();
         return response()->json(['success' => true, 'message' => "Admin user removed successfully"]);
     }
+
 }

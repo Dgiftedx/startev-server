@@ -31,6 +31,7 @@ Route::get('/video/{file}', function ( $file ) {
         return response()->file($path, array('Content-Type' => 'video/mp4'));
 });
 
+
 Auth::routes();
 Route::group(['middleware' => ['auth:admin']], function () {
 
