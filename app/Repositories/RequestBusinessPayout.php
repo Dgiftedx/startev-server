@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class RequestBusinessPayout
 {
-    public function __construct()
-    {
-        return $this->run();
-    }
 
     public function run()
     {
@@ -40,12 +36,13 @@ class RequestBusinessPayout
         $collection = [];
 
         foreach($this->getBusinessOrders() as $id => $orders) {
+
             $collection[$id] = [];
             $total = 0;
             foreach($orders as $order) {
                 $settlement = VendorSettlement::where('order_id', '=', $order->id)->first();
 
-                if($settlement->business_settled === 0) {
+                if(!$settlement->business_settled) {
                     $collection[$id][] = [
                         'settlement_id' => $settlement->id,
                         'business_id' => $order->business_id,
@@ -61,12 +58,13 @@ class RequestBusinessPayout
             $collection[$id]['total'] = $total;
         }
 
-
         return $collection;
     }
 
 
-
+    /**
+     * @return array
+     */
     public function saveBusinessBatch()
     {
         $batchIds = [];
@@ -75,12 +73,16 @@ class RequestBusinessPayout
 
         foreach($businessSplit as $id => $split) {
             $total = $businessSplit[$id]['total'];
-            unset($businessSplit[$id]['total']);
-            $batch = BusinessSettlementBatch::create([
-                'business_id' => $id,
-                'orders_pile' => json_encode( $split),
-                'total' => $total
-            ]);
+
+            if (BusinessSettlementBatch::where('business_id','=',$id)->where('status','=','pending')->exists()){
+                $batch = BusinessSettlementBatch::where('business_id','=',$id)->where('status','=','pending')->first();
+            }else{
+                $batch = BusinessSettlementBatch::create([
+                    'business_id' => $id,
+                    'orders_pile' => json_encode($split),
+                    'total' => $total
+                ]);
+            }
 
             $batchIds[] = $batch->id;
         }

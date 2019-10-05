@@ -2,41 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\sendMessageCampaign;
-use App\Models\Feed;
-use App\Models\User;
-use App\Repositories\OrderTransaction;
-use App\Repositories\PayStackVerifyTransaction;
-use App\Repositories\ProcessBusinessPayout;
 use App\Repositories\ProcessBusinessPayoutData;
 use App\Repositories\ProcessStorePayout;
 use App\Repositories\RequestBusinessPayout;
 use App\Repositories\StoreIncrement;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpFoundation\Request;
 
-class TestController extends Controller
+class CronController extends Controller
 {
-
-
-    protected $base_url;
-
-    public function __construct()
-    {
-        $this->base_url = url('/');
-    }
-
-    public function sendMail()
-    {
-
-        $mailContent['message'] = "This is a testing mail";
-        $mailContent['subject'] = "Testing";
-        $mailContent['recipients'] = ['olubunmivictor6@gmail.com'];
-        dispatch(new sendMessageCampaign($mailContent));
-
-        return "success";
-    }
-
     public function payBusiness()
     {
         /**
@@ -45,21 +19,21 @@ class TestController extends Controller
          * to it's settlement split.
          * group and save batch for bulk payout
          */
-          $process = (new RequestBusinessPayout)->run();
+        $process = (new RequestBusinessPayout)->run();
 
-         /**
-          * Process the bulk payout taking values from business
-          * settlement batches.
-          * Only process if there are settlements
-          */
+        /**
+         * Process the bulk payout taking values from business
+         * settlement batches.
+         * Only process if there are settlements
+         */
 
-          if (is_array($process) && count($process) > 0) {
-              $success = (new ProcessBusinessPayoutData)->payout($process);
-          }else{
-              $success = ['message' => "No settlement found for payout"];
-          }
+        if (is_array($process) && count($process) > 0) {
+            $success = (new ProcessBusinessPayoutData)->payout($process);
+        }else{
+            $success = ['message' => "No settlement found for payout"];
+        }
 
-          Log::info($success);
+        Log::info($success);
 
 //          return response()->json($success);
     }
@@ -92,7 +66,4 @@ class TestController extends Controller
 
 //        return response()->json($success);
     }
-
-
-
 }

@@ -63,7 +63,7 @@ class PayoutsController extends Controller
 
             case 'store':
             $settlement = StoreSettlementBatch::find($data['id']);
-            $raw = json_decode($settlement->settlement_reference);
+            $raw = isset($settlement->settlement_reference)?json_decode($settlement->settlement_reference):[];
             foreach($raw as $key => $r){
 
                 if($key !== 'total') {

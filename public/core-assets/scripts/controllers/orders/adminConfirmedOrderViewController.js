@@ -40,7 +40,6 @@ mainApp.controller('adminConfirmedOrderViewController', ['$rootScope','lodash','
 
         $scope.model.view = function (order) {
             $scope.model.currentTransaction = order;
-            console.log(order);
             //open up modal box
             //open modal box;
             $('#detailsModal').modal('show');

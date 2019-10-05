@@ -26,7 +26,8 @@
                                         <strong>@{{ payout.reference_id?payout.reference_id:'Still procesing payout...' }}</strong>
                                     </td>
                                     <td>
-                                        <strong>NGN @{{ payout.total | number:0 }}</strong>
+                                        <strong ng-if="payout.total">NGN @{{ payout.total | number:0 }}</strong>
+                                        <strong ng-if="!payout.total">Not yet compiled</strong>
                                     </td>
                                     <td>
                                         <span ng-if="payout.status === 'pending'" class="badge badge-danger badge-pill">
@@ -60,7 +61,10 @@
                     <div class="modal-body m-2">
                         <div class="row">
                             <div class="col-md-5 border border-warning">
-                               <h1>Total Payout <br/> <strong class="text-success">NGN @{{ model.currentPayout.total |number:0 }}</strong></h1>
+                               <h1>Total Payout <br/>
+                                   <strong ng-if="model.currentPayout.total" class="text-success">NGN @{{ model.currentPayout.total |number:0 }}</strong>
+                                   <strong ng-if="!model.currentPayout.total" class="text-success">Not known</strong>
+                               </h1>
                                <hr>
                                <div class="text-center">
                                 <h6>Store Owner</h6><br/>

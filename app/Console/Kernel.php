@@ -2,7 +2,9 @@
 
 namespace App\Console;
 
+use App\Http\Controllers\CronController;
 use App\Repositories\RequestBusinessPayout;
+use function Clue\StreamFilter\fun;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -25,7 +27,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //  $schedule->call(new RequestBusinessPayout)->dailyAt('07:00');
+          $schedule->call(function () {
+              (new CronController)->payBusiness();
+              (new CronController)->payStores();
+          })->dailyAt('07:00')->withoutOverlapping(10);;
     }
 
     /**

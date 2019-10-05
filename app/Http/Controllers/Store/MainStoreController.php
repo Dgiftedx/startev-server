@@ -212,17 +212,15 @@ class MainStoreController extends Controller
         //get buyer
         $data['buyer_id'] = $data['user_id'];
 
-        if ($data['user_id'] < 1){
-            if(User::where('email','=',$data['email'])->exists()){
-                $user = User::where('email','=',$data['email'])->first();
-                $data['buyer_id'] = $user->id;
-                $data['name'] = $user->name?$user->name:null;
-                $data['email'] = $user->email?$user->email:null;
+        if(User::where('email','=',$data['email'])->exists()){
+            $user = User::where('email','=',$data['email'])->first();
+            $data['buyer_id'] = $user->id;
+            $data['name'] = $user->name?$user->name:null;
+            $data['email'] = $user->email?$user->email:null;
 //                $data['phone'] = $data['phone'];
 //                $data['location'] = $user->address?$user->address:null;
-                $data['location'] = $data['delivery_address'];
-                User::find($user->id)->update(['phone' => $data['phone'], 'address' => $data['delivery_address']]);
-            }
+            $data['location'] = $data['delivery_address'];
+            User::find($user->id)->update(['phone' => $data['phone'], 'address' => $data['delivery_address']]);
         }
 
         unset($data['user_id']);
@@ -307,6 +305,7 @@ class MainStoreController extends Controller
 
             //Pile request parameters for transaction calculations and settlements
             $params = [
+                'delivery' => $data['delivery_fee'],
                 'amountTotal' => $businessOrder->amount, //amount
                 'starTev' => (new Setting)->value('STARTEV_PERCENTAGE_CHARGE'), //percentage
                 'commission' => $businessOrder->commission, //percentage

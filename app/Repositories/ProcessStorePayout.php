@@ -37,19 +37,23 @@ class ProcessStorePayout
 
                 $pay = $this->makeRequest($payload);
 
-                if($pay && isset($pay['status'])) {
-                    //payout successful
-                    dd($pay);
+                if($pay && isset($pay['status']) && $pay['status']) {
+
+                    StoreSettlementBatch::find($batch->id)->update(['status' => 'processed']);
+                    return ['success' => true ];
                 }
 
-                //payout failed with response code 400
-                dd($pay);
+                //there is an error and could not be processed
+                return $pay;
 
             }else{
                 //remove batch if there is no active account number
                 StoreSettlementBatch::find($batch->id)->delete();
             }
         }
+
+
+        return [];
     }
 
     private function makeRequest($singlePayout)
@@ -60,12 +64,16 @@ class ProcessStorePayout
             $response = json_decode($response->getBody()->getContents(), true);
         }catch (\Exception $e){
             //just return the error message
-            return $e->getMessage();
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ];
         }
 
         return $response;
 
-        return $this->filterResponse($response);
+//        return $this->filterResponse($response);
     }
 
 

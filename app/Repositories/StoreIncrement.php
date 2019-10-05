@@ -20,11 +20,10 @@ class StoreIncrement
     public function run()
     {
         $this->incrementCounter();
-       $totals = $this->calculateStoreTotals();
+        $totals = $this->calculateStoreTotals();
+        $payoutIds = $this->updateSettlement($totals);
 
-       $payoutIds = $this->updateSettlement($totals);
-
-       return $payoutIds;
+        return $payoutIds;
     }
 
 
@@ -35,7 +34,6 @@ class StoreIncrement
 
             //
             foreach($batches as $batch) {
-
                 $counter = $batch->counter?$batch->counter:0;
                 StoreSettlementBatch::find($batch->id)->update(['counter' => $counter + 1]);
             }
@@ -68,14 +66,14 @@ class StoreIncrement
 
         $ids = $this->takeReady();
         VendorSettlement::whereIn('store_id', $ids)->whereNull('store_reference_id')->get()
-        ->mapToGroups(function($item) use (&$data) {
-            $data[$item->store_id][] = [
-                'order_id' => $item->order_id,
-                'vendor_settlement_id' => $item->id,
-                'payout' => $item->commission_payout
-            ];
-            return [];
-        });
+            ->mapToGroups(function($item) use (&$data) {
+                $data[$item->store_id][] = [
+                    'order_id' => $item->order_id,
+                    'vendor_settlement_id' => $item->id,
+                    'payout' => $item->commission_payout
+                ];
+                return [];
+            });
 
         return $data;
     }

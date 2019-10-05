@@ -66,12 +66,12 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Transaction Full Details for <strong class="text-primary">#@{{ model.currentTransaction.order.identifier }}</strong></h4>
+                        <h4 class="modal-title">Transaction Full Details for <strong class="text-primary">#@{{ model.currentTransaction.identifier }}</strong></h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <img src="@{{ model.currentTransaction.order.main_product.images[0] }}" height="120" class="img-responsive" alt=""/>
+                                <img src="@{{ model.currentTransaction.main_product.images[0] }}" height="120" class="img-responsive" alt=""/>
                             </div>
                             <div class="col-md-8">
                                 <table class="table">

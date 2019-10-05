@@ -36,34 +36,42 @@ class ProcessBusinessPayoutData
 
                 $pay = $this->makeRequest($payload);
 
-                if($pay && isset($pay['status'])) {
-                    dd($pay);
+                if($pay && isset($pay['status']) && $pay['status']) {
+
+                    BusinessSettlementBatch::find($batch->id)->update(['status' => 'processed']);
+                    return ['success' => true ];
                 }
 
-
-                dd($pay);
+                //there is an error and could not be processed
+                return $pay;
 
             }else{
                 //remove batch.
                 BusinessSettlementBatch::find($batch->id)->delete();
             }
         }
+
+        return[];
     }
 
     private function makeRequest($singlePayout)
     {
-        $requestUrl = env('PAYSTACK_ENDPOINT') . "transfer";
+        $requestUrl = env('PAYSTACK_ENDPOINT') . "transfer/";
         try{
             $response = $this->client->request("POST", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_TEST')], 'form_params' => $singlePayout]);
             $response = json_decode($response->getBody()->getContents(), true);
         }catch (\Exception $e){
             //just return the error message
-            return $e->getMessage();
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ];
         }
 
         return $response;
 
-        return $this->filterResponse($response);
+//        return $this->filterResponse($response);
     }
 
 
