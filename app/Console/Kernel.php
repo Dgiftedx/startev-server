@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
           $schedule->call(function () {
               (new CronController)->payBusiness();
               (new CronController)->payStores();
-          })->dailyAt('07:00')->withoutOverlapping(10);;
+          })->dailyAt('07:00')->name('payout_job')->withoutOverlapping(10);;
     }
 
     /**
