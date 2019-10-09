@@ -28,8 +28,9 @@ class PayStackVerifyTransaction
      * Make request to payStack endpoint to verify
      * transaction using the reference ID.
      *
-     * @param [type] $reference
-     * @return mixed
+     * @param $reference
+     * @return float
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function verify($reference)
     {
@@ -44,8 +45,9 @@ class PayStackVerifyTransaction
      * with authorization using Guzzle Http Client
      * and return a json parsed response
      *
-     * @param [type] $reference
-     * @return void
+     * @param $reference
+     * @return mixed|\Psr\Http\Message\ResponseInterface|string
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function makeRequest($reference)
     {
@@ -65,7 +67,7 @@ class PayStackVerifyTransaction
      * Filter response to get needed parameters.
      *
      * @param [type] $response
-     * @return void
+     * @return float
      */
     public function filterResponse($response)
     {
