@@ -84,6 +84,7 @@ Route::group([
     Route::post('address-search-places','OpenApiController@searchPlacesByAddress');
     Route::post('main-store-calculate-delivery','OpenApiController@calculateDelivery');
     Route::post('generate-code', 'ApiAccountController@generateCode');
+    Route::post('generate-store-url', 'ApiAccountController@generateStoreUrl');
 
     //Industries
     Route::get('industries','ApiCommonController@industries');

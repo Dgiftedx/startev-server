@@ -85,10 +85,34 @@ class UserStoreController extends Controller
             unset($data['store_logo']);
         }
 
+        $storeUrl=$data['store_url'];
+        $newCode=strtolower($this->generateStoreUrl($data['store_name'],$userStore->id));
+        $data['store_url']=$storeUrl.$newCode;
+        $data['ref_code']=$data['identifier']=$newCode;
         $userStore->update($data);
 
         $update = StoreHelperController::userStore($user_id);
         return response()->json($update);
+    }
+
+    public function generateStoreUrl( $storename,$id )
+    {
+        $code = strtolower(str_replace(' ','_',$storename));
+        $userStore=UserStore::where('ref_code',$code)->first();
+        if (is_null($userStore))
+            return $code;
+        else
+            return $this->modeCode($code,$id,1);
+    }
+
+    public function modeCode($code,$id,$cc)
+    {
+        $newCode=$code.$cc;
+        $userStore=UserStore::where('ref_code',$newCode)->first();
+        if(!is_null($userStore) && $userStore->id!=$id)
+            $this->modeCode($code,$id,$cc++);
+        else
+            return $newCode;
     }
 
     /**
