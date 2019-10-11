@@ -168,7 +168,12 @@ class ApiVentureController extends Controller
         $mailContent['to'] = $user->email;
         $mailContent['subject'] = "Partnership Update";
 
+        $mailContent2['message'] = "Hi <strong>{$venture->venture_name}</strong>! <br> You have a new partnership request from {$user->name}.";
+        $mailContent2['to'] = $venture->business->user->email;
+        $mailContent2['subject'] = "New Partnership Request";
+
         dispatch(new SendEmailNotification($mailContent));
+        dispatch(new SendEmailNotification($mailContent2));
 
         return response()->json($update[0]);
     }

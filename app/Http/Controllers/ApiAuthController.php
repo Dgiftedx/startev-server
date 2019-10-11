@@ -164,8 +164,10 @@ class ApiAuthController extends Controller
 
         //return user instance with token
         $cert =  $this->refresh();
+//        return response()->json(['error'=>$user,$cert->original['accessData']['role']]);
 
         $data['user_id'] = $user->id;
+        $data['role'] = $cert->original['accessData']['role'];
 
         //send mail
         $this->sendWelcomeMail($data);
@@ -192,7 +194,7 @@ class ApiAuthController extends Controller
             'subject' => 'Confirm Your Email Address',
             'message' => "Welcome $user->name <br/><br/> Please confirm your email address by clicking the button below. You might not be able to log in without email confirmation",
             'token' => $user->slug,
-            'base_url' => 'https://startev.africa'
+            'base_url' => env('APP_BASE_URL','https://startev.africa')
         ];
 
         dispatch(new SendConfirmationMail($mailContents));
@@ -204,7 +206,8 @@ class ApiAuthController extends Controller
         $mailContents = [
             'to' => $user->email,
             'subject' => 'Welcome to Startev Africa',
-            'message' => "Welcome $user->name <br/> Your Username is $user->username"
+//            'message' => "Welcome $user->name <br/> Your Username is $user->username",
+            'message' => "Hello $user->name <br/>Welcome to Startev Africa"
         ];
 
         if ($data['role'] === 'student') {
