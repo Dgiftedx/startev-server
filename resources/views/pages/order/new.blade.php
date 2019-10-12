@@ -116,7 +116,7 @@
                                         <td class="text-danger"><strong>@{{ item.venture.venture_name }}</strong></td>
                                     </tr>
                                     <tr ng-if="item.status !== 'confirm' && item.status !== 'delivered'">
-                                        <td colspan="2"><button ng-click="model.confirmOrder(item)" type="button" class="btn btn-sm btn-success">Confirm</button></td>
+                                        <td colspan="2"><button ng-click="model.dispatchOrder(item)" type="button" class="btn btn-sm btn-success">Dispatch</button></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">&nbsp;</td>

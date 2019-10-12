@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\HelperController;
+use App\Models\Admin\Admin;
 use App\Models\Business\UserBusinessOrder;
 use App\Models\Business\UserBusinessProduct;
 use App\Models\BusinessVenture;
@@ -405,7 +406,7 @@ class MainStoreController extends Controller
             'role' => 'buyer'
         ];
 
-        //send to buyer
+        //send to student
         dispatch( new SendOrderNotification($mailContent));
 
         //Prepare store contents
@@ -415,8 +416,17 @@ class MainStoreController extends Controller
         $mailContent['subject'] = "New Order Alert :: Startev Africa";
         $mailContent['role'] = 'store';
         $mailContent['total'] = $totals;
-        //send to buyer
+        //send to student
         dispatch( new SendOrderNotification($mailContent));
+
+        //What of the Store administrators
+        Admin::all()
+            ->mapToGroups(function ($admin)use(&$mailContent,$recipients){
+                $mailContent['email']=$admin->email;
+                $mailContent['name']=$admin->name;
+                dispatch( new SendOrderNotification($mailContent));
+                return [];
+            });
         //All mail sent. Anyway don't bother about the memory consumption. Job things!
 
     }

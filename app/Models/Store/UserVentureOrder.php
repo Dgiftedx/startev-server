@@ -2,6 +2,7 @@
 
 namespace App\Models\Store;
 
+use App\Models\BatchOrder;
 use App\Models\Business\UserBusinessProduct;
 use App\Models\BusinessVenture;
 use App\Models\User;

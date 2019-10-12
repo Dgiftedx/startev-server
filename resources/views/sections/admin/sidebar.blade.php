@@ -38,11 +38,12 @@
                     </li>
 
 
-                    <li class="treeview {{ $route === 'admin new orders' || $route === 'admin confirmed orders' ? 'active' : '' }}">
+                    <li class="treeview {{ $route === 'admin new orders' || $route === 'admin confirmed orders'  || $route === 'admin delivered orders' || $route === 'admin dispatched orders' ? 'active' : '' }}">
                         <a href="javascript:void(0)"><i class="icon_cart_alt"></i> <span>Manage Orders</span> <i class="fa fa-angle-right"></i></a>
                         <ul class="treeview-menu">
                                 <li><a href="{{ route('admin new orders') }}">All Batch Orders</a></li>
-                                <li><a href="{{ route('admin confirmed orders') }}">Confirmed Orders</a></li>
+                                <li><a href="{{ route('admin dispatched orders') }}">Dispatched Orders</a></li>
+                                <li><a href="{{ route('admin delivered orders') }}">Confirmed Orders</a></li>
                         </ul>
                     </li>
                     <li class="treeview {{ $route === 'platform mentors' || $route === 'platform students' || $route === 'platform graduates' || $route === 'platform businesses' ? 'active' : '' }}">

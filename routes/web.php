@@ -67,13 +67,14 @@ Route::group(['middleware' => ['auth:admin']], function () {
     //Orders Management
     Route::get('new-orders', 'Admin\ViewsController@newOrders')->name('admin new orders');
     Route::get('confirmed-orders', 'Admin\ViewsController@confirmedOrders')->name('admin confirmed orders');
+    Route::get('dispatched-orders', 'Admin\ViewsController@dispatchedOrders')->name('admin dispatched orders');
     Route::get('cancelled-orders', 'Admin\ViewsController@cancelledOrders')->name('admin cancelled orders');
     Route::get('delivered-orders', 'Admin\ViewsController@deliveredOrders')->name('admin delivered orders');
 
     //Ajax calls
     Route::get('admin/order/get-orders-index/{type}','Admin\OrdersController@index');
     Route::get('admin/confirm-order/{id}','Admin\OrdersController@confirmOrder');
-    Route::get('admin/order/conclude-order/{id}', 'Admin\OrdersController@final');
+    Route::get('admin/order/conclude-order/{id}', 'Admin\OrdersController@finalizeOrder');
 
 
     Route::get('get-platform-students', 'Admin\PlatformUsersController@platformStudents');
