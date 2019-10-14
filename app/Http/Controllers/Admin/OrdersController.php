@@ -79,6 +79,8 @@ class OrdersController extends Controller
          * Wherever we need to send the payload to for delivery,
          * it's done below and success response is returned to the server
          */
+        $recipients = [];
+
         $this->sendShippingMails($ventureOrder,$ventureOrder->batch_id,$ventureOrder->identifier);
 
 
@@ -130,6 +132,21 @@ class OrdersController extends Controller
         $mailContent['role'] = 'store';
         $mailContent['message'] = $msg;
         $mailContent['base_url'] = env('APP_BASE_URL','https://app.startev.africa').'/venture-dashboard';
+        //send to student
+        dispatch( new SendConfirmNotification($mailContent));
+
+        $msg="Hi {$recipients->venture->venture_name}. <br> The order  #<strong>{$order_id}</strong> from your store has been DISPATCHED!";
+        $msg.="<h3>Order ID: {$order_id}</h3>";
+        $msg.="<h3>Batch ID: {$batch_id}</h3>";
+        $msg.="<h3>Store: {$recipients->store->store_name}</h3>";
+        $msg.="<h3>Venture: {$recipients->venture->venture_name}</h3>";
+        $msg.="<h3>Buyer: {$recipients->buyer->name}</h3>";
+        $mailContent['email'] = $recipients->venture->business->user->email;
+        $mailContent['name'] = $recipients->venture->venture_name;
+        $mailContent['subject'] = "Order Dispatch Alert :: Startev Africa";
+        $mailContent['role'] = 'venture';
+        $mailContent['message'] = $msg;
+        $mailContent['base_url'] = env('APP_BASE_URL','https://app.startev.africa').'/store-manager';
         //send to student
         dispatch( new SendConfirmNotification($mailContent));
         unset($mailContent['base_url']);
@@ -187,6 +204,24 @@ class OrdersController extends Controller
         $mailContent['base_url'] = env('APP_BASE_URL','https://app.startev.africa').'/venture-dashboard';
         //send to student
         dispatch( new SendConfirmNotification($mailContent));
+
+
+        $msg="Hi {$recipients->venture->venture_name}. <br> The order  #<strong>{$order_id}</strong> from your store has been COMPLETED!";
+        $msg.="<h3>Order ID: {$order_id}</h3>";
+        $msg.="<h3>Batch ID: {$batch_id}</h3>";
+        $msg.="<h3>Store: {$recipients->store->store_name}</h3>";
+        $msg.="<h3>Venture: {$recipients->venture->venture_name}</h3>";
+        $msg.="<h3>Buyer: {$recipients->buyer->name}</h3>";
+        $mailContent['email'] = $recipients->venture->business->user->email;
+        $mailContent['name'] = $recipients->venture->venture_name;
+        $mailContent['subject'] = "Order Dispatch Alert :: Startev Africa";
+        $mailContent['role'] = 'venture';
+        $mailContent['message'] = $msg;
+        $mailContent['base_url'] = env('APP_BASE_URL','https://app.startev.africa').'/store-manager';
+        //send to student
+        dispatch( new SendConfirmNotification($mailContent));
+        unset($mailContent['base_url']);
+
         unset($mailContent['base_url']);
 
         //What of the Store administrators

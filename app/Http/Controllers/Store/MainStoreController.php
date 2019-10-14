@@ -25,6 +25,7 @@ use App\Models\StoreSettlementBatch;
 use App\Models\Transaction\VendorSettlement;
 use App\Repositories\OrderTransaction;
 use App\Repositories\PayStackVerifyTransaction;
+use PhpParser\Node\Expr\New_;
 
 class MainStoreController extends Controller
 {
@@ -213,17 +214,19 @@ class MainStoreController extends Controller
         //get buyer
         $data['buyer_id'] = $data['user_id'];
 
-        if(User::where('email','=',$data['email'])->exists()){
-            $user = User::where('email','=',$data['email'])->first();
+        $user=(New User)->where('email','=',$data['email'])->first();
+        if(is_null($user)) {
+            $usrData=['name'=>$data['name'],'slug'=>'all_users','email'=>$data['email'],'password'=>"password",'phone'=>$data['phone'],'address'=>$data['delivery_address']];
+            $user = (new User)->create($usrData);
+        }
+        if(!is_null($user))
+        {
             $data['buyer_id'] = $user->id;
             $data['name'] = $user->name?$user->name:null;
             $data['email'] = $user->email?$user->email:null;
-//                $data['phone'] = $data['phone'];
-//                $data['location'] = $user->address?$user->address:null;
             $data['location'] = $data['delivery_address'];
-            User::find($user->id)->update(['phone' => $data['phone'], 'address' => $data['delivery_address']]);
+            $user->update(['phone' => $data['phone'], 'address' => $data['delivery_address']]);
         }
-
         unset($data['user_id']);
 
 
@@ -246,6 +249,8 @@ class MainStoreController extends Controller
          */
         $finder = $items[0]->store_identifier;
         $store = UserStore::where('identifier', '=', $finder)->first();
+        if(is_null($store))
+            return response()->json(['store not found',$store]);
         $batch['store_id'] = $store->id;
 
         //set store owner email on recipients to be sent notifications
