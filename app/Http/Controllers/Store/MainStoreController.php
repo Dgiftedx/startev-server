@@ -308,7 +308,8 @@ class MainStoreController extends Controller
             ////////////////////////////////////////////////////////////////////////////////////
 
             //use transaction reference to get payStack charge
-            $payStackCharge = (new PayStackVerifyTransaction)->verify($data['transaction_ref']);
+//            $payStackCharge = (new PayStackVerifyTransaction)->verify($data['transaction_ref']);
+            $payStackCharge = 0;
 
             //Pile request parameters for transaction calculations and settlements
             $params = [
