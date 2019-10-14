@@ -25,6 +25,7 @@ use App\Models\StoreSettlementBatch;
 use App\Models\Transaction\VendorSettlement;
 use App\Repositories\OrderTransaction;
 use App\Repositories\PayStackVerifyTransaction;
+use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Expr\New_;
 
 class MainStoreController extends Controller
@@ -216,7 +217,7 @@ class MainStoreController extends Controller
 
         $user=(New User)->where('email','=',$data['email'])->first();
         if(is_null($user)) {
-            $usrData=['name'=>$data['name'],'slug'=>'all_users','email'=>$data['email'],'password'=>"password",'phone'=>$data['phone'],'address'=>$data['delivery_address']];
+            $usrData=['name'=>$data['name'],'slug'=>$this->createSlug('all_users'),'email'=>$data['email'],'password'=>Hash::make('password'),'phone'=>$data['phone'],'address'=>$data['delivery_address']];
             $user = (new User)->create($usrData);
         }
         if(!is_null($user))
@@ -456,5 +457,31 @@ class MainStoreController extends Controller
 
             dispatch( new SendOrderNotification($mailContent));
         }
+    }
+
+    public function createSlug($title, $id = 0)
+    {
+        $slug = str_slug($title);
+        $allSlugs = $this->getRelatedSlugs($slug, $id);
+        if (! $allSlugs->contains('slug', $slug)){
+            return $slug;
+        }
+
+        $i = 1;
+        $is_contain = true;
+        do {
+            $newSlug = $slug . '-' . $i;
+            if (!$allSlugs->contains('slug', $newSlug)) {
+                $is_contain = false;
+                return $newSlug;
+            }
+            $i++;
+        } while ($is_contain);
+    }
+    protected function getRelatedSlugs($slug, $id = 0)
+    {
+        return User::select('slug')->where('slug', 'like', $slug.'%')
+            ->where('id', '<>', $id)
+            ->get();
     }
 }
