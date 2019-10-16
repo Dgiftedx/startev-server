@@ -17,6 +17,7 @@ Route::get('send-mail', 'TestController@sendMail');
 Route::get('pay-business','TestController@payBusiness');
 Route::get('pay-stores','TestController@payStores');
 Route::get('verify-transaction/{ref}','TestController@verifyTransaction');
+Route::get('verify-paystack-transaction','TestController@verifyPayStackTransactions');
 
 //Download schedule
 Route::get('download-broadcast-schedules/{id}', 'OpenApiController@downloadScheduleReport');
