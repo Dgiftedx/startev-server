@@ -5,6 +5,7 @@ namespace App\Models\Store;
 use App\Models\BatchOrder;
 use App\Models\Business\UserBusinessProduct;
 use App\Models\BusinessVenture;
+use App\Models\Transaction\VendorSettlement;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,7 +30,8 @@ class UserVentureOrder extends Model
         'delivery_address',
         'transaction_ref',
         'forwarded',
-        'status'
+        'status',
+        'vendor_settlement_id',
     ];
 
 
@@ -42,6 +44,12 @@ class UserVentureOrder extends Model
     {
         return $this->belongsTo(UserStore::class, 'store_id');
     }
+
+    public function settlement()
+    {
+        return $this->belongsTo(VendorSettlement::class, 'vendor_settlement_id');
+    }
+
 
     public function buyer()
     {

@@ -93,6 +93,12 @@ class TestController extends Controller
 //        return response()->json($success);
     }
 
+    public function verifyTransaction($ref)
+    {
+        $payStackChargeVerify = (new PayStackVerifyTransaction)->verify($ref,1);
+        dd($payStackChargeVerify);
+    }
+
 
 
 }

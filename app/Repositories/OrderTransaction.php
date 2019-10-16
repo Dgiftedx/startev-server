@@ -35,6 +35,7 @@ class OrderTransaction
     {
         //Set Order Total Amount
         $this->totalAmount = $transactionValues['amountTotal'];
+        $this->grandTotal = $transactionValues['batchGrandTotal'];
         //Set StarTev Transaction Fees
         $this->starTevPercentage = $transactionValues['starTev'];
         //Set Percentage Commission On Product
@@ -96,7 +97,7 @@ class OrderTransaction
 
     public function calBusiness()
     {
-        return ($this->totalAmount - $this->calEscrowed());
+        return ($this->totalAmount - $this->calCommission() - $this->calStarTev());
     }
 
     public function calEscrowed()

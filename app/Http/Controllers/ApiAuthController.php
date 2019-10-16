@@ -71,6 +71,7 @@ class ApiAuthController extends Controller
 
         unset($data['ref_code']);
         $data['slug'] = uniqid(rand(), true);
+
         $user = $this->user->create($data);
 
         //handle referral logic and determine if this user was referred or not

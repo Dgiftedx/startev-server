@@ -9,6 +9,7 @@ use App\Models\Business\UserBusinessProduct;
 use App\Models\BusinessVenture;
 use App\Models\Buyer;
 use App\Models\Business;
+use App\Models\PaystackTransaction;
 use App\Models\Store\UserCart;
 use App\Models\Store\UserInvoice;
 use App\Models\Store\UserStore;
@@ -42,7 +43,7 @@ class MainStoreController extends Controller
      * ApiAccountController constructor.
      * @param User $userModel
      */
-    public function __construct( User $userModel )
+    public function __construct(User $userModel)
     {
         //User model property
         $this->user = $userModel;
@@ -52,7 +53,7 @@ class MainStoreController extends Controller
     }
 
 
-    public function index( $identifier )
+    public function index($identifier)
     {
         $store = StoreHelperController::getMainStoreInfo($identifier);
 
@@ -66,14 +67,14 @@ class MainStoreController extends Controller
     }
 
 
-    public function singleProduct( $product )
+    public function singleProduct($product)
     {
         $single = UserVentureProduct::find($product);
         return response()->json($single);
     }
 
 
-    public function byFilter( Request $request, $identifier )
+    public function byFilter(Request $request, $identifier)
     {
         $data = $request->all();
 
@@ -89,7 +90,7 @@ class MainStoreController extends Controller
     }
 
 
-    public function getLocalProduct( Request $request )
+    public function getLocalProduct(Request $request)
     {
         $query = $request->all();
         $product = UserVentureProduct::find($query['product_id']);
@@ -108,11 +109,11 @@ class MainStoreController extends Controller
     }
 
 
-    public function addToCart( Request $request )
+    public function addToCart(Request $request)
     {
         $data = $request->all();
 
-        if(auth()->check()) {
+        if (auth()->check()) {
             //user authenticated
 
             //check if store_identifier is set
@@ -123,10 +124,11 @@ class MainStoreController extends Controller
             }
 
             //check if item already exist in cart
-            if (!UserCart::where('user_id','=',$data['user_id'])
-                ->where('product_id','=',$data['product_id'])
-                ->where('original_product_id','=','original_product_id')
-                ->where('store_identifier','=',$data['store_identifier'])->exists()) {
+            if (!UserCart::where('user_id', '=', $data['user_id'])
+                ->where('product_id', '=', $data['product_id'])
+                ->where('original_product_id', '=', 'original_product_id')
+                ->where('store_identifier', '=', $data['store_identifier'])->exists()
+            ) {
 
                 //log new item
                 UserCart::create($data);
@@ -155,8 +157,7 @@ class MainStoreController extends Controller
 
     private function find_key_value($array, $key, $val)
     {
-        foreach ($array as $item)
-        {
+        foreach ($array as $item) {
             if (is_array($item) && $this->find_key_value($item, $key, $val)) return true;
 
             if (isset($item[$key]) && $item[$key] == $val) return true;
@@ -166,7 +167,7 @@ class MainStoreController extends Controller
     }
 
 
-    public function removeFromCart( $item_id )
+    public function removeFromCart($item_id)
     {
         UserCart::find($item_id)->delete();
         //pull all cart items for user
@@ -182,11 +183,11 @@ class MainStoreController extends Controller
 
         $commission = 0;
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $mainProduct = UserBusinessProduct::find($item->original_product_id)->first();
-            if($mainProduct->product_commission !== 0) {
+            if ($mainProduct->product_commission !== 0) {
                 $commission += ($mainProduct->product_commission / 100) * $item->amount;
-            }else{
+            } else {
                 //use default commission percentage i.e 10%
                 $commission += (0.3 / 100) * $item->amount;
             }
@@ -195,7 +196,7 @@ class MainStoreController extends Controller
     }
 
 
-    public function placeOrder( Request $request )
+    public function placeOrder(Request $request)
     {
 
         $recipients = [];
@@ -205,31 +206,47 @@ class MainStoreController extends Controller
 
         //Get other information are regards this order
         $data = $request->all();
+//use transaction reference to get payStack charge
+        $payStackChargeVerify = (new PayStackVerifyTransaction)->verify($data['transaction_ref'],1);
+        if(!isset($payStackChargeVerify['status'])||$payStackChargeVerify['status']==false)
+            return response()->json(['Payment Was not successful']);
+        $payStackCharge = (new PayStackVerifyTransaction)->verify($data['transaction_ref'],0);
+//            $payStackCharge = 0;
 
 
-         $recipients['buyer'] = ['email' => $data['email'], 'name' => $data['name']];
+        $recipients['buyer'] = ['email' => $data['email'], 'name' => $data['name']];
 
         //set a batch id
-        $data['batch_id'] = 'BA'. HelperController::generateIdentifier(14);
+        $data['batch_id'] = 'BA' . HelperController::generateIdentifier(14);
 
-        //get buyer
-        $data['buyer_id'] = $data['user_id'];
+        $payload=[
+            'batch_id'=>  $data['batch_id'],
+            'phone'=>  $data['phone'],
+            'reference'=>  $data['transaction_ref'],
+            'status'=>  $payStackChargeVerify['status'],
+            'message'=>  $payStackChargeVerify['message'],
+            'data'=>  $payStackChargeVerify['data'],
+        ];
 
-        $user=(New User)->where('email','=',$data['email'])->first();
-        if(is_null($user)) {
-            $usrData=['name'=>$data['name'],'slug'=>$this->createSlug('all_users'),'email'=>$data['email'],'password'=>Hash::make('password'),'phone'=>$data['phone'],'address'=>$data['delivery_address']];
+        (new PaystackTransaction)->create($payload);
+
+
+        $user = (New User)->where('email', '=', $data['email'])->first();
+        if (is_null($user)) {
+            $usrData = ['name' => $data['name'], 'slug' => $this->createSlug('all_users'), 'email' => $data['email'], 'password' => Hash::make('password'), 'phone' => $data['phone'], 'address' => $data['delivery_address']];
             $user = (new User)->create($usrData);
         }
-        if(!is_null($user))
-        {
+        if (!is_null($user)) {
             $data['buyer_id'] = $user->id;
-            $data['name'] = $user->name?$user->name:null;
-            $data['email'] = $user->email?$user->email:null;
+            $data['name'] = $user->name ? $user->name : null;
+            $data['email'] = $user->email ? $user->email : null;
             $data['location'] = $data['delivery_address'];
             $user->update(['phone' => $data['phone'], 'address' => $data['delivery_address']]);
         }
         unset($data['user_id']);
 
+        //get buyer
+        $data['buyer_id'] = $user->id;
 
         //invoice holder
         $invoice = [];
@@ -250,25 +267,22 @@ class MainStoreController extends Controller
          */
         $finder = $items[0]->store_identifier;
         $store = UserStore::where('identifier', '=', $finder)->first();
-        if(is_null($store))
-            return response()->json(['store not found',$store]);
+        if (is_null($store))
+            return response()->json(['store not found', $store]);
         $batch['store_id'] = $store->id;
 
         //set store owner email on recipients to be sent notifications
-        $storeOwner = (new User)->find($store->user_id);
+        $storeOwner =$store->user;
         $recipients['store'] = ['email' => $storeOwner->email, 'store_name' => $store->store_name];
 
-        $settlementBatch['store_id'] = $store->id;
-        $settlementBatch['counter'] = 1;
-        $settlementBatch['active'] = 1;
-        //if there is no existing opening, create a new batch.
-        if(!StoreSettlementBatch::where('store_id','=',$store->id)->where('active','=',1)->exists()){
-            StoreSettlementBatch::create($settlementBatch);
-        }
 
+
+        //if there is no existing opening, create a new batch.
+//        $storeSettlementBatch=(new StoreSettlementBatch)->firstOrNew(['store_id'=>$store->id,'active'=> 1],$settlementBatch);
 
         //Calculate total student's commission and save alongside with batch details
         $batch['total_student_commission'] = $this->calculateStudentCommission($items);
+        //fetch original product
         //first create batch entry
         $newBatch = (new BatchOrder)->create($batch);
 
@@ -276,13 +290,14 @@ class MainStoreController extends Controller
 
         foreach ($items as $index => $item) {
             $mainProduct = UserBusinessProduct::find($item->original_product_id);
+            $originalProduct = UserVentureProduct::find($item->product_id);
 
             //Fetch the business who owns the product
             $business = StoreHelperController::fetchBusinessId($mainProduct->venture_id);
             $recipients['ventures'][] = $mainProduct->venture_id;
 
             $data['batch_id'] = $newBatch->batch_id;
-            $data['identifier'] = 'OD'. HelperController::generateIdentifier(14); //unique order id
+            $data['identifier'] = 'OD' . HelperController::generateIdentifier(14); //unique order id
             $data['product_id'] = $item->product_id;
             $data['business_id'] = $business;
             $data['store_id'] = $store->id;
@@ -302,44 +317,6 @@ class MainStoreController extends Controller
             //Forward orders to student from whose store this order is placed.
             UserVentureOrder::create($data);
 
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // Start Vendor Settlement Processes
-            ////////////////////////////////////////////////////////////////////////////////////
-
-            //use transaction reference to get payStack charge
-//            $payStackCharge = (new PayStackVerifyTransaction)->verify($data['transaction_ref']);
-            $payStackCharge = 0;
-
-            //Pile request parameters for transaction calculations and settlements
-            $params = [
-                'delivery' => $data['delivery_fee'],
-                'amountTotal' => $businessOrder->amount, //amount
-                'starTev' => (new Setting)->value('STARTEV_PERCENTAGE_CHARGE'), //percentage
-                'commission' => $businessOrder->commission, //percentage
-                'payStack' => $payStackCharge //amount
-            ];
-
-            //Perform transaction breakdown
-            $result = (new OrderTransaction($params))->calculate();
-            $result['batch_id'] = $businessOrder->batch_id;
-            $result['order_id'] = $businessOrder->id;
-            $result['store_id'] = $businessOrder->store_id;
-
-            //Log settlement split
-            $settlement = VendorSettlement::create($result);
-
-            //Log delivery charge
-            $deliveryCharge['order_id'] = $businessOrder->id;
-            $deliveryCharge['batch_id'] = $businessOrder->batch_id;
-            $deliveryCharge['vendor_settlement_id'] = $settlement->id;
-            $deliveryCharge['amount'] = $settlement->delivery;
-
-            UserBusinessOrder::find($businessOrder->id)->update(['vendor_settlement_id' => $settlement->id]);
-
-            //fetch original product
-            $originalProduct = UserVentureProduct::find($item->product_id);
-
             //set invoice data
             $invoice['order_id'] = $businessOrder->identifier;
             $invoice['order_date'] = Carbon::now();
@@ -355,9 +332,9 @@ class MainStoreController extends Controller
             ];
 
             //remove item from cart
-            if ($data['buyer_id'] > 0 && isset($item->id)){
+            if ($data['buyer_id'] > 0 && isset($item->id)) {
                 $search = UserCart::find($item->id);
-                if(!is_null($search)) {
+                if (!is_null($search)) {
                     $search->delete();
                 }
             }
@@ -373,7 +350,7 @@ class MainStoreController extends Controller
 
         if ($data['buyer_id'] > 0) {
             $cartItems = StoreHelperController::getCartItems();
-        }else{
+        } else {
             $cartItems = [];
         }
 
@@ -387,7 +364,7 @@ class MainStoreController extends Controller
          * about the order.
          */
         $totals = ['items_total' => $data['grand_total'], 'grant_total' => $data['grand_total'], 'delivery_fee' => $data['delivery_fee']];
-        $this->sendOrderMails($recipients,$totals, $items);
+        $this->sendOrderMails($recipients, $totals, $items);
 
         //send venture notifications
         $this->sendVentureMail($recipients);
@@ -406,7 +383,7 @@ class MainStoreController extends Controller
         //First mail the buyer with items
         $mailContent = [
             'email' => $recipients['buyer']['email'],
-            'name' =>  $recipients['buyer']['name'],
+            'name' => $recipients['buyer']['name'],
             'subject' => "Your order details!",
             'items' => $items,
             'total' => $totals,
@@ -414,7 +391,7 @@ class MainStoreController extends Controller
         ];
 
         //send to student
-        dispatch( new SendOrderNotification($mailContent));
+        dispatch(new SendOrderNotification($mailContent));
 
         //Prepare store contents
         $mailContent['email'] = $recipients['store']['email'];
@@ -424,14 +401,14 @@ class MainStoreController extends Controller
         $mailContent['role'] = 'store';
         $mailContent['total'] = $totals;
         //send to student
-        dispatch( new SendOrderNotification($mailContent));
+        dispatch(new SendOrderNotification($mailContent));
 
         //What of the Store administrators
         Admin::all()
-            ->mapToGroups(function ($admin)use(&$mailContent,$recipients){
-                $mailContent['email']=$admin->email;
-                $mailContent['name']=$admin->name;
-                dispatch( new SendOrderNotification($mailContent));
+            ->mapToGroups(function ($admin) use (&$mailContent, $recipients) {
+                $mailContent['email'] = $admin->email;
+                $mailContent['name'] = $admin->name;
+                dispatch(new SendOrderNotification($mailContent));
                 return [];
             });
         //All mail sent. Anyway don't bother about the memory consumption. Job things!
@@ -448,7 +425,7 @@ class MainStoreController extends Controller
         $mailContent['subject'] = 'New Order Alert :: Startev Africa';
         $ventures = array_unique($recipients['ventures']);
 
-        foreach($ventures as $ventureId) {
+        foreach ($ventures as $ventureId) {
             $venture = BusinessVenture::find($ventureId);
             $business = \App\Models\Business::where('id', '=', $venture->business_id)->first();
             $user = User::find($business->user_id);
@@ -456,7 +433,7 @@ class MainStoreController extends Controller
             $mailContent['name'] = $user->name;
             $mailContent['venture'] = $venture->venture_name;
 
-            dispatch( new SendOrderNotification($mailContent));
+            dispatch(new SendOrderNotification($mailContent));
         }
     }
 
@@ -464,7 +441,7 @@ class MainStoreController extends Controller
     {
         $slug = str_slug($title);
         $allSlugs = $this->getRelatedSlugs($slug, $id);
-        if (! $allSlugs->contains('slug', $slug)){
+        if (!$allSlugs->contains('slug', $slug)) {
             return $slug;
         }
 
@@ -479,10 +456,54 @@ class MainStoreController extends Controller
             $i++;
         } while ($is_contain);
     }
+
     protected function getRelatedSlugs($slug, $id = 0)
     {
-        return User::select('slug')->where('slug', 'like', $slug.'%')
+        return User::select('slug')->where('slug', 'like', $slug . '%')
             ->where('id', '<>', $id)
             ->get();
     }
+
+
+    public function initSettlementProcess(){
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // Start Vendor Settlement Processes
+        ////////////////////////////////////////////////////////////////////////////////////
+
+//Remove Settlement from Checkout
+//        $settlementBatch['store_id'] = $store->id;
+//        $settlementBatch['counter'] = 1;
+//        $settlementBatch['active'] = 1;
+
+        //Pile request parameters for transaction calculations and settlements
+//        $params = [
+//            'delivery' => $data['delivery_fee'],
+//            'amountTotal' => $businessOrder->amount, //amount
+//            'starTev' => (new Setting)->value('STARTEV_PERCENTAGE_CHARGE'), //percentage
+//            'commission' => $businessOrder->commission, //percentage
+//            'payStack' => $payStackCharge //amount
+//        ];
+//
+//        //Perform transaction breakdown
+//        $result = (new OrderTransaction($params))->calculate();
+//        $result['batch_id'] = $businessOrder->batch_id;
+//        $result['order_id'] = $businessOrder->id;
+//        $result['store_id'] = $businessOrder->store_id;
+//
+//        //Log settlement split
+//        $settlement = VendorSettlement::create($result);
+//
+//        //Log delivery charge
+//        $deliveryCharge['order_id'] = $businessOrder->id;
+//        $deliveryCharge['batch_id'] = $businessOrder->batch_id;
+//        $deliveryCharge['vendor_settlement_id'] = $settlement->id;
+//        $deliveryCharge['amount'] = $settlement->delivery;
+//
+//        UserBusinessOrder::find($businessOrder->id)->update(['vendor_settlement_id' => $settlement->id]);
+//
+//        //fetch original product
+//        $originalProduct = UserVentureProduct::find($item->product_id);
+    }
+
 }

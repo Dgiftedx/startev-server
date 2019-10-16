@@ -42,4 +42,8 @@ class BatchOrder extends Model
         $result= $query->whereRaw($whereClause,$whereParam); //Collect the result using ->first() or ->get()
         return ($result);
     }
+
+    public function paystackTransaction(){
+        return $this->hasOne(PaystackTransaction::class,'batch_id','batch_id');
+    }
 }

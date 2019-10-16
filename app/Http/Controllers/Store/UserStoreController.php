@@ -7,10 +7,12 @@ use App\Models\Business\UserBusinessOrder;
 use App\Models\Business\UserBusinessProduct;
 use App\Models\Partnership;
 use App\Models\Store\UserStore;
+use App\Models\Store\UserVentureCommission;
 use App\Models\Store\UserVentureOrder;
 use App\Models\Store\UserVentureProduct;
 use App\Models\User;
 use Carbon\Carbon;
+use function Clue\StreamFilter\fun;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\BatchOrder;
@@ -123,13 +125,21 @@ class UserStoreController extends Controller
     public function dashboard( $userId )
     {
         // Gather data
+        $totalCommisions=0;
+        UserVentureCommission::byFilter(['user_id'=>$userId])
+            ->get()
+            ->mapToGroups(function ($totalCommision)use (&$totalCommisions){
+                $totalCommisions +=$totalCommision->commission;
+                return [];
+            });
         $data = [
             'hasActiveStore' => StoreHelperController::hasActiveStore($userId),
             'orders_amount' => StoreHelperController::OrdersTotalAmount($userId),
             'orders_amount_avg' => UserVentureOrder::where('store_id','=', UserStore::storeId($userId))->avg('amount'),
             'delivered_orders' => StoreHelperController::OrdersDeliveredAmount($userId),
             'delivered_orders_avg' => UserVentureOrder::where('store_id','=', UserStore::storeId($userId))->where('status','=','delivered')->avg('amount'),
-            'total_commission' => StoreHelperController::totalCommission($userId),
+            'total_commission' => $totalCommisions,
+//            'total_commission' => StoreHelperController::totalCommission($userId),
             'recent_orders' => StoreHelperController::recentOrders($userId)
         ];
         // return json response

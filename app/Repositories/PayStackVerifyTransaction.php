@@ -31,29 +31,22 @@ class PayStackVerifyTransaction
      * @param [type] $reference
      * @return mixed
      */
-    public function verify($reference)
+    public function verify($reference,$all)
     {
         $response = $this->makeRequest($reference);
 
-        return $this->filterResponse($response);
+//        return $response;
+        return $this->filterResponse($response,$all);
     }
 
 
-    /**
-     * Make request to paystack endpoint
-     * with authorization using Guzzle Http Client
-     * and return a json parsed response
-     *
-     * @param [type] $reference
-     * @return void
-     */
     public function makeRequest($reference)
     {
-        $requestUrl = env('PAYSTACK_ENDPOINT') . "transaction/verify/" .$reference;
-        try{
-            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_TEST')]]);
+        $requestUrl = env('PAYSTACK_ENDPOINT') . "transaction/verify/" . $reference;
+        try {
+            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer ' . env('PAYSTACK_SECRET_TEST')]]);
             $response = json_decode($response->getBody()->getContents(), true);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             //just return the error message
             return $e->getMessage();
         }
@@ -61,15 +54,11 @@ class PayStackVerifyTransaction
         return $response;
     }
 
-    /**
-     * Filter response to get needed parameters.
-     *
-     * @param [type] $response
-     * @return void
-     */
-    public function filterResponse($response)
+    public function filterResponse($response, $all = 1)
     {
-        return ($response['data']['fees'] / 100);
+        if ($all <> 1)
+            return ($response['data']['fees'] / 100);
+        return $response;
     }
 
 

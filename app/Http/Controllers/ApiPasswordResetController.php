@@ -57,6 +57,7 @@ class ApiPasswordResetController extends Controller
     public function changePassword( Request $request )
     {
 
+        dd($request);
         $verified = $this->getPasswordResetTableRow($request->get('resetToken'));
         if (is_null($verified)) {
             $message = "Invalid Token Supplied. Please resend password reset";

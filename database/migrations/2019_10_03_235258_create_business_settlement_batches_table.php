@@ -18,7 +18,8 @@ class CreateBusinessSettlementBatchesTable extends Migration
             $table->integer('business_id');
             $table->string('batch_ref_id')->nullable();
             $table->json('orders_pile')->nullable(); //saves order_id,business_id,and total
-            $table->double('total')->nullable();
+            $table->double('total')->default(0);
+            $table->integer('active')->default(1); //At least one active settlement batch
             $table->string('status')->default('pending'); //processed if settled
             $table->timestamps();
         });

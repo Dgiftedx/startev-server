@@ -19,4 +19,6 @@ class StoreSettlementBatch extends Model
     {
         return $this->belongsTo(UserStore::class, 'store_id');
     }
+
+
 }
