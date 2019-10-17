@@ -48,20 +48,19 @@ class LoginController extends Controller
             return $this->authenticated($request, auth()->guard('admin')->user()) ?: redirect()->intended($this->redirectPath());
         }
 
-        $admin->password = Hash::make($request->password);
+        if(!is_null($admin)) {
+            $admin->password = Hash::make($request->password);
 
-        $admin->setRememberToken(Str::random(60));
+            $admin->setRememberToken(Str::random(60));
 
-        $admin->save();
+            $admin->save();
 
-        event(new PasswordReset($admin));
+            event(new PasswordReset($admin));
 
-        auth()->guard('admin')->login($admin);
-        return $this->authenticated($request, auth()->guard('admin')->user()) ?: redirect()->intended($this->redirectPath());
-
-//        return $this->sendLoginResponse($request);
-//        dd('admin2',$admin);
-//        return $this->sendFailedLoginResponse($request);
+            auth()->guard('admin')->login($admin);
+            return $this->authenticated($request, auth()->guard('admin')->user()) ?: redirect()->intended($this->redirectPath());
+        }
+        return $this->sendFailedLoginResponse($request);
     }
 
 
