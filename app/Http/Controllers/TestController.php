@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\sendMessageCampaign;
+use App\Models\BatchOrder;
 use App\Models\Feed;
+use App\Models\PaystackTransaction;
+use App\Models\Store\UserVentureOrder;
 use App\Models\User;
 use App\Repositories\OrderTransaction;
 use App\Repositories\PayStackVerifyTransaction;
@@ -91,6 +94,39 @@ class TestController extends Controller
         Log::info($success);
 
 //        return response()->json($success);
+    }
+
+    public function verifyTransaction($ref)
+    {
+        $payStackChargeVerify = (new PayStackVerifyTransaction)->verify($ref,1);
+        dd($payStackChargeVerify);
+    }
+
+    public function verifyPayStackTransactions(){
+        $foundRefs=[];
+        BatchOrder::all()
+            ->mapToGroups(function ($batchOrder)use(&$foundRefs){
+                $userVentureOrder=UserVentureOrder::byFilter(['batch_id'=>$batchOrder->batch_id])->first();
+                if(is_null($userVentureOrder))
+                    return [];
+                $ref=$userVentureOrder->transaction_ref;
+                $payStackChargeVerify = (new PayStackVerifyTransaction)->verify($ref,1);
+                if(!isset($payStackChargeVerify['status'])||$payStackChargeVerify['status']==false)
+                    return [];
+                $payload=[
+                    'batch_id'=>  $batchOrder->batch_id,
+                    'phone'=>  $userVentureOrder->phone,
+                    'reference'=>  $ref,
+                    'status'=>  $payStackChargeVerify['status'],
+                    'message'=>  $payStackChargeVerify['message'],
+                    'data'=>  $payStackChargeVerify['data'],
+                ];
+                (new PaystackTransaction)->updateOrCreate(['reference'=>$ref],$payload);
+                $foundRefs[]=$ref;
+               return [];
+            });
+
+        return json_encode($foundRefs);
     }
 
 

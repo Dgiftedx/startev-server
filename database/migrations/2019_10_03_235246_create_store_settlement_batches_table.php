@@ -18,10 +18,10 @@ class CreateStoreSettlementBatchesTable extends Migration
             $table->string('reference_id')->nullable();
             $table->integer('store_id');
             $table->json('settlement_reference')->nullable(); //saving vendor_settlement_id & commission_payout
-            $table->double('total')->nullable();
-            $table->bigInteger('counter');
-            $table->boolean('active')->default(0);
-            $table->string('status')->default('pending');
+            $table->double('total')->default(0);
+            $table->bigInteger('counter')->default(0);
+            $table->integer('active')->default(0);
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
 

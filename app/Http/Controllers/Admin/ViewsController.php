@@ -69,6 +69,10 @@ class ViewsController extends Controller
     {
         return view('pages.order.confirmed');
     }
+    public function dispatchedOrders()
+    {
+        return view('pages.order.dispatched');
+    }
 
 
     public function cancelledOrders()

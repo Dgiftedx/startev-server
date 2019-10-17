@@ -30,11 +30,11 @@
                                         <strong ng-if="!payout.total">Not yet compiled</strong>
                                     </td>
                                     <td>
-                                        <span ng-if="payout.status === 'pending'" class="badge badge-danger badge-pill">
-                                            @{{ payout.status }}
+                                        <span ng-if="payout.status == 0" class="badge badge-danger badge-pill">
+                                            Pending
                                         </span>
-                                        <span ng-if="payout.status === 'processed'" class="badge badge-success badge-pill">
-                                            @{{ payout.status }}
+                                        <span ng-if="payout.status == 1" class="badge badge-success badge-pill">
+                                            Paid Out
                                         </span>
                                     </td>
 

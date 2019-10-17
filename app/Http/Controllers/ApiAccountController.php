@@ -695,11 +695,33 @@ class ApiAccountController extends Controller
         $code = HelperController::generateIdentifier(4) . $data['store_id'];
         return response()->json($code);
     }
+    public function generateStoreUrl( Request $request )
+    {
+        $cc=1;
+        $data = $request->all();
+        $code = str_replace(' ','_',$data['store_id']);
+        $userStore=UserStore::where('ref_code',$code)->first();
+        if (is_null($userStore))
+        return response()->json($code);
+        else
+            return $this->modeCode($code);
+    }
 
     public function toggleConnection( $user, $mentor )
     {
         $connections = HelperController::toggleConnection($user, $mentor);
         return response()->json(['connections' => $connections['connections'], 'message' => $connections['message']]);
+    }
+
+    public function modeCode($code,$cc=1)
+    {
+        $newCode=$code.$cc;
+        $userStore=UserStore::where('ref_code',$newCode)->first();
+        if(!is_null($userStore))
+            $this->modeCode($code,$cc++);
+        else
+            return response()->json($newCode);
+
     }
 
 }

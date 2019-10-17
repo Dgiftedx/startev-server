@@ -47,7 +47,7 @@ class AddHelpTips01ToHelpTipsTable extends Migration
                 'title' => 'Get Trained',
                 'content' => 'You don\'t know how, get connected with leading mentors in the industry of your interest',
                 'link_text' => 'View Mentors List',
-                'doctrine/dballink' => '/industry',
+                'link' => '/industry',
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at'=> \Carbon\Carbon::now()
             ],

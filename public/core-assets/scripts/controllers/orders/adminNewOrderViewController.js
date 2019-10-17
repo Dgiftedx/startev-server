@@ -43,14 +43,14 @@ mainApp.controller('adminNewOrderViewController', ['$rootScope','lodash','$scope
             $scope.model.showDetails = false;
         };
 
-        $scope.model.confirmOrder = function(order){
+        $scope.model.dispatchOrder = function(order){
             console.log(order);
             adminService.fetchData(
                 '/admin/confirm-order/'+order.id,
                 function(resp) {
                     $scope.model.close();
                     $scope.model.loadOrdersIndex();
-                    adminService.alert("Order confirmed. You can now check confirmed order list for further actions");
+                    adminService.alert("Order Dispatched. You can now check confirmed order list for further actions");
                 }
             )
         }
