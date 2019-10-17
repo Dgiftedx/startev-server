@@ -116,6 +116,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     //Mail Manager
     Route::post('mail-manager/check-users','MailManagerController@checkUsers');
+    Route::get('mail-manager/check-users-export-mail','MailManagerController@checkUsersExportMail');
     Route::post('mail-manager/send-mail','MailManagerController@sendMail');
     Route::get('mail-manager/compose-view','Admin\ViewsController@compose')->name('compose');
 
