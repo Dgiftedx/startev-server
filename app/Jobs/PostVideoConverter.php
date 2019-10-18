@@ -59,6 +59,8 @@ class PostVideoConverter implements ShouldQueue
         $video = FFMpeg::fromDisk('video')->open($filePath);
 
         Log::info(json_encode($this->videoDetails));
+
+
         $video->getFrameFromSeconds(10)
             ->export()
             ->toDisk('video')

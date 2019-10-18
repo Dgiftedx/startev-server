@@ -103,10 +103,15 @@ class ApiFeedsController extends Controller
 
     public function uploadVideo( Request $request )
     {
+        //check for null field
+        if (is_null($request->file('file'))){
+            return response(['error' => 'File upload field is null. Please insert a video']);
+        }
 
+        //check for acceptable file type
+        $fileExtension = $request->file('file')->getClientOriginalExtension();
 
-        $fileExtension = request('file')->getClientOriginalExtension();
-        $allowed = ['mp4','avi','asf','mov','qt','mpg','mpeg','mpeg-4','wmv','3gp','webm'];
+        $allowed = ['mp4','avi','asf','mov','qt','mpg','mpeg','mpeg-4','wmv','3gp','webm','mkv'];
 
         if (!in_array($fileExtension, $allowed)) {
             return response()->json(['error' => "Invalid file type."], 404);
@@ -117,7 +122,7 @@ class ApiFeedsController extends Controller
         $videoTmp = time();
 
         $file = request('file');
-        $fileName = $videoTmp.'.'.$file->getClientOriginalExtension();
+        $fileName = $videoTmp.'.'.$fileExtension;
         $path = public_path().'/uploads/';
         $file->move($path, $fileName);
 

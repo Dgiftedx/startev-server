@@ -35,7 +35,6 @@ class CronController extends Controller
 
         Log::info($success);
 
-//          return response()->json($success);
     }
 
 
@@ -64,6 +63,5 @@ class CronController extends Controller
 
         Log::info($success);
 
-//        return response()->json($success);
     }
 }
