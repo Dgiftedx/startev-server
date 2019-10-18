@@ -13,6 +13,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Log;
 use Pbmedia\LaravelFFMpeg\FFMpegFacade as FFMpeg;
 use PhpParser\Node\Scalar\MagicConst\File;
 use Pusher\Laravel\Facades\Pusher;
@@ -57,6 +58,7 @@ class PostVideoConverter implements ShouldQueue
 
         $video = FFMpeg::fromDisk('video')->open($filePath);
 
+        Log::info(json_encode($this->videoDetails));
         $video->getFrameFromSeconds(10)
             ->export()
             ->toDisk('video')

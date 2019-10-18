@@ -40,7 +40,7 @@ class VerifyAccountNumber
     {
         $requestUrl = env('PAYSTACK_ENDPOINT') . "bank/resolve?account_number={$accountNumber}&bank_code={$bankCode}";
         try{
-            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_TEST')]]);
+            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_LIVE')]]);
             $response = json_decode($response->getBody()->getContents(), true);
         }catch (\Exception $e){
             //just return the error message
@@ -50,18 +50,13 @@ class VerifyAccountNumber
         return $response;
     }
 
-    /**
-     * Filter response to get needed parameters.
-     *
-     * @param [type] $response
-     * @return void
-     */
+
     private function filterResponse($response)
     {
-        if($response['status']) {
+        if(isset($response['status'])&&$response['status']) {
             return $response['data'];
         }
-        return [];
+        return [$response];
     }
 
 

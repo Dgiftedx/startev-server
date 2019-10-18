@@ -62,47 +62,89 @@ mainApp.controller('composeController', ['$rootScope','lodash','$scope','$locati
         
         $scope.model.lockSelection = function () {
 
-            if (lodash.size($scope.model.targetGroup) === 0 || lodash.size($scope.model.searchData) === 0) {
+            // if (lodash.size($scope.model.targetGroup) === 0 || lodash.size($scope.model.searchData) === 0) {
+            if (lodash.size($scope.model.targetGroup) === 0) {
                 return adminService.alert("Please make selection to determine target users who will receive this mail","warning");
             }
 
 
+            var data={};
             if ($scope.model.searchData.from && $scope.model.searchData.to && $scope.model.targetGroup === 'newUser') {
                 // Check if user is found for the selected date range
-                var data = {
+                data = {
                     from : $scope.model.searchData.from,
                     to: $scope.model.searchData.to
                 };
 
-                adminService.sendNormalData(
-                    '/mail-manager/check-users',
-                    data,
-                    function (resp) {
-                        if (resp.data.hasUsers) {
-                            $scope.model.showComposeContainer = true;
-                            $scope.model.cargando_compose_main = true;
+        }else if ($scope.model.targetGroup === 'platformUsers') {
+                // Check if user is found for the selected date range
+                data = {
+                    user_group : $scope.model.searchData.user_group
+                };
 
-                            $timeout(function () {
-                                $scope.model.cargando_compose_main = false;
-                            }, 2000);
-
-                            return false;
-                        }else{
-                            adminService.alert("No users found for selected range", "danger");
-                            return false;
-                        }
-
-                    }
-                )
-
-            }else{
-                $scope.model.showComposeContainer = true;
-                $scope.model.cargando_compose_main = true;
-
-                $timeout(function () {
-                    $scope.model.cargando_compose_main = false;
-                }, 2000);
             }
+            else{
+                data={targetGroup:$scope.model.targetGroup}
+            }
+
+            adminService.sendNormalData(
+                '/mail-manager/check-users',
+                data,
+                function (resp) {
+                    if (resp.data.hasUsers) {
+                        $scope.model.showComposeContainer = true;
+                        $scope.model.cargando_compose_main = true;
+                        $scope.model.searchData.recipients = resp.data.users;
+
+                        $timeout(function () {
+                            $scope.model.cargando_compose_main = false;
+                        }, 2000);
+
+                        return false;
+                    } else {
+                        adminService.alert("No users found for selected range", "danger");
+                        return false;
+                    }
+
+                },
+
+                function (response) {
+                    console.log(response);
+                }
+            )
+
+
+
+        };
+        $scope.model.lockSelectionExport = function () {
+
+            // if (lodash.size($scope.model.targetGroup) === 0 || lodash.size($scope.model.searchData) === 0) {
+            if (lodash.size($scope.model.targetGroup) === 0) {
+                return adminService.alert("Please make selection to determine target users who will receive this mail","warning");
+            }
+
+
+            var data={};
+            if ($scope.model.searchData.from && $scope.model.searchData.to && $scope.model.targetGroup === 'newUser') {
+                // Check if user is found for the selected date range
+                data = {
+                    from : $scope.model.searchData.from,
+                    to: $scope.model.searchData.to
+                };
+
+        }else if ($scope.model.targetGroup === 'platformUsers') {
+                // Check if user is found for the selected date range
+                data = {
+                    user_group : $scope.model.searchData.user_group
+                };
+
+            }
+            else{
+                data={targetGroup:$scope.model.targetGroup}
+            }
+            para = JSON.stringify(data);
+            window.open('/mail-manager/check-users-export-mail?params='+para,'_blank');
+
 
         };
 

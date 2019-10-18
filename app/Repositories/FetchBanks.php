@@ -40,7 +40,7 @@ class FetchBanks
     {
         $requestUrl = env('PAYSTACK_ENDPOINT') . "bank?perPage=" . 500;
         try{
-            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_TEST')]]);
+            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_LIVE')]]);
             $response = json_decode($response->getBody()->getContents(), true);
         }catch (\Exception $e){
             //just return the error message

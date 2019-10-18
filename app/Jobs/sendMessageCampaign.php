@@ -34,7 +34,7 @@ class sendMessageCampaign implements ShouldQueue
     public function handle()
     {
         foreach ($this->mailDetails['recipients'] as $recipient) {
-            Mail::to($recipient)->send(new CampaignMail($this->mailDetails));
+            Mail::to($recipient['email'])->send(new CampaignMail($this->mailDetails));
         }
     }
 }

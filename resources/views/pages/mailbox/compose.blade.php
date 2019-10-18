@@ -70,6 +70,7 @@
                             </select>
                         </div>
                         <button ng-click="model.lockSelection()" type="button" class="btn btn-danger m-t-20 btn-block waves-effect waves-light">Compose</button>
+                        <button ng-click="model.lockSelectionExport()" type="button" class="btn btn-info m-t-20 btn-block waves-effect waves-light">Export list</button>
                     </div>
                 </div>
             </div>
@@ -78,6 +79,25 @@
             <div class="col-xlg-10 col-lg-9 col-md-8 bg-light-part b-l">
                 <div class="card-body" coderty-loading="model.cargando_compose_main" ng-if="model.showComposeContainer">
                     <h3 class="card-title">Compose New Message</h3>
+                    <div class="form-group">
+                        <button ng-click="model.showReceipients=!model.showReceipients" class="form-control">@{{ model.showReceipients?'Hide':'Show' }} Recipients</button>
+                    </div>
+                    <div class="form-group fadeInUp" ng-if="model.showReceipients">
+                        <table class="wrapper" width="100%" cellpadding="0" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="receiver in model.searchData.recipients">
+                                <td>@{{ receiver.name }}</td>
+                                <td>@{{ receiver.email }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="form-group">
                         <input class="form-control" ng-model="model.searchData.subject" placeholder="Subject:">
                     </div>
