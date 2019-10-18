@@ -106,7 +106,7 @@ class ApiFeedsController extends Controller
 
 
         $fileExtension = request('file')->getClientOriginalExtension();
-        $allowed = ['mp4','avi','asf','mov','qt','mpg','mpeg','mpeg-4','wmv','3gp'];
+        $allowed = ['mp4','avi','asf','mov','qt','mpg','mpeg','mpeg-4','wmv','3gp','webm'];
 
         if (!in_array($fileExtension, $allowed)) {
             return response()->json(['error' => "Invalid file type."], 404);

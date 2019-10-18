@@ -58,7 +58,7 @@ class ProcessBusinessPayoutData
     {
         $requestUrl = env('PAYSTACK_ENDPOINT') . "transfer/";
         try{
-            $response = $this->client->request("POST", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_TEST')], 'form_params' => $singlePayout]);
+            $response = $this->client->request("POST", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_LIVE')], 'form_params' => $singlePayout]);
             $response = json_decode($response->getBody()->getContents(), true);
         }catch (\Exception $e){
             //just return the error message

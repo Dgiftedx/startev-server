@@ -34,7 +34,7 @@ class PayStackCustomer
     {
         $requestUrl = env('PAYSTACK_ENDPOINT') . "customer";
         try{
-            $response = $this->client->request("POST", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_TEST')], 'form_params' => $payload]);
+            $response = $this->client->request("POST", $requestUrl, ['headers' => ['Authorization' => 'Bearer '. env('PAYSTACK_SECRET_LIVE')], 'form_params' => $payload]);
             $response = json_decode($response->getBody()->getContents(), true);
         }catch (\Exception $e){
             //just return the error message
