@@ -121,4 +121,10 @@ class ViewsController extends Controller
     {
         return view('pages.payouts.business');
     }
+    public function pendingPayoutView()
+    {
+        return view('pages.payouts.pending-payouts');
+    }
+
+
 }

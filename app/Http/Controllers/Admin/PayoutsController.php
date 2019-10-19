@@ -28,6 +28,12 @@ class PayoutsController extends Controller
             $result = StoreSettlementBatch::with(['store','store.user'])->orderBy('id','desc')->get();
             break;
 
+            case 'all_pending':
+                $result['biz'] = BusinessSettlementBatch::with(['business','business.user'])->orderBy('id','desc')->get();
+                $result['store'] = StoreSettlementBatch::with(['store','store.user'])->orderBy('id','desc')->get();
+
+                break;
+
             case 'delivery':
             $result = [];
             break;
@@ -82,5 +88,9 @@ class PayoutsController extends Controller
 
 
         return response()->json(['success' => true, 'items' => $result ]);
+    }
+
+    public function exportPendingPayouts(){
+        dd('Will be up in a moment');
     }
 }

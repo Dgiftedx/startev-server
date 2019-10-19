@@ -34,6 +34,7 @@
                         <ul class="treeview-menu">
                                 <li><a href="{{ route('business payout') }}">Business Payout</a></li>
                                 <li><a href="{{ route('store payout') }}">Store Payout</a></li>
+                                <li><a href="{{ route('all pending payout') }}">All Pending Payout</a></li>
                         </ul>
                     </li>
 

@@ -141,9 +141,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     //Payout Overview
     Route::get('/payouts/index','Admin\PayoutsController@index');
+    Route::get('/payouts/export-pending-payouts','Admin\PayoutsController@exportPendingPayouts');
     Route::get('/payouts/items','Admin\PayoutsController@items');
     Route::get('/payouts/store-view', 'Admin\ViewsController@storePayoutView')->name('store payout');
     Route::get('/payouts/delivery-view', 'Admin\ViewsController@deliveryPayoutView')->name('delivery payout');
     Route::get('/payouts/business-view', 'Admin\ViewsController@businessPayoutView')->name('business payout');
+    Route::get('/payouts/pending-view', 'Admin\ViewsController@pendingPayoutView')->name('all pending payout');
 
 });
