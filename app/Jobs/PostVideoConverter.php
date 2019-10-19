@@ -40,6 +40,7 @@ class PostVideoConverter implements ShouldQueue
      */
     public function handle()
     {
+        ini_set('max_execution_time', 60000);
         $filePath = $this->videoDetails['file'];
         $fileName = $this->videoDetails['file'];
 
@@ -58,7 +59,7 @@ class PostVideoConverter implements ShouldQueue
 
         $video = FFMpeg::fromDisk('video')->open($filePath);
 
-        Log::info(json_encode($this->videoDetails));
+//        Log::info(json_encode(['video_details'=>$this->videoDetails]));
 
 
         $video->getFrameFromSeconds(10)
@@ -90,6 +91,7 @@ class PostVideoConverter implements ShouldQueue
         ];
 
         $update = Feed::create($databaseUpdate);
+//        Log::info(json_encode(['update'=>$update]));
 
         $feedData['id'] = $update->id;
 

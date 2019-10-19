@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\PendingSettlements;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Business\UserBusinessOrder;
@@ -9,6 +10,7 @@ use App\Models\BusinessSettlementBatch;
 use App\Models\BusinessVenture;
 use App\Models\StoreSettlementBatch;
 use App\Models\Transaction\DeliveryCharge;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PayoutsController extends Controller
 {
@@ -91,6 +93,8 @@ class PayoutsController extends Controller
     }
 
     public function exportPendingPayouts(){
-        dd('Will be up in a moment');
+        $result['biz'] = BusinessSettlementBatch::with(['business','business.user'])->orderBy('id','desc')->get();
+        $result['store'] = StoreSettlementBatch::with(['store','store.user'])->orderBy('id','desc')->get();
+        return  Excel::download(new PendingSettlements($result), 'startev_settlement_list.xlsx');
     }
 }

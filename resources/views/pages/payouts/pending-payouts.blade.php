@@ -15,7 +15,8 @@
                                 <tr>
                                     <th>Batch / Reference ID</th>
                                     <th>Total</th>
-                                    <th>Venture</th>
+                                    <th>Venture/Store</th>
+                                    <th>Account Type</th>
                                     <th>Account Details</th>
                                     <th class="text-nowrap">Action</th>
                                 </tr>
@@ -32,9 +33,34 @@
                                         @{{ payout.business.name }}
                                     </td>
                                     <td>
+                                        BUSINESS VENTURE
+                                    </td>
+                                    <td>
                                         @{{ payout.business.account_name }}<br>
                                         @{{ payout.business.account_number }}<br>
                                         @{{ payout.business.bank_name }}
+                                    </td>
+                                    <td>
+                                        <button type="button" ng-click="model.viewDetails(payout)" class="btn btn-sm btn-primary">Mark as Settled</button>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="payout in model.payouts.store">
+                                    <td>
+                                        <strong>@{{ payout.reference_id?payout.reference_id:'Still processing payout...' }}</strong>
+                                    </td>
+                                    <td>
+                                        <strong>NGN @{{ payout.total | number:0 }}</strong>
+                                    </td>
+                                    <td>
+                                        @{{ payout.store.store_name }}
+                                    </td>
+                                    <td>
+                                       STORE
+                                    </td>
+                                    <td>
+                                        @{{ payout.store.account_name }}<br>
+                                        @{{ payout.store.account_number }}<br>
+                                        @{{ payout.store.bank_name }}
                                     </td>
                                     <td>
                                         <button type="button" ng-click="model.viewDetails(payout)" class="btn btn-sm btn-primary">Mark as Settled</button>
