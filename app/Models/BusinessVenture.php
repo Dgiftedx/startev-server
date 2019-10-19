@@ -14,7 +14,13 @@ class BusinessVenture extends Model implements Searchable
         'business_id',
         'venture_name',
         'venture_address',
-        'venture_description'
+        'venture_description',
+        'bank_name',
+        'bank_code',
+        'account_name',
+        'account_number',
+        'payment_id',
+
     ];
 
 
@@ -23,7 +29,7 @@ class BusinessVenture extends Model implements Searchable
      */
     public function getSearchResult(): SearchResult
     {
-        $url = "/partner-view/" .  $this->identifier;
+        $url = "/partner-view/" . $this->identifier;
 
         return new SearchResult(
             $this,
@@ -44,7 +50,7 @@ class BusinessVenture extends Model implements Searchable
 
     public function partners()
     {
-        return $this->belongsToMany(User::class, 'partnerships','user_id','venture_id');
+        return $this->belongsToMany(User::class, 'partnerships', 'user_id', 'venture_id');
     }
 
     public function products()

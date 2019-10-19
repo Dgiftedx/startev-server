@@ -57,6 +57,7 @@ Route::group([
     Route::get('get-banks','OpenApiController@banks');
     Route::post('verify-account-number','ApiAccountController@verifyAccountNumber');
     Route::post('add-account-details','ApiAccountController@addAccountDetails');
+    Route::post('add-account-details-biz','ApiAccountController@addAccountDetailsBiz');
     Route::post('add-business-account-details','ApiAccountController@addBusinessAccountDetails');
     Route::get('get-landing-stats', 'OpenApiController@landingStats');
     Route::get('get-profile','ApiAccountController@profile');
@@ -255,6 +256,7 @@ Route::group([
     Route::post('store-manager/add-venture/{businessId}','Store\BusinessStoreController@addVenture');
     Route::get('store-manager/get-settings/{businessId}','Store\BusinessStoreController@getSettings');
     Route::get('store-manager/get-dashboard-data/{ventureId}/{userId}','Store\BusinessStoreController@dashboard');
+    Route::get('store-manager/get-venture-data/{ventureId}/{userId}','Store\BusinessStoreController@venturedata');
     Route::get('store-manager/get-store-orders/{ventureId}/{userId}','Store\BusinessStoreController@storeOrders');
     Route::get('store-manager/get-single-order/{orderId}', 'Store\BusinessStoreController@singleOrder');
     Route::get('store-manager/get-single-product/{Id}','Store\BusinessStoreController@singleProduct');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Store\StoreHelperController;
 use App\Models\Business;
+use App\Models\BusinessVenture;
 use App\Models\CareerPath;
 use App\Models\City;
 use App\Models\Country;
@@ -111,6 +112,35 @@ class ApiAccountController extends Controller
 
         $update = StoreHelperController::userStore($userID);
         return response()->json($update);
+    }
+    public function addAccountDetailsBiz( Request $request )
+    {
+        $data = $request->all();
+
+//        return response()->json($data);
+        $userID = $data['user_id'];
+        $user = $this->user->find($userID);
+
+        unset($data['user_id']);
+
+        $name = explode(" ", $user->name);
+        $payload = [
+            'first_name' => $name[0],
+            'last_name' => $name[1],
+            'email' => $user->email,
+            'phone' => $user->phone?$user->phone:'N/A'
+        ];
+
+        $result = (new PayStackCustomer)->create($payload);
+        $data['payment_id'] = $result['data']['customer_code'];
+
+        $venture = BusinessVenture::find($data['venture_id']);
+        if(is_null($venture))
+            return response()->json(['success'=>false]);
+            $venture->update($data);
+
+//        $update = StoreHelperController::userStore($userID);
+        return response()->json($venture);
     }
 
 

@@ -74,6 +74,14 @@ class BusinessStoreController extends Controller
 
         return response()->json($data);
     }
+    public function venturedata( $ventureId, $userId )
+    {
+
+        // Gather data
+        $data=BusinessVenture::find($ventureId);
+
+        return response()->json($data);
+    }
 
 
     /**
