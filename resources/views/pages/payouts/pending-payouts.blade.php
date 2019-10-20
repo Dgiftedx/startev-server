@@ -41,7 +41,7 @@
                                         @{{ payout.business.bank_name }}
                                     </td>
                                     <td>
-                                        <button type="button" ng-click="model.viewDetails(payout)" class="btn btn-sm btn-primary">Mark as Settled</button>
+                                        <button type="button" ng-click="model.viewDetails(payout)" class="btn btn-sm btn-primary">View Details</button>
                                     </td>
                                 </tr>
                                 <tr ng-repeat="payout in model.payouts.store">
@@ -63,7 +63,7 @@
                                         @{{ payout.store.bank_name }}
                                     </td>
                                     <td>
-                                        <button type="button" ng-click="model.viewDetails(payout)" class="btn btn-sm btn-primary">Mark as Settled</button>
+                                        <button type="button" ng-click="model.viewDetailsVenture(payout)" class="btn btn-sm btn-primary">View Details</button>
                                     </td>
                                 </tr>
 
@@ -102,7 +102,7 @@
                                 <table class="table" ng-repeat="item in model.currentPayout.items">
                                     <tr>
                                         <td>Order ID:</td>
-                                        <td>@{{ item.order.identifier }}</td>
+                                        <td>@{{ item.settlement.order.identifier }}</td>
                                     </tr>
                                     <tr>
                                         <td>Venture:</td>
@@ -110,9 +110,60 @@
                                     </tr>
                                     <tr>
                                         <td>Venture Allocation:</td>
-                                        <td><strong>NGN @{{ item.payout |number:0}}</strong></td>
+                                        <td><strong>NGN @{{ item.settlement.business_payout |number:0}}</strong></td>
                                     </tr>
 
+                                    <tr>
+                                        <td colspan="2" class="bg-danger">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+{{--                        <button type="button" class="btn btn-primary">Print</button>--}}
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="modal fade" id="ventureModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Payout Details for <strong class="text-primary">#@{{ model.currentPayout.batch_ref_id }}</strong></h4>
+                    </div>
+                    <div class="modal-body m-2">
+                        <div class="row">
+                            <div class="col-md-5 border border-warning">
+                                <h1>Total Payout <br/> <strong class="text-success">NGN @{{ model.currentPayout.total |number:0 }}</strong></h1>
+                                <hr>
+                                <div class="text-center">
+                                    <h6>Store Owner</h6><br/>
+                                    <h4>@{{ model.currentPayout.store.user.name }}</h4>
+                                    <hr>
+                                    <h6>Store Owner Phone</h6><br/>
+                                    <h4>@{{ model.currentPayout.store.user.phone }}</h4>
+                                    <hr>
+                                    <h6>Store Owner Email</h6><br/>
+                                    <h4>@{{ model.currentPayout.store.user.email }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <table class="table" ng-repeat="item in model.currentPayout.items">
+
+                                    <tr>
+                                        <td>Order ID:</td>
+                                        <td>@{{ item.settlement.order.identifier }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Payout Allocation:</td>
+                                        <td><strong>NGN @{{ item.settlement.commission_payout |number:0}}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Business Venture:</td>
+                                        <td><strong> @{{ item.venture.venture_name}}</strong></td>
+                                    </tr>
                                     <tr>
                                         <td colspan="2" class="bg-danger">&nbsp;</td>
                                     </tr>

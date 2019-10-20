@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\PendingSettlements;
+use App\Models\Store\UserVentureOrder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Business\UserBusinessOrder;
@@ -29,10 +30,15 @@ class PayoutsController extends Controller
             case 'store':
             $result = StoreSettlementBatch::with(['store','store.user'])->orderBy('id','desc')->get();
             break;
-
+/* $table->integer('active')->default(1); //At least one active settlement batch
+            $table->string('status')->default('pending'); //processed if settled*/
             case 'all_pending':
-                $result['biz'] = BusinessSettlementBatch::with(['business','business.user'])->orderBy('id','desc')->get();
-                $result['store'] = StoreSettlementBatch::with(['store','store.user'])->orderBy('id','desc')->get();
+                $result['biz'] = BusinessSettlementBatch::with(['business','business.user'])
+                    ->byFilter(['active'=>1,'status'=>'pending'])
+                    ->orderBy('id','desc')->get();
+                $result['store'] = StoreSettlementBatch::with(['store','store.user'])
+                    ->byFilter(['active'=>1,'status'=>0])
+                    ->orderBy('id','desc')->get();
 
                 break;
 
@@ -55,34 +61,18 @@ class PayoutsController extends Controller
 
         switch($data['type']){
             case 'business':
-            $settlement = BusinessSettlementBatch::find($data['id']);
-            $raw = json_decode($settlement->orders_pile);
-            foreach($raw as $key => $r){
-
-                if($key !== 'total') {
-                    $result[] = [
-                        'venture' => BusinessVenture::find($r->venture_id),
-                        'order' => UserBusinessOrder::find($r->order_id),
-                        'payout' => $r->payout
-                    ];
-                }
-            }
-            break;
+            $settlement = UserBusinessOrder::with(['venture','settlement.order'])
+                ->byFilter(['business_settlement_batch_id'=>$data['id']])->get();
+            if(!is_null($settlement))
+                    $result=$settlement;
+                break;
 
             case 'store':
-            $settlement = StoreSettlementBatch::find($data['id']);
-            $raw = isset($settlement->settlement_reference)?json_decode($settlement->settlement_reference):[];
-            foreach($raw as $key => $r){
-
-                if($key !== 'total') {
-                    $result[] = [
-                        'order' => UserBusinessOrder::find($r->order_id),
-                        'payout' => $r->payout
-                    ];
-                }
-            }
-            break;
-
+                $settlement = UserVentureOrder::with(['store','venture','settlement.order'])
+                    ->byFilter(['store_settlement_batch_id'=>$data['id']])->get();
+                if(!is_null($settlement))
+                    $result=$settlement;
+                break;
             case 'delivery':
             $result = [];
             break;

@@ -25,11 +25,11 @@
                                         <strong>NGN @{{ payout.total | number:0 }}</strong>
                                     </td>
                                     <td>
-                                        <span ng-if="payout.status === 'pending'" class="badge badge-danger badge-pill">
-                                            @{{ payout.status }}
+                                        <span ng-if="payout.status === 0" class="badge badge-danger badge-pill">
+                                            pending
                                         </span>
-                                        <span ng-if="payout.status === 'processed'" class="badge badge-success badge-pill">
-                                            @{{ payout.status }}
+                                        <span ng-if="payout.status === 1" class="badge badge-success badge-pill">
+                                            Paid Out
                                         </span>
                                     </td>
                                     <td>
@@ -72,7 +72,7 @@
                                 <table class="table" ng-repeat="item in model.currentPayout.items">
                                     <tr>
                                         <td>Order ID:</td>
-                                        <td>@{{ item.order.identifier }}</td>
+                                        <td>@{{ item.settlement.order.identifier }}</td>
                                     </tr>
                                     <tr>
                                         <td>Venture:</td>
@@ -80,7 +80,7 @@
                                     </tr>
                                     <tr>
                                         <td>Venture Allocation:</td>
-                                        <td><strong>NGN @{{ item.payout |number:0}}</strong></td>
+                                        <td><strong>NGN @{{ item.settlement.business_payout |number:0}}</strong></td>
                                     </tr>
 
                                     <tr>

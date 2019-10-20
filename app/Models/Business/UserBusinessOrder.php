@@ -3,6 +3,7 @@
 namespace App\Models\Business;
 
 use App\Models\BatchOrder;
+use App\Models\BusinessSettlementBatch;
 use App\Models\BusinessVenture;
 use App\Models\Buyer;
 use App\Models\Store\UserStore;
@@ -33,7 +34,8 @@ class UserBusinessOrder extends Model
         'transaction_ref',
         'amount',
         'status',
-        'notes'
+        'notes',
+        'business_settlement_batch_id',
     ];
 
 
@@ -85,6 +87,10 @@ class UserBusinessOrder extends Model
     public function settlement()
     {
         return $this->belongsTo(VendorSettlement::class, 'vendor_settlement_id');
+    }
+
+    public function businessSettlementBatch(){
+        return $this->belongsTo(BusinessSettlementBatch::class,'business_settlement_batch_id');
     }
 
     public function scopeByFilter($query,$data){

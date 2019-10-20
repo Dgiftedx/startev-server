@@ -5,6 +5,7 @@ namespace App\Models\Store;
 use App\Models\BatchOrder;
 use App\Models\Business\UserBusinessProduct;
 use App\Models\BusinessVenture;
+use App\Models\StoreSettlementBatch;
 use App\Models\Transaction\VendorSettlement;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +33,7 @@ class UserVentureOrder extends Model
         'forwarded',
         'status',
         'vendor_settlement_id',
+        'store_settlement_batch_id',
     ];
 
 
@@ -74,6 +76,10 @@ class UserVentureOrder extends Model
     public function batch()
     {
         return $this->belongsTo(BatchOrder::class, 'batch_id', 'batch_id');
+    }
+
+    public function storeSettlementBatch(){
+        return $this->belongsTo(StoreSettlementBatch::class,'store_settlement_batch_id');
     }
 
     public function scopeByFilter($query,$data){

@@ -37,5 +37,20 @@ mainApp.controller('pendingPayoutViewController', ['$rootScope','lodash','$scope
             )
 
         }
+        $scope.model.viewDetailsVenture = function (payout) {
+            $scope.model.currentPayout = payout;
+
+            adminService.fetchData(
+                '/payouts/items?type=business&id='+payout.id,
+                function(resp){
+                    $scope.model.currentPayout.items = resp.data.items;
+                    //open modal box;
+                    $timeout(function() {
+                        $('#ventureModal').modal('show');
+                    });
+                }
+            )
+
+        }
 
     }]);

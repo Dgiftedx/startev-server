@@ -28,6 +28,14 @@
                     <li><a href="{{ route('admin users') }}"><i class="icon_contacts"></i> <span>Admin Users</span></a></li>
                     <li><a href="{{ route('all transactions') }}"><i class="icon_briefcase"></i> <span>Transactions</span></a></li>
 
+                    <li class="treeview {{ $route === 'admin new orders' || $route === 'admin confirmed orders'  || $route === 'admin delivered orders' || $route === 'admin dispatched orders' ? 'active' : '' }}">
+                        <a href="javascript:void(0)"><i class="icon_cart_alt"></i> <span>Manage Orders</span> <i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{ route('admin new orders') }}">All Batch Orders</a></li>
+                            <li><a href="{{ route('admin dispatched orders') }}">Dispatched Orders</a></li>
+                            <li><a href="{{ route('admin delivered orders') }}">Confirmed Orders</a></li>
+                        </ul>
+                    </li>
 
                     <li class="treeview {{ $route === 'business payout' || $route === 'store payout' || $route === 'delivery payout' ? 'active' : '' }}">
                         <a href="javascript:void(0)"><i class="icon_cart"></i> <span>Payout Overview</span> <i class="fa fa-angle-right"></i></a>
@@ -39,14 +47,6 @@
                     </li>
 
 
-                    <li class="treeview {{ $route === 'admin new orders' || $route === 'admin confirmed orders'  || $route === 'admin delivered orders' || $route === 'admin dispatched orders' ? 'active' : '' }}">
-                        <a href="javascript:void(0)"><i class="icon_cart_alt"></i> <span>Manage Orders</span> <i class="fa fa-angle-right"></i></a>
-                        <ul class="treeview-menu">
-                                <li><a href="{{ route('admin new orders') }}">All Batch Orders</a></li>
-                                <li><a href="{{ route('admin dispatched orders') }}">Dispatched Orders</a></li>
-                                <li><a href="{{ route('admin delivered orders') }}">Confirmed Orders</a></li>
-                        </ul>
-                    </li>
                     <li class="treeview {{ $route === 'platform mentors' || $route === 'platform students' || $route === 'platform graduates' || $route === 'platform businesses' ? 'active' : '' }}">
                         <a href="javascript:void(0)"><i class="icon_cone_alt"></i> <span>Platform Users</span> <i class="fa fa-angle-right"></i></a>
                         <ul class="treeview-menu">

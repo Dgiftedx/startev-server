@@ -32,11 +32,12 @@
                                     <thead>
                                     <tr>
                                         <th>Batch ID</th>
+                                        <th>Item</th>
+                                        <th>Item Price</th>
+                                        <th>Item QTY</th>
                                         <th>Total Amount</th>
-                                        <th>Items</th>
                                         <th>Buyer</th>
                                         <th>Store</th>
-                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -45,18 +46,22 @@
                                             @{{ order.batch_id }}
                                         </td>
                                         <td>
-                                           @{{ order.items_total | number:0 }}
+                                            @{{ order.main_product.product_name }}
                                         </td>
                                         <td>
-                                            @{{ model.count(order.orders_business) }}
+                                           NGN @{{ order.main_product.product_price | number:0 }}
+                                        </td>
+                                        <td>
+                                            @{{ order.quantity | number:0 }}
+                                        </td>
+                                        <td>
+                                           NGN @{{ order.amount | number:0 }}
                                         </td>
                                         <td>@{{ order.buyer.name }}</td>
                                         <td>
                                             @{{ order.store.store_name }}
                                         </td>
-                                        <td>
-                                            <button type="button" ng-click="model.view(order)" class="btn btn-info">View Items</button>
-                                        </td>
+
                                     </tr>
                                     </tbody>
                                 </table>

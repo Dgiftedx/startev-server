@@ -301,8 +301,6 @@ class OrdersController extends Controller
 
         // Update Delivery, Store and Business Bits
         (new DeliveryCharge)->create($deliveryPayload);
-        $businessOrder->update(['vendor_settlement_id'=>$settlement->id]);
-        $ventureOrder->update(['vendor_settlement_id'=>$settlement->id]);
 
         ///////Also Update SettlementBatches Scheme///////
 
@@ -325,6 +323,8 @@ class OrdersController extends Controller
 
         (new UserVentureCommission)->updateOrCreate(['user_id'=>$store->user_id,'order_id'=>$businessOrder->identifier],['commission'=>$settlement->commission_payout]);
 
+        $businessOrder->update(['vendor_settlement_id'=>$settlement->id,'business_settlement_batch_id'=>$businessSettlementBatch->id]);
+        $ventureOrder->update(['vendor_settlement_id'=>$settlement->id,'store_settlement_batch_id'=>$storeSettlementBatch->id]);
 
 
     }

@@ -82,11 +82,15 @@
 
                                     <tr>
                                         <td>Order ID:</td>
-                                        <td>@{{ item.order.identifier }}</td>
+                                        <td>@{{ item.settlement.order.identifier }}</td>
                                     </tr>
                                     <tr>
                                         <td>Payout Allocation:</td>
-                                        <td><strong>NGN @{{ item.payout |number:0}}</strong></td>
+                                        <td><strong>NGN @{{ item.settlement.commission_payout |number:0}}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Business Venture:</td>
+                                        <td><strong> @{{ item.venture.venture_name}}</strong></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="bg-danger">&nbsp;</td>
