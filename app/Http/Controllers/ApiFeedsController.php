@@ -41,13 +41,12 @@ class ApiFeedsController extends Controller
 
     public function index()
     {
-//        $feeds = [];
         $id = auth()->user()->id;
 
         $hiddenFeeds = UserHiddenFeed::where('user_id','=',$id)->pluck('feed_id')->toArray();
 
         $feeds = $this->feed->with('feedComments')->with('feedComments.user')->whereNotIn('id', $hiddenFeeds)->orderBy('id','desc')
-            ->paginate(10);
+            ->paginate(5);
 
         foreach ($feeds as $feed ) {
             $feed->postType = $feed->post_type;
