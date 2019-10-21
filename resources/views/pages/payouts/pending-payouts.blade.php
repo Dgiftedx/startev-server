@@ -121,8 +121,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-{{--                        <button type="button" class="btn btn-primary">Print</button>--}}
+                        <button type="button" class="btn btn-primary" ng-click="model.markBusinessSettled()" ng-disabled="settlingBusiness">@{{ settlingBusiness?"Processing...":"Mark as Settled" }}</button>
+                        <button type="button" class="btn btn-danger" ng-click="settlingBusiness=false" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -172,7 +172,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" ng-click="model.markVentureSettled()" ng-disabled="settlingBusiness">@{{ settlingBusiness?"Processing...":"Mark as Settled" }}</button>
+                        <button type="button" class="btn btn-danger" ng-click="settlingBusiness=false" data-dismiss="modal">Close</button>
 {{--                        <button type="button" class="btn btn-primary">Print</button>--}}
                     </div>
                 </div>

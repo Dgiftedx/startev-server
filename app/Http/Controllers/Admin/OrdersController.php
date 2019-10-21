@@ -229,7 +229,7 @@ class OrdersController extends Controller
         dispatch(new SendConfirmNotification($mailContent));
         unset($mailContent['base_url']);
 
-        unset($mailContent['base_url']);
+//        unset($mailContent['base_url']);
 
         //What of the Store administrators
         Admin::all()

@@ -77,6 +77,9 @@ class UserVentureOrder extends Model
     {
         return $this->belongsTo(BatchOrder::class, 'batch_id', 'batch_id');
     }
+    public function userVentureCommission(){
+        return $this->hasOne(UserVentureCommission::class,'order_id','identifier');
+    }
 
     public function storeSettlementBatch(){
         return $this->belongsTo(StoreSettlementBatch::class,'store_settlement_batch_id');
