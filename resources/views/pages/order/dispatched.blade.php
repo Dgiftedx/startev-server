@@ -93,6 +93,10 @@
                                         <td>@{{ model.currentTransaction.buyer.email }}</td>
                                     </tr>
                                     <tr>
+                                        <td>Buyer Phone: </td>
+                                        <td>@{{ model.currentTransaction.buyer.phone }}</td>
+                                    </tr>
+                                    <tr>
                                         <td>Order ID:</td>
                                         <td>@{{ model.currentTransaction.identifier }}</td>
                                     </tr>

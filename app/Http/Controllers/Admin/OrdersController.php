@@ -221,7 +221,7 @@ class OrdersController extends Controller
         $msg .= "<h3>Buyer: {$recipients->buyer->name}</h3>";
         $mailContent['email'] = $recipients->venture->business->user->email;
         $mailContent['name'] = $recipients->venture->venture_name;
-        $mailContent['subject'] = "Order Dispatch Alert :: Startev Africa";
+        $mailContent['subject'] = "Order Delivery Alert :: Startev Africa";
         $mailContent['role'] = 'venture';
         $mailContent['message'] = $msg;
         $mailContent['base_url'] = env('APP_BASE_URL', 'https://app.startev.africa') . '/store-manager';
