@@ -129,7 +129,7 @@ class OpenApiController extends Controller
             }
         }
 
-        return response()->json(['success' => true, "result" => ['price' => 500]]);
+        return response()->json(['success' => true, "result" => ['price' => 1000]]);
 
         //before pushing destinations to query, check if at least there is one verified address
         // if (count($verified) < 1) {

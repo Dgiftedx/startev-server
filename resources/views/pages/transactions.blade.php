@@ -35,6 +35,7 @@
                             <table datatable="ng" class="table table-bordered">
                                 <thead>
                                 <tr>
+                                    <th>Date</th>
                                     <th>Sales</th>
                                     <th>PayStack Charge</th>
                                     <th>Startev</th>
@@ -48,6 +49,7 @@
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="transaction in model.transactions">
+                                    <td><strong> @{{ transaction.created_at }}</strong></td>
                                     <td>
                                         <strong>NGN @{{ transaction.total | number:0 }}</strong>
                                     </td>

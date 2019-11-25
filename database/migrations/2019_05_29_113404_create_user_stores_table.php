@@ -23,7 +23,7 @@ class CreateUserStoresTable extends Migration
             $table->string('store_url')->nullable();
             $table->boolean('bank_account_lock')->default(1);
             $table->string('account_name')->nullable();
-            $table->bigInteger('account_number')->nullable();
+            $table->string('account_number')->nullable();
             $table->string('bank_name')->nullable();
             $table->bigInteger('otp')->nullable();
             $table->timestamps();

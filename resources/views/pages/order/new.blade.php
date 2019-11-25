@@ -14,6 +14,7 @@
                                 <table datatable="ng" class="table table-bordered">
                                     <thead>
                                     <tr>
+                                        <th>Order Date</th>
                                         <th>Batch ID</th>
                                         <th>Total Amount</th>
                                         <th>Items</th>
@@ -24,6 +25,9 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="order in model.orders">
+                                        <td>
+                                            @{{ order.created_at }}
+                                        </td>
                                         <td>
                                             @{{ order.batch_id }}
                                         </td>
@@ -62,6 +66,10 @@
                                     <tr>
                                         <td>Batch ID:</td>
                                         <td><strong class="text-danger">@{{ model.currentOrder.batch_id }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Order Date:</td>
+                                        <td><strong class="text-danger">@{{ model.currentOrder.created_at }}</strong></td>
                                     </tr>
                                     <tr>
                                         <td>Grand Total:</td>
