@@ -175,6 +175,19 @@ class OrdersController extends Controller
                 dispatch(new SendConfirmNotification($mailContent));
                 return [];
             });
+        //Extra bcc
+        $msg = "Hi Mfon <br> An order #<strong>{$order_id}</strong> from  <strong>{$recipients->store->store_name}</strong> has been DISPATCHED! Kindly login and process Delivery";
+        $msg .= "<h3>Order ID: {$order_id}</h3>";
+        $msg .= "<h3>Batch ID: {$batch_id}</h3>";
+        $msg .= "<h3>Venture: {$recipients->venture->venture_name}</h3>";
+        $msg .= "<h3>Buyer: {$recipients->buyer->name}</h3>";
+        $msg .= "<h3>Store: {$recipients->store->store_name}</h3>";
+        $mailContent['email'] = "info@startev.africa";
+        $mailContent['name'] = "Mfon";
+        $mailContent['message'] = $msg;
+        $mailContent['server_url'] = env('APP_SERVER_URL', 'https://startev.africa');
+
+        dispatch(new SendConfirmNotification($mailContent));
         //All mail sent. Don't bother about the memory consumption. Job things!
 
     }
@@ -248,6 +261,19 @@ class OrdersController extends Controller
                 dispatch(new SendConfirmNotification($mailContent));
                 return [];
             });
+        //Extra bcc
+        $msg = "Hi Mfon. <br> An order #<strong>{$order_id}</strong> from  <strong>{$recipients->store->store_name}</strong> has been COMPLETED! Transaction Reconciliation has been initialized. <br><br><strong>CONGRATULATIONS!</strong>";
+        $msg .= "<h3>Order ID: {$order_id}</h3>";
+        $msg .= "<h3>Batch ID: {$batch_id}</h3>";
+        $msg .= "<h3>Venture: {$recipients->venture->venture_name}</h3>";
+        $msg .= "<h3>Buyer: {$recipients->buyer->name}</h3>";
+        $msg .= "<h3>Store: {$recipients->store->store_name}</h3>";
+        $mailContent['email'] = "info@startev.africa";
+        $mailContent['name'] = "Mfon";
+        $mailContent['message'] = $msg;
+        $mailContent['server_url'] = env('APP_SERVER_URL', 'https://startev.africa');
+
+        dispatch(new SendConfirmNotification($mailContent));
         //All mail sent. Don't bother about the memory consumption. Job things!
 
     }

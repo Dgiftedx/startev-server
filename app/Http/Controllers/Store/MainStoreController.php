@@ -404,6 +404,9 @@ class MainStoreController extends Controller
         dispatch(new SendOrderNotification($mailContent));
 
         //What of the Store administrators
+        $mailContent['email'] = "info@startev.africa";
+        $mailContent['name'] = "Mfon";
+        dispatch(new SendOrderNotification($mailContent));
         Admin::all()
             ->mapToGroups(function ($admin) use (&$mailContent, $recipients) {
                 $mailContent['email'] = $admin->email;
