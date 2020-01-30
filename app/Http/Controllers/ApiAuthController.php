@@ -44,6 +44,7 @@ class ApiAuthController extends Controller
             'password' => $request->get('password')
         ];
 
+//        $ttl_in_minutes = 2;
 //        $ttl_in_minutes = 60*24*100;
         //if credentials does not match/exists
 //        if (! $token = auth()->setTTL($ttl_in_minutes)->attempt($credentials)) {
