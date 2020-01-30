@@ -44,7 +44,9 @@ class ApiAuthController extends Controller
             'password' => $request->get('password')
         ];
 
+//        $ttl_in_minutes = 60*24*100;
         //if credentials does not match/exists
+//        if (! $token = auth()->setTTL($ttl_in_minutes)->attempt($credentials)) {
         if (! $token = auth()->attempt($credentials)) {
             //return error message
             return response()->json(['error' => 'Invalid email address or Password'], '401');
