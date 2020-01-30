@@ -18,6 +18,7 @@ class Authenticate extends Middleware
             return route('login');
         }
 
-        return redirect()->guest(route('auth.login'));
+        return redirect()->guest('/');
+//        return redirect()->guest(route('auth.login'));
     }
 }
