@@ -283,7 +283,7 @@ class BroadcastManagerController extends Controller
      */
     public function getBroadcastMessages()
     {
-        $messages = BroadcastSchedule::orderBy('id','desc')->get();
+        $messages = BroadcastGroupMessage::orderBy('created_at','asc')->get();
         return response()->json($messages);
     }
 
