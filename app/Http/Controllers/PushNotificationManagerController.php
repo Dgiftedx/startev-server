@@ -27,7 +27,7 @@ class PushNotificationManagerController extends Controller
 
     public function saveToken( Request $request )
     {
-
+        return response()->json(['success'=>$this->user]);
         $user = User::find($this->user->id);
         $data = $request->all();
         if(!isset($data['token']))
