@@ -211,6 +211,11 @@ Route::group([
     Route::get('pick-audio-session/{id}', 'Chat\AudioSessionController@pickSession');
     Route::get('get-audio-host-session/{host}', 'Chat\AudioSessionController@getHostSession');
 
+
+    Route::post('fcmtoken/set', 'saveToken@saveToken');
+
+
+
 });
 
 

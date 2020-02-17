@@ -38,7 +38,8 @@ class User extends Authenticatable implements JWTSubject, Searchable
         'address',
         'bio',
         'bg_image',
-        'email_verified_at'
+        'email_verified_at',
+        'push_token'
     ];
 
     /**

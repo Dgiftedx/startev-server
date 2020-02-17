@@ -8,6 +8,8 @@ use App\Models\Chat\Message;
 use App\Models\Chat\MessageConversation;
 use App\Models\User;
 use App\Models\UserContact;
+use App\Providers\PushNotification;
+use App\Repositories\Notification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -141,23 +143,33 @@ class MessagingController extends Controller
 
         Message::create($data);
         //send email notification to recipient if offline
-        $this->handleOfflineMessageNotification($data['receiver_id'], $data['message']);
+        $this->handleOfflineMessageNotification($data['receiver_id'], $data['message'],$data['sender_id']);
 
         return response()->json(['success' => true]);
     }
 
 
-    private  function handleOfflineMessageNotification($recipient, $message)
+    private  function handleOfflineMessageNotification($recipient, $message,$sender)
     {
         $user = User::find($recipient);
+        $senderuser = User::find($sender);
 
         if (!$user->isOnline()) {
             $mailContent = [];
             $mailContent['message'] = $message;
             $mailContent['to'] = $user->email;
             $mailContent['subject'] = "You have a new Message";
-            dispatch(new SendEmailNotification($mailContent));
+//            dispatch(new SendEmailNotification($mailContent));
+
         }
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$Messages],
+            'title'=>'You have a new Message ',
+            'body'=>"New Message From ".$senderuser->name
+        ];
+        $pushData['users'][] = $recipient;
+
+        (new Notification())->sendPush($pushData);
     }
 
 
