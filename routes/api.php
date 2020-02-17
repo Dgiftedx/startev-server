@@ -212,7 +212,7 @@ Route::group([
     Route::get('get-audio-host-session/{host}', 'Chat\AudioSessionController@getHostSession');
 
 
-    Route::post('fcmtoken/set', 'saveToken@saveToken');
+    Route::post('fcmtoken/set', 'PushNotificationManagerController@saveToken');
 
 
 
