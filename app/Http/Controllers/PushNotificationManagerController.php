@@ -27,11 +27,12 @@ class PushNotificationManagerController extends Controller
 
     public function saveToken( Request $request )
     {
+
+        $user = User::find($this->user->id);
         $data = $request->all();
         if(!isset($data['token']))
             return response()->json(['error'=>'Invalid Data']);
-        $this->user->push_token = $data['token'];
-        $this->user->save();
+        $user->update(['push_token'=>$data['token']]);
         return response()->json(['success'=>true]);
     }
 
