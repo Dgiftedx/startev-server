@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PushNotificationManagerController extends Controller
@@ -18,22 +17,21 @@ class PushNotificationManagerController extends Controller
      * ApiAccountController constructor.
      * @param User $userModel
      */
-    public function __construct( User $userModel )
+    public function __construct(User $userModel)
     {
         $this->user = $userModel;
         $this->middleware('auth:api');
     }
 
 
-    public function saveToken( Request $request )
+    public function saveToken(Request $request)
     {
-        return response()->json(['success'=>$this->user]);
-        $user = User::find($this->user->id);
         $data = $request->all();
-        if(!isset($data['token']))
-            return response()->json(['error'=>'Invalid Data']);
-        $user->update(['push_token'=>$data['token']]);
-        return response()->json(['success'=>true]);
+        if (!isset($data['user_id']))
+            return response()->json(['error' => 'Invalid Data']);
+        $user = User::find($data['user_id']);
+        $user->update(['push_token' => $data['token']]);
+        return response()->json(['success' => true]);
     }
 
 }
