@@ -28,6 +28,18 @@
                     <li><a href="{{ route('admin users') }}"><i class="icon_contacts"></i> <span>Admin Users</span></a></li>
                     <li><a href="{{ route('all transactions') }}"><i class="icon_briefcase"></i> <span>Transactions</span></a></li>
 
+
+
+
+                    <li class="treeview {{ $route === 'feeds' || $route === 'feed-setting' ? 'active' : '' }}">
+                        <a href="javascript:void(0)"><i class="icon_table"></i> <span>Manage Feeds</span> <i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{ route('feeds') }}">All Feeds</a></li>
+                            <li><a href="{{ route('feed-setting') }}">Feed Setting</a></li>
+                        </ul>
+                    </li>
+
+
                     <li class="treeview {{ $route === 'admin new orders' || $route === 'admin confirmed orders'  || $route === 'admin delivered orders' || $route === 'admin dispatched orders' ? 'active' : '' }}">
                         <a href="javascript:void(0)"><i class="icon_cart_alt"></i> <span>Manage Orders</span> <i class="fa fa-angle-right"></i></a>
                         <ul class="treeview-menu">

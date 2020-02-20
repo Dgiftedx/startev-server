@@ -132,6 +132,17 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('manage-contents/help-tips-view','Admin\ViewsController@helpTips')->name('help tips');
     Route::get('manage-contents/get-advert-banners','Admin\ViewsController@adverts')->name('adverts');
 
+    //Feeds Management
+
+    Route::get('manage-contents/get-feeds','Admin\FeedsController@getFeeds')->name('feeds');
+    Route::get('manage-contents/fetch_data','Admin\FeedsController@fetch_data');
+    Route::get('manage-contents/trash_data','Admin\FeedsController@trash_data');
+    Route::get('manage-contents/publish_data','Admin\FeedsController@publish_data');
+    Route::get('manage-contents/review_data','Admin\FeedsController@review_data');
+    Route::get('manage-contents/feed/{id}','Admin\FeedsController@view');
+    Route::get('manage-contents/feeds/setting','Admin\FeedsController@feedsSettings')->name('feed-setting');
+    Route::get('manage-contents/feeds/updateFeedSetting','Admin\FeedsController@updateFeedSetting');
+
 
     //site Data
     Route::get('/general-settings/reload-banks','Admin\SettingsController@reloadBanks');

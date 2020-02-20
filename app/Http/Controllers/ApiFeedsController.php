@@ -45,7 +45,11 @@ class ApiFeedsController extends Controller
 
         $hiddenFeeds = UserHiddenFeed::where('user_id','=',$id)->pluck('feed_id')->toArray();
 
-        $feeds = $this->feed->with('feedComments')->with('feedComments.user')->whereNotIn('id', $hiddenFeeds)->orderBy('id','desc')
+        $feeds = $this->feed->with('feedComments')
+            ->with('feedComments.user')
+            ->whereNotIn('id', $hiddenFeeds)
+            ->where('status', 1)
+            ->orderBy('id','desc')
             ->paginate(5);
 
         foreach ($feeds as $feed ) {
@@ -72,6 +76,7 @@ class ApiFeedsController extends Controller
             ->with('feedComments.user')
             ->whereNotIn('id', $hiddenFeeds)
             ->where('user_id', '=', $user_id)
+            ->where('status', 1)
             ->orderBy('id','desc')
             ->get()
             ->mapToGroups(function ($item) use (&$feeds) {
