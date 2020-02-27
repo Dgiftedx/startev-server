@@ -11,6 +11,9 @@ use App\Models\Partnership;
 use App\Models\User;
 use Spatie\Searchable\Search;
 use Illuminate\Http\Request;
+use App\Providers\PushNotification;
+use App\Repositories\Notification;
+use Illuminate\Support\Facades\Log;
 
 class ApiVentureController extends Controller
 {
@@ -175,8 +178,29 @@ class ApiVentureController extends Controller
         dispatch(new SendEmailNotification($mailContent));
         dispatch(new SendEmailNotification($mailContent2));
 
+
+        //send push notification to target user if offline
+        $this->handleOfflinePartnershipNotification($user, $venture->business->user->id);
+
         return response()->json($update[0]);
     }
+
+
+    //send push notification to target user if offline
+    private  function handleOfflinePartnershipNotification($sender, $recipient)
+    {
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$Partnership],
+            'title'=>'New Partnership Request',
+            'body'=>"{$sender->name} sent a partnership request"
+        ];
+        $pushData['users'][] = $recipient;
+
+        (new Notification)->sendPush($pushData);
+
+        //   dd($pushData);
+    }
+
 
     public function acceptPartnership( Request $request )
     {
@@ -211,9 +235,27 @@ class ApiVentureController extends Controller
         //send mail notification
         dispatch(new SendEmailNotification($mailContent));
 
+
+        //send push notification to target user if offline
+        $this->handleOfflineApprovedPartnershipNotification( $venture, $user->id);
+
         return response()->json($partners);
     }
 
+
+    //send push notification to target user if offline
+    private  function handleOfflineApprovedPartnershipNotification($sender, $recipient)
+    {
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$Partnership],
+            'title'=>'New Partnership Approval',
+            'body'=>"Partnership with {$sender->venture_name} Approved"
+        ];
+        $pushData['users'][] = $recipient;
+
+        (new Notification)->sendPush($pushData);
+
+    }
 
 
     public function rejectPartnership( Request $request )
@@ -238,7 +280,24 @@ class ApiVentureController extends Controller
         //send mail notification
         dispatch(new SendEmailNotification($mailContent));
 
+        //send push notification to target user if offline
+        $this->handleOfflineRejectPartnershipNotification( $venture, $user->id);
+
         return response()->json($partners);
+    }
+
+    //send push notification to target user if offline
+    private  function handleOfflineRejectPartnershipNotification($sender, $recipient)
+    {
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$Partnership],
+            'title'=>'Partnership Update',
+            'body'=>"Partnership with {$sender->venture_name} Rejected"
+        ];
+        $pushData['users'][] = $recipient;
+
+        (new Notification)->sendPush($pushData);
+
     }
 
 

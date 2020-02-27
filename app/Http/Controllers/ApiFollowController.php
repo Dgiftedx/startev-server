@@ -8,6 +8,9 @@ use App\Models\Feed;
 use App\Models\User;
 use App\Models\UserNotification;
 use Illuminate\Http\Request;
+use App\Providers\PushNotification;
+use App\Repositories\Notification;
+use Illuminate\Support\Facades\Log;
 
 class ApiFollowController extends Controller
 {
@@ -38,12 +41,41 @@ class ApiFollowController extends Controller
         $targetUser = $this->user->find($target);
 
         $notyTitle = "You have a new follower";
-        $notyContent = "{$targetUser->name} is following you.";
+        $notyContent = "{$user->name} is following you.";
         UserNotification::create(['user_id' => $userId, 'target_id' => $target, 'title' => $notyTitle, 'content' => $notyContent]);
 
         $people = (new ApiFeedsController($this->user, $this->feed))->gatherPeopleToFollow($userId);
+
+
+//        dd($userId, $target);
+        //send push notification to target user if offline
+        $this->handleOfflineFollowNotification($userId, $target);
+        Log::info("Rrecipients ".$user);
+
         return response()->json(['success' => true, 'people' => $people]);
     }
+
+    //send push notification to target user if offline
+    private  function handleOfflineFollowNotification($sender, $recipient)
+    {
+        $user = User::find($recipient);
+        $senderuser = User::find($sender);
+
+        if (!$user->isOnline()) {
+        }
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$Messages],
+            'title'=>'You have a new follower',
+            'body'=>"{$senderuser->name} is following you."
+        ];
+        $pushData['users'][] = $recipient;
+
+        (new Notification)->sendPush($pushData);
+
+//        dd($pushData);
+    }
+
+
 
     public function toggleFollow($userId, $target)
     {
@@ -52,7 +84,7 @@ class ApiFollowController extends Controller
         $user->toggleFollow($target);
 
         $targetUser = $this->user->find($target);
-        $message = "{$user->name} just stopped following you. You'll no longer receive updates from this user";
+        $message = "You just stopped following {$targetUser->name}. You'll no longer receive updates from this user";
 
         if ($user->isFollowing($target)){
             $notyTitle = "You have a new follower";
@@ -60,12 +92,16 @@ class ApiFollowController extends Controller
 
             UserNotification::create(['user_id' => $userId, 'target_id' => $target, 'title' => $notyTitle, 'content' => $notyContent]);
 
-            $message = "{$user->name} is now following you. You'll now receive updates from this user";
+            $message = "You are now following {$targetUser->name}. You'll now receive updates from this user";
 
             $mailContent['message'] = $message;
             $mailContent['to'] = $targetUser->email;
             $mailContent['subject'] = "You have a new follower";
+
             dispatch(new SendEmailNotification($mailContent));
+
+
+            $this->handleOfflineFollowNotification($userId, $target);
 
         }
         return response([

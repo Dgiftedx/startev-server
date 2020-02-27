@@ -13,6 +13,7 @@ use App\Jobs\SendPushNotification;
 use App\Providers\PushNotification;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Log;
 
 class Notification
 {
@@ -45,8 +46,11 @@ class Notification
                 'headers' => $headers,
                 'body' => $body
             ]);
+//            Log::info("success");
             return $res->getBody()->getContents();
+//            return '';
         } catch (\Exception $e) {
+//            Log::info("Error");
 //            dd($e);
             return response()->json(['error' => 'Network Error']);
         }

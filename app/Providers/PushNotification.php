@@ -17,6 +17,9 @@ class PushNotification
 
     public static $NewsFeed = 1;
     public static $Messages = 2;
+    public static $Comments = 3;
+    public static $Partnership = 4;
+    public static $NewOrder = 5;
 
 
     /**

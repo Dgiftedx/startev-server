@@ -169,7 +169,7 @@ class MessagingController extends Controller
         ];
         $pushData['users'][] = $recipient;
 
-        (new Notification())->sendPush($pushData);
+        (new Notification)->sendPush($pushData);
     }
 
 

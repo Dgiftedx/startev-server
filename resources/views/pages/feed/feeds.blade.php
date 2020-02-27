@@ -39,7 +39,6 @@
                         </div>
                         <div class="table-responsive" id="table_data">
                             @include('pages.feed.feeds_data')
-
                         </div>
                     </div>
                 </div>

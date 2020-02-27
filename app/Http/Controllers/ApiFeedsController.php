@@ -15,6 +15,10 @@ use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
 use Nahid\Linkify\Facades\Linkify;
 use Pusher\Laravel\Facades\Pusher;
+use App\Providers\PushNotification;
+use App\Repositories\Notification;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ApiFeedsController extends Controller
 {
@@ -195,13 +199,35 @@ class ApiFeedsController extends Controller
         $user = User::find($data['user_id']);
 
         UserNotification::create(['user_id' => $data['user_id'], 'target_id' => 0, 'title' => "New feed has been published", 'content' => "{$user->name} published to news feed."]);
+
         $mailContent['message'] = "Your Post, <strong>{$update->title}</strong>, has been published successfully. Login to see user reactions.";
         $mailContent['to'] = $user->email;
 
         //send notification mail
         dispatch(new SendEmailNotification($mailContent));
+//            Log::info("user".$user);
+
+
+        //send push notification to recipient if offline
+        $this->handleOfflineFeedNotification($user);
+
 
         return response()->json(['success' => true, 'message' => 'Post published successfully']);
+    }
+
+    //Send push notification to offline followers on new feed
+    private  function handleOfflineFeedNotification($sender)
+    {
+        $recipients = $sender->followers()->where('push_token', '!=', '')->pluck('id');
+//        Log::info("Rrecipients ".$recipients);
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$NewsFeed],
+            'title' => 'New Feed Have Been Published',
+            'body' => "New Feed From " . $sender->name
+        ];
+        $pushData['users'][] = $recipients;
+
+        (new Notification)->sendPush($pushData);
     }
 
     /**
@@ -305,6 +331,12 @@ class ApiFeedsController extends Controller
         $new = FeedComment::create($comment);
 
         $update = Feed::with('feedComments')->with('feedComments.user')->find($new->feed_id);
+
+//        dd($feed->user_id, $userId);
+
+        //send push notification to feed user if offline
+        $this->handleOfflineCommentNotification($userId, $feed->user_id);
+
         return response()->json([
             'success' => true,
             'feed_id' => $new->feed_id,
@@ -312,6 +344,24 @@ class ApiFeedsController extends Controller
         ]);
 
     }
+
+    //Send push notification to offline User on new comment
+    private  function handleOfflineCommentNotification($sender, $recipient)
+    {
+        $sender = User::find($sender);
+
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$Comments],
+            'title'=>'You Have a New Post Comment',
+            'body'=>"New Comment From ".$sender->name
+        ];
+        $pushData['users'][] = $recipient;
+
+        (new Notification)->sendPush($pushData);
+
+//        dd($pushData);
+    }
+
 
     public function showSingle($feed_id)
     {

@@ -28,6 +28,9 @@ use App\Repositories\OrderTransaction;
 use App\Repositories\PayStackVerifyTransaction;
 use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Expr\New_;
+use App\Providers\PushNotification;
+use App\Repositories\Notification;
+use Illuminate\Support\Facades\Log;
 
 class MainStoreController extends Controller
 {
@@ -206,12 +209,12 @@ class MainStoreController extends Controller
 
         //Get other information are regards this order
         $data = $request->all();
-//use transaction reference to get payStack charge
+        //use transaction reference to get payStack charge
         $payStackChargeVerify = (new PayStackVerifyTransaction)->verify($data['transaction_ref'],1);
         if(!isset($payStackChargeVerify['status'])||$payStackChargeVerify['status']==false)
             return response()->json(['Payment Was not successful']);
         $payStackCharge = (new PayStackVerifyTransaction)->verify($data['transaction_ref'],0);
-//            $payStackCharge = 0;
+        //$payStackCharge = 0;
 
 
         $recipients['buyer'] = ['email' => $data['email'], 'name' => $data['name']];
@@ -370,6 +373,10 @@ class MainStoreController extends Controller
         $this->sendVentureMail($recipients);
 
 
+        //send push notification to target user if offline
+        $this->handleOfflineOrderNotification($recipients);
+
+
         // return success response with invoice
         return response()->json([
             'invoice' => $invoice,
@@ -440,6 +447,31 @@ class MainStoreController extends Controller
         }
     }
 
+
+    //send push notification to target user if offline
+    private  function handleOfflineOrderNotification($recipients)
+    {
+
+        $ventures = array_unique($recipients['ventures'])->pluck('business_id');
+
+
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$NewOrder],
+            'title'=>'New Order Alert :: Startev Africa',
+            'body'=>"New Order From  {$recipients['buyer']['name']}"
+        ];
+
+        foreach ($ventures as $ventureId) {
+            $venture = BusinessVenture::find($ventureId);
+            $business = \App\Models\Business::where('id', '=', $venture->business_id)->first();
+
+            $pushData['users'][] = $business->user_id;
+        }
+
+        (new Notification)->sendPush($pushData);
+
+    }
+
     public function createSlug($title, $id = 0)
     {
         $slug = str_slug($title);
@@ -479,7 +511,7 @@ class MainStoreController extends Controller
 //        $settlementBatch['counter'] = 1;
 //        $settlementBatch['active'] = 1;
 
-        //Pile request parameters for transaction calculations and settlements
+//Pile request parameters for transaction calculations and settlements
 //        $params = [
 //            'delivery' => $data['delivery_fee'],
 //            'amountTotal' => $businessOrder->amount, //amount
