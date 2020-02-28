@@ -151,12 +151,14 @@ class OpenApiController extends Controller
     {
         $formatted = [];
         //perform process
-        foreach ($result['predictions'] as $suggestion) {
-            $formatted[] = [
-                'id' => isset($suggestion['id'])?$suggestion['id']:'',
-                'place_id' => isset($suggestion['place_id'])?$suggestion['place_id']:'',
-                'name' => isset($suggestion['description'])?$suggestion['description']:'',
-            ];
+        if(isset($result['predictions'])) {
+            foreach ($result['predictions'] as $suggestion) {
+                $formatted[] = [
+                    'id' => isset($suggestion['id']) ? $suggestion['id'] : '',
+                    'place_id' => isset($suggestion['place_id']) ? $suggestion['place_id'] : '',
+                    'name' => isset($suggestion['description']) ? $suggestion['description'] : '',
+                ];
+            }
         }
         //return response
         return $formatted;
