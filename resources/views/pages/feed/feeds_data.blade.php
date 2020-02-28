@@ -6,7 +6,7 @@
                 @if( $status == '')
                     All
                 @elseif( $status == 0)
-                    Pendding
+                    Pending
                 @elseif( $status == 1)
                     Published
                 @else()
