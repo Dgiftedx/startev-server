@@ -20,6 +20,7 @@ class PushNotification
     public static $Comments = 3;
     public static $Partnership = 4;
     public static $NewOrder = 5;
+    public static $Other = 6;
 
 
     /**
