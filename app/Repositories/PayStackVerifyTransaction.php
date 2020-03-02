@@ -54,8 +54,7 @@ class PayStackVerifyTransaction
     {
         $requestUrl = env('PAYSTACK_ENDPOINT') . "transaction/verify/" . $reference;
         try {
-//            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer ' . env('PAYSTACK_SECRET_LIVE')]]);
-            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer ' . env('PAYSTACK_SECRET_TEST')]]);
+            $response = $this->client->request("GET", $requestUrl, ['headers' => ['Authorization' => 'Bearer ' . env('PAYSTACK_SECRET_LIVE')]]);
             $response = json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
             //just return the error message

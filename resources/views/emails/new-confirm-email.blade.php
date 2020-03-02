@@ -465,29 +465,29 @@
                                     <!--[if mso]></td></tr></table><![endif]-->
                                     <!--[if (!mso)&(!IE)]><!-->
                                 </div>
-                                <!--<![endif]-->
-                            </div>
-                        </div>
-                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-                        <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
-                    </div>
-                </div>
-            </div>
-            <div style="background-color:transparent;">
-                <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #FFFFFF;;">
-                    <div style="border-collapse: collapse;display: table;width: 100%;background-color:#FFFFFF;">
-                        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:650px"><tr class="layout-full-width" style="background-color:#FFFFFF"><![endif]-->
-                        <!--[if (mso)|(IE)]><td align="center" width="650" style="background-color:#FFFFFF;width:650px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
-                        <div class="col num12" style="min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top;;">
-                            <div style="width:100% !important;">
-                                <!--[if (!mso)&(!IE)]><!-->
-                                <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
-                                    <!--<![endif]-->
-                                    <div align="center" class="button-container" style="padding-top:20px;padding-right:20px;padding-bottom:20px;padding-left:20px;">
-                                        <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="left"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ $mailContent['base_url'] }}" style="height:36pt; width:138pt; v-text-anchor:middle;" arcsize="53%" stroke="false" fillcolor="#174055"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:14px"><![endif]--><a href="http://app.startev.africa/confirm-email?token=@isset($mailContent['token']){{ $mailContent['token'] }}@endisset" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #174055; border-radius: 25px; -webkit-border-radius: 25px; -moz-border-radius: 25px; width: auto; width: auto; border-top: 1px solid #174055; border-right: 1px solid #174055; border-bottom: 1px solid #174055; border-left: 1px solid #174055; padding-top: 10px; padding-bottom: 10px; font-family: 'Open Sans', Helvetica, Arial, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:30px;padding-right:30px;font-size:14px;display:inline-block;">
+                                <div style="background-color:transparent;">
+                                    <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #FFFFFF;;">
+                                        <div style="border-collapse: collapse;display: table;width: 100%;background-color:#FFFFFF;">
+                                            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:650px"><tr class="layout-full-width" style="background-color:#FFFFFF"><![endif]-->
+                                            <!--[if (mso)|(IE)]><td align="center" width="650" style="background-color:#FFFFFF;width:650px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->
+                                            <div class="col num12" style="min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top;;">
+                                                <div style="width:100% !important;">
+                                                    <!--[if (!mso)&(!IE)]><!-->
+                                                    <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
+                                                        <!--<![endif]-->
+                                                        <div align="center" class="button-container" style="padding-top:20px;padding-right:20px;padding-bottom:20px;padding-left:20px;">
+                                                            <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px" align="left"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ $mailContent['base_url'] }}" style="height:36pt; width:138pt; v-text-anchor:middle;" arcsize="53%" stroke="false" fillcolor="#174055"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:14px"><![endif]--><a href="http://app.startev.africa/confirm-email?token=@isset($mailContent['token']){{ $mailContent['token'] }}@endisset&c=@isset($mailContent['verify_code']){{ $mailContent['verify_code'] }}@endisset" style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #174055; border-radius: 25px; -webkit-border-radius: 25px; -moz-border-radius: 25px; width: auto; width: auto; border-top: 1px solid #174055; border-right: 1px solid #174055; border-bottom: 1px solid #174055; border-left: 1px solid #174055; padding-top: 10px; padding-bottom: 10px; font-family: 'Open Sans', Helvetica, Arial, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" target="_blank"><span style="padding-left:30px;padding-right:30px;font-size:14px;display:inline-block;">
                                                 <span style="font-size: 16px; line-height: 32px;"><strong><span style="font-size: 14px; line-height: 28px;">Confirm Email Address</span></strong></span></span></a>
+                                                        </div>
+                                                        <!--[if (!mso)&(!IE)]><!-->
+                                                    </div>
+                                                    <!--<![endif]-->
+                                                </div>
+                                            </div>
+                                            <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                                            <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
+                                        </div>
                                     </div>
-                                    <!--[if (!mso)&(!IE)]><!-->
                                 </div>
                                 <!--<![endif]-->
                             </div>
@@ -497,6 +497,7 @@
                     </div>
                 </div>
             </div>
+
             <div style="background-color:transparent;">
                 <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #FFFFFF;;">
                     <div style="border-collapse: collapse;display: table;width: 100%;background-color:#FFFFFF;">
