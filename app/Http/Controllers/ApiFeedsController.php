@@ -222,12 +222,23 @@ class ApiFeedsController extends Controller
 //        Log::info("Rrecipients ".$recipients);
         $pushData['content'] = [
             'data' => ['type'=>PushNotification::$NewsFeed],
-            'title' => 'New Feed Have Been Published',
-            'body' => "New Feed From " . $sender->name
+            'title' => 'News Feed Update',
+            'body' => "New Post from " . $sender->name
         ];
-        $pushData['users'][] = $recipients;
+        if(count($recipients) > 0) {
+            $pushData['users'][] = $recipients;
 
-        (new Notification)->sendPush($pushData);
+            (new Notification)->sendPush($pushData);
+        }
+        if (!$sender->isOnline()) {
+            $pushData['content']['body'] =
+                "Post Published";
+            $pushData['content']['body'] =
+                "Your Post Has Been Published.";
+            $pushData['users'] = [$sender->id];
+            (new Notification)->sendPush($pushData);
+        }
+
     }
 
     /**
@@ -335,7 +346,7 @@ class ApiFeedsController extends Controller
 //        dd($feed->user_id, $userId);
 
         //send push notification to feed user if offline
-        $this->handleOfflineCommentNotification($userId, $feed->user_id);
+        $this->handleOfflineCommentNotification($comment['user_id'], $feed->user_id);
 
         return response()->json([
             'success' => true,
@@ -348,16 +359,18 @@ class ApiFeedsController extends Controller
     //Send push notification to offline User on new comment
     private  function handleOfflineCommentNotification($sender, $recipient)
     {
-        $sender = User::find($sender);
+        if($sender != $recipient) {
+            $sender = User::find($sender);
 
-        $pushData['content'] = [
-            'data' => ['type'=>PushNotification::$Comments],
-            'title'=>'You Have a New Post Comment',
-            'body'=>"New Comment From ".$sender->name
-        ];
-        $pushData['users'][] = $recipient;
+            $pushData['content'] = [
+                'data' => ['type' => PushNotification::$NewsFeed],
+                'title' => 'News Feed Update',
+                'body' => $sender->name . " commented on your post."
+            ];
+            $pushData['users'][] = $recipient;
 
-        (new Notification)->sendPush($pushData);
+            (new Notification)->sendPush($pushData);
+        }
 
 //        dd($pushData);
     }

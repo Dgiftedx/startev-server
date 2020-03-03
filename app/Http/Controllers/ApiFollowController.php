@@ -50,7 +50,7 @@ class ApiFollowController extends Controller
 //        dd($userId, $target);
         //send push notification to target user if offline
         $this->handleOfflineFollowNotification($userId, $target);
-        Log::info("Rrecipients ".$user);
+//        Log::info("Rrecipients ".$user);
 
         return response()->json(['success' => true, 'people' => $people]);
     }
@@ -62,15 +62,18 @@ class ApiFollowController extends Controller
         $senderuser = User::find($sender);
 
         if (!$user->isOnline()) {
-        }
-        $pushData['content'] = [
-            'data' => ['type'=>PushNotification::$Messages],
-            'title'=>'You have a new follower',
-            'body'=>"{$senderuser->name} is following you."
-        ];
-        $pushData['users'][] = $recipient;
+            $title = 'You have a new follower';
+            $body = "{$senderuser->name} is following you.";
+            $pushData['content'] = [
+                'data' => ['type'=>PushNotification::$Other],
+                'title'=>$title,
+                'body'=>$body
+            ];
+            $pushData['users'][] = $recipient;
 
-        (new Notification)->sendPush($pushData);
+            (new Notification)->sendPush($pushData);
+        }
+
 
 //        dd($pushData);
     }

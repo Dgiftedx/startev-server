@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\SendConfirmationMail;
 use App\Jobs\SendEmailNotification;
 use App\Models\Business;
+use App\Models\EmailVerification;
 use App\Models\Graduate;
 use App\Models\Mentor;
 use App\Models\Student;
@@ -52,6 +53,10 @@ class ApiAuthController extends Controller
             //return error message
             return response()->json(['error' => 'Invalid email address or Password'], '401');
         }
+        $user = $this->user->whereEmail($credentials['email'])->first();
+        if (is_null($user->email_verified_at)) {
+            return response()->json(['error' => "Your email is not verified",'is_not_verified'=>$user->slug]);
+        }
 
         //return user instance with token
         return $this->respondWithToken($token);
@@ -82,27 +87,30 @@ class ApiAuthController extends Controller
 
         $data['user_id'] = $user->id;
 
-        //send Welcome Mail
-        $this->sendVerificationMail($data);
 
+
+        $is_created = false;
         if ($data['role'] === 'student') {
             // Log a new profile for student & login
             Student::create($data);
 
-            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+//            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+            $is_created = true;
         }
 
         if ($data['role'] === 'graduate') {
             // Log a new profile for student & login
             Graduate::create($data);
-            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+//            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+            $is_created = true;
         }
 
         if ($data['role'] === 'mentor'){
             // If Mentor, log a new profile & login
             Mentor::create($data);
 
-            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+//            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+            $is_created = true;
         }
 
         if ($data['role'] === 'business'){
@@ -110,8 +118,15 @@ class ApiAuthController extends Controller
             //otherwise, it's a business body, Log & login
             Business::create(['user_id' => $user->id]);
 
-            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
+//            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
 //            return $this->login($request);
+            $is_created = true;
+        }
+
+        if($is_created){
+            //send Welcome Mail
+            $this->sendVerificationMail($data);
+            return response()->json(['slug' => $data['slug'], 'email' => $data['email']]);
         }
 
         return response()->json(['error' => "Your account cannot be created this time, Please contact support"], 401);
@@ -157,10 +172,16 @@ class ApiAuthController extends Controller
         }
 
         $user = $this->user->whereSlug($data['slug'])->first();
-
         if (!is_null($user->email_verified_at)) {
             return response()->json(['message' => "Your email has already been verified"]);
         }
+        $emailverify = EmailVerification::where('user_id',$user->id)
+            ->where('code',$data['verifyCode'])->first();
+        if(is_null($emailverify)){
+            return response()->json(['error' =>
+                "Your Account couldn't be Verified. Invalid Token. Please contact out support team"], 401);
+        }
+
 
         $this->user->find($user->id)->update(['email_verified_at' => Carbon::now()->toDateTimeString()]);
 
@@ -189,17 +210,59 @@ class ApiAuthController extends Controller
         return response()->json(auth()->user());
     }
 
+    public function veriToken($len=7){
+        return strtoupper(str_random($len));
+    }
+
+    public function enc($str, $count = 5)
+    {
+//        while(true){
+        for ($i = 0; $i < $count; $i++) {
+            $str = base64_encode($str);
+            $str = strrev($str);
+        }
+//        }
+        return $str;
+    }
+
+    public function dec($str, $count = 5)
+    {
+//        while(true){
+        for ($i = 0; $i < $count; $i++) {
+            $str = strrev($str);
+            $str = base64_decode($str);
+        }
+//        }
+        return $str;
+    }
 
     public function sendVerificationMail($data)
     {
         $user = User::find($data['user_id']);
+        $veriCode = $this->veriToken();
+
+        $veriUrl = $veriCode;
+
+        $emailContent = '<div align="center">
+<h4>Welcome ' . $user->name . '</h4>
+<h4>Thank you for your interest in Startev Africa.</h4>
+<h5>Your Verification code is:</h5>
+<h3><a>' . $veriCode . '</a></h3>
+<p><h5>Please Enter Verification code on Provided Text Box.</h5></p> 
+<p><h5>You can also click the link below to verify your email.</h5></p> 
+</div>';
+
         $mailContents = [
             'to' => $user->email,
             'subject' => 'Confirm Your Email Address',
-            'message' => "Welcome $user->name <br/><br/> Please confirm your email address by clicking the button below. You might not be able to log in without email confirmation",
+            'message' => $emailContent,
             'token' => $user->slug,
+            'verify_code' => $veriUrl,
             'base_url' => env('APP_BASE_URL','https://startev.africa')
         ];
+        $userVerifySet = new EmailVerification();
+        $userVerifySet->updateOrCreate(['user_id' => $user->id], ['code' => $veriCode]);
+
 
         dispatch(new SendConfirmationMail($mailContents));
     }

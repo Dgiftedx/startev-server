@@ -161,15 +161,16 @@ class MessagingController extends Controller
             $mailContent['subject'] = "You have a new Message";
 //            dispatch(new SendEmailNotification($mailContent));
 
-        }
-        $pushData['content'] = [
-            'data' => ['type'=>PushNotification::$Messages],
-            'title'=>'You have a new Message ',
-            'body'=>"New Message From ".$senderuser->name
-        ];
-        $pushData['users'][] = $recipient;
+            $pushData['content'] = [
+                'data' => ['type'=>PushNotification::$Messages],
+                'title'=>'You have a new Message ',
+                'body'=>"New Message From ".$senderuser->name
+            ];
+            $pushData['users'][] = $recipient;
 
-        (new Notification)->sendPush($pushData);
+            (new Notification)->sendPush($pushData);
+        }
+
     }
 
 
