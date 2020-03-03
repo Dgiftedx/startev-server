@@ -14,6 +14,7 @@ use App\Models\UserHiddenFeed;
 use App\Models\Vocal;
 use App\Models\VocalReferral;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\HelperController as AdminHelperController;
 
@@ -74,6 +75,8 @@ class ApiAuthController extends Controller
 
         unset($data['ref_code']);
         $data['slug'] = uniqid(rand(), true);
+        $data['rand_token'] = uniqid(rand());
+//      $data['rand_token'] =uniqid(rand(), true);
 
         $user = $this->user->create($data);
 
@@ -196,7 +199,8 @@ class ApiAuthController extends Controller
         $mailContents = [
             'to' => $user->email,
             'subject' => 'Confirm Your Email Address',
-            'message' => "Welcome $user->name <br/><br/> Please confirm your email address by clicking the button below. You might not be able to log in without email confirmation",
+            'message' => "Welcome $user->name <br/><br/> Please confirm your email address by clicking the button below. 
+                    You might not be able to log in without email confirmation<br/> Your token ID is ".$user->rand_token,
             'token' => $user->slug,
             'base_url' => env('APP_BASE_URL','https://startev.africa')
         ];
