@@ -374,7 +374,7 @@ class MainStoreController extends Controller
 
 
         //send push notification to target user if offline
-        $this->handleOfflineOrderNotification($recipients);
+//        $this->handleOfflineOrderNotification($recipients);
 
 
         // return success response with invoice
