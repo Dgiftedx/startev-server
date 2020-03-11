@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\ReportFeed;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Feed;
@@ -160,5 +161,9 @@ class FeedsController extends Controller
             $value = $results[14]->column_default;
             return view('pages.feed.settings_data', compact('value'))->render();
         }
+    }
+    public function feed_reports() {
+        $reports = ReportFeed::with(['reportUser', 'reportFeed'])->get();
+        return view ('pages.feed.feeds_report')->with('reports', $reports);
     }
 }

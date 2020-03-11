@@ -141,6 +141,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('manage-contents/review_data','Admin\FeedsController@review_data');
     Route::get('manage-contents/feed/{id}','Admin\FeedsController@view');
     Route::get('manage-contents/feeds/setting','Admin\FeedsController@feedsSettings')->name('feed-setting');
+    Route::get('manage-contents/feeds/feeds_report','Admin\FeedsController@feed_reports')->name('feed-report');
     Route::get('manage-contents/feeds/updateFeedSetting','Admin\FeedsController@updateFeedSetting');
 
 

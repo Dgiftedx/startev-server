@@ -36,6 +36,7 @@
                         <ul class="treeview-menu">
                             <li><a href="{{ route('feeds') }}">All Feeds</a></li>
                             <li><a href="{{ route('feed-setting') }}">Feed Setting</a></li>
+                            <li><a href="{{ route('feed-report') }}">Feeds Reports</a></li>
                         </ul>
                     </li>
 

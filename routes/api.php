@@ -113,6 +113,7 @@ Route::group([
     Route::post('api-update-feed','ApiFeedsController@updateFeed');
     Route::get('single-feed/{feed_id}','ApiFeedsController@showSingle');
     Route::get('increase-feed-view/{id}','ApiFeedsController@increaseFeedViews');
+    Route::post('feeds-report','ApiFeedsController@feed_reporting');
 
     //Follow & Un-follow
     Route::get('follow/{userId}/{target}', 'ApiFollowController@follow');

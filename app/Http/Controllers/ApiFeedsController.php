@@ -12,6 +12,7 @@ use App\Models\UserHiddenFeed;
 use App\Models\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\ReportFeed;
 use JD\Cloudder\Facades\Cloudder;
 use Nahid\Linkify\Facades\Linkify;
 use Pusher\Laravel\Facades\Pusher;
@@ -19,6 +20,7 @@ use App\Providers\PushNotification;
 use App\Repositories\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
 
 class ApiFeedsController extends Controller
 {
@@ -482,6 +484,20 @@ class ApiFeedsController extends Controller
         $update = $this->feed->find($id);
 
         return response()->json($update);
+    }
+
+    public function feed_reporting(Request $request) {
+        $reports = $request->all();
+        $reports['status'] = 0;
+        reportFeed::create([
+            'user_id' => $reports['user_id'],
+            'post_id' => $reports['feed_id'],
+            'reports' => $reports['reports'],
+            'status' => $reports['status']]
+        );
+        return response()->json([
+            'success' => 'Report submitted'
+        ]);
     }
 
 }
