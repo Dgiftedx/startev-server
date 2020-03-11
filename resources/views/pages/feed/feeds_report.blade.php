@@ -19,13 +19,15 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {{--{{$reports}}--}}
                     @foreach($reports as $report)
+
                     <tr>
                         <td>
                             {{$report->reports}}
                         </td>
                         <td>
-                            {{$report->report_user->name}}
+                            {{$report->reportUser->name}}
                         </td>
                         <td>
                             @if ($report->status == 0)
@@ -40,7 +42,7 @@
                             @endrole
                         </td>
                     </tr>
-                        @endforeach
+                    @endforeach
                     </tbody>
                 </table>
             </div>
