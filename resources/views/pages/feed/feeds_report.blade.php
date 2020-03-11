@@ -15,7 +15,7 @@
                         <th>Report</th>
                         <th>Reported by</th>
                         <th>Status</th>
-                        <th class="text-nowrap">Action</th>
+                        {{--<th class="text-nowrap">Action</th>--}}
                     </tr>
                     </thead>
                     <tbody>
@@ -35,12 +35,12 @@
                             @else
                                 <button type="button" class="btn btn-info">Not resolved</button>
                         @endif
-                        <td class="text-nowrap">
-                            <button type="button" class="btn btn-circle btn-info"><i class="fa fa-eye"></i></button>
-                            @role('super')
-                            <button  type="button" class="btn btn-circle btn-danger"><i class="fa fa-trash"></i></button>
-                            @endrole
-                        </td>
+                        {{--<td class="text-nowrap">--}}
+                            {{--<button type="button" class="btn btn-circle btn-info"><i class="fa fa-eye"></i></button>--}}
+                            {{--@role('super')--}}
+                            {{--<button  type="button" class="btn btn-circle btn-danger"><i class="fa fa-trash"></i></button>--}}
+                            {{--@endrole--}}
+                        {{--</td>--}}
                     </tr>
                     @endforeach
                     </tbody>
