@@ -128,8 +128,10 @@ class OpenApiController extends Controller
                 $query[] = ['type' => 'address', 'value' => $address->address];
             }
         }
+        $startev_percentage = \App\Models\Setting::where('key', \App\Models\Setting::$STARTEV_PERCENTAGE_CHARGE)->first()->value;
 
-        return response()->json(['success' => true, "result" => ['price' => 1000]]);
+//        $sale_percentage = 0.075;
+        return response()->json(['success' => true, "result" => ['price' => 1000,'percentage' => $startev_percentage]]);
 
         //before pushing destinations to query, check if at least there is one verified address
         // if (count($verified) < 1) {

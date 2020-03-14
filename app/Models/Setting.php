@@ -8,6 +8,7 @@ class Setting extends Model
 {
 
     protected $fillable = ['key','value'];
+    public static $STARTEV_PERCENTAGE_CHARGE = 'STARTEV_PERCENTAGE_CHARGE';
 
     public function value($key)
     {
