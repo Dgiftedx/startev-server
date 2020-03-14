@@ -114,6 +114,9 @@ Route::group([
     Route::get('single-feed/{feed_id}','ApiFeedsController@showSingle');
     Route::get('increase-feed-view/{id}','ApiFeedsController@increaseFeedViews');
     Route::post('feeds-report','ApiFeedsController@feed_reporting');
+    Route::post('report-users','ApiFeedsController@report_users');
+    Route::post('block-users','ApiFeedsController@blockUser');
+    Route::post('block-report','ApiFeedsController@Block_reportUser');
 
     //Follow & Un-follow
     Route::get('follow/{userId}/{target}', 'ApiFollowController@follow');
@@ -184,6 +187,12 @@ Route::group([
     Route::get('get-user-contact-list/{id}', 'ContactListController@index');
     Route::post('add-to-contact-list', 'ContactListController@addToContact');
     Route::post('remove-from-contact-list', 'ContactListController@removeFromContact');
+    Route::get('get-block-user-list/{id}', 'ContactListController@getBlockUserList');
+    Route::post('remove-from-block-list/', 'ContactListController@deletefromBlocklist');
+    Route::get('get-all_block-list','ContactListController@allBlockUserlist');
+
+
+
 
     //Broadcast
     Route::post('log-live-session', 'BroadcastManagerController@logSession');

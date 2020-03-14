@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BlockUser;
 use App\Http\Controllers\Mail\MailController;
 use App\Jobs\PostVideoConverter;
 use App\Jobs\SendEmailNotification;
@@ -10,6 +11,7 @@ use App\Models\FeedComment;
 use App\Models\User;
 use App\Models\UserHiddenFeed;
 use App\Models\UserNotification;
+use App\ReportUser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\ReportFeed;
@@ -497,6 +499,48 @@ class ApiFeedsController extends Controller
         );
         return response()->json([
             'success' => 'Report submitted'
+        ]);
+    }
+    public function report_users(Request $request) {
+        $reports = $request->all();
+        $reports['status'] = 0;
+        ReportUser::create([
+                'user_id' => $reports['user_id'],
+                'reported_user_id' => $reports['reported_user'],
+                'status' => $reports['status']]
+        );
+        return response()->json([
+            'success' => 'Report submitted'
+        ]);
+    }
+    public function blockUser(Request $request) {
+        $reports = $request->all();
+        $reports['status'] = 1;
+        BlockUser::create([
+                'user_id' => $reports['user_id'],
+                'blocked_user_id' => $reports['blocked_user'],
+                'status' => $reports['status']]
+        );
+        return response()->json([
+            'success' => 'Blocked contact will no longer be able to call you or send you messages.'
+        ]);
+    }
+    public function Block_reportUser(Request $request) {
+        $reports = $request->all();
+        $reports['status'] = 1;
+        BlockUser::create([
+                'user_id' => $reports['user_id'],
+                'blocked_user_id' => $reports['offend_id'],
+                'status' => $reports['status']]
+        );
+        $reports['status'] = 0;
+        ReportUser::create([
+                'user_id' => $reports['user_id'],
+                'reported_user_id' => $reports['offend_id'],
+                'status' => $reports['status']]
+        );
+        return response()->json([
+            'success' => 'Contact reported and blocked.'
         ]);
     }
 
