@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\HelperController;
-use App\Jobs\SendEmailNotification;
 use App\Models\Chat\Message;
 use App\Models\Chat\MessageConversation;
 use App\Models\User;
@@ -12,7 +12,6 @@ use App\Providers\PushNotification;
 use App\Repositories\Notification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Pusher\Laravel\Facades\Pusher;
 
 class MessagingController extends Controller
@@ -49,11 +48,31 @@ class MessagingController extends Controller
 
         $removeDuplicates = array_unique($merge);
         // get this users and their messages
-        $contacts = User::whereIn('id',$removeDuplicates)->get(['id','avatar','bio','name','username','state','country','status']);
+        $contacts = (new User)
+            ->with(['block'=>function($q) use($user_id){
+                $q->where('user_id',$user_id);
+
+            },'blockMe'=>function($q) use($user_id){
+                $q->where('blocked_user_id',$user_id);
+            }])
+            ->whereIn('id',$removeDuplicates)
+            ->get(['id','avatar','bio','name','username','state','country','status']);
         foreach ($contacts as $contact) {
             $contact->status = $contact->isOnline();
             $contact->messages = $this->helperGetMessages($user_id, $contact->id);
             $contact->role = HelperController::fetchMinimalRole($contact->id);
+            if(!is_null($contact->block))
+            {
+                $contact->is_block = true;
+                    $contact->user_block = false;
+
+            }
+            if (!is_null($contact->blockMe)) {
+                $contact->is_block = true;
+                $contact->user_block = true;
+            }
+            unset($contact->block);
+            unset($contact->blockMe);
         }
 
         return response()->json($contacts);

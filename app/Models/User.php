@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\BlockUser;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 use App\Models\Store\UserStore;
@@ -216,5 +217,21 @@ class User extends Authenticatable implements JWTSubject, Searchable
     public function userStore()
     {
         return $this->hasOne(UserStore::class,'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function block()
+    {
+        return $this->hasOne(BlockUser::class,'blocked_user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function blockMe()
+    {
+        return $this->hasOne(BlockUser::class,'user_id');
     }
 }

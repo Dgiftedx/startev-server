@@ -522,7 +522,7 @@ class ApiFeedsController extends Controller
                 'status' => $reports['status']]
         );
         return response()->json([
-            'success' => 'Blocked contact will no longer be able to call you or send you messages.'
+            'success' => 'Blocked contact will no longer be able to send you messages.'
         ]);
     }
     public function Block_reportUser(Request $request) {

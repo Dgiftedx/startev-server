@@ -116,8 +116,10 @@ class ContactListController extends Controller
     }
     public function deletefromBlocklist(Request $request) {
         $all = $request->all();
-        $user = BlockUser::where('blocked_user_id',$all['ruser_id']);
-        $user->delete();
+        (new BlockUser)
+            ->where('blocked_user_id',$all['ruser_id'])
+            ->where('user_id',$all['user_id'])
+            ->delete();
         $blockList = BlockUser::where('user_id', '=', $all['user_id'])->get();
         foreach ($blockList as $list) {
             $list->userdetail = User::where('id',$list->blocked_user_id)->first();
