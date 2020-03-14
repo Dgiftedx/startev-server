@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BlockUser;
 use App\Models\User;
 use App\Models\UserContact;
 use Illuminate\Http\Request;
@@ -101,6 +102,27 @@ class ContactListController extends Controller
         $this->contacts->find($contactBook->id)->update(['contacts_id' => $contactIds]);
 
         return response()->json(['success' => true]);
+    }
+    public function getBlockUserList( $id) {
+        $blockList = BlockUser::where('user_id', '=', $id)->get();
+        foreach ($blockList as $list) {
+            $list->userdetail = User::where('id',$list->blocked_user_id)->first();
+        }
+        return response()->json(['success' => $blockList]);
+    }
+    public function allBlockUserlist() {
+        $all = BlockUser::all();
+        return response()->json(['success' => $all]);
+    }
+    public function deletefromBlocklist(Request $request) {
+        $all = $request->all();
+        $user = BlockUser::where('blocked_user_id',$all['ruser_id']);
+        $user->delete();
+        $blockList = BlockUser::where('user_id', '=', $all['user_id'])->get();
+        foreach ($blockList as $list) {
+            $list->userdetail = User::where('id',$list->blocked_user_id)->first();
+        }
+        return response()->json(['success' => true, 'list' => $blockList]);
     }
 
 }

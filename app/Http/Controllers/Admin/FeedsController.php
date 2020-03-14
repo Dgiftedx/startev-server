@@ -164,9 +164,6 @@ class FeedsController extends Controller
     }
     public function feed_reports() {
         $reports = ReportFeed::with(['reportUser', 'reportFeed'])->get();
-//        foreach($reports as $report){
-//            dd($report->reportUser->name);
-//        }
         return view ('pages.feed.feeds_report')->with('reports', $reports);
     }
 }
