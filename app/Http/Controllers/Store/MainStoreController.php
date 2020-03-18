@@ -9,6 +9,7 @@ use App\Models\Business\UserBusinessProduct;
 use App\Models\BusinessVenture;
 use App\Models\Buyer;
 use App\Models\Business;
+use App\Models\Orderlist;
 use App\Models\PaystackTransaction;
 use App\Models\Store\UserCart;
 use App\Models\Store\UserInvoice;
@@ -198,22 +199,21 @@ class MainStoreController extends Controller
         return $commission;
     }
 
-
     public function placeOrder(Request $request)
     {
 
-        $recipients = [];
-
-        // Get order items
-        $items = json_decode($request->get('items'));
-
         //Get other information are regards this order
         $data = $request->all();
+        $batch = [];
+        $invoice = [];
+        $recipients = [];
+        // Get order items
+        $items = json_decode($request->get('items'));
         //use transaction reference to get payStack charge
-        $payStackChargeVerify = (new PayStackVerifyTransaction)->verify($data['transaction_ref'],1);
-        if(!isset($payStackChargeVerify['status'])||$payStackChargeVerify['status']==false)
+        $payStackChargeVerify = (new PayStackVerifyTransaction)->verify($data['transaction_ref'], 1);
+        if (!isset($payStackChargeVerify['status']) || $payStackChargeVerify['status'] == false)
             return response()->json(['Payment Was not successful']);
-        $payStackCharge = (new PayStackVerifyTransaction)->verify($data['transaction_ref'],0);
+        $payStackCharge = (new PayStackVerifyTransaction)->verify($data['transaction_ref'], 0);
         //$payStackCharge = 0;
 
 
@@ -222,13 +222,13 @@ class MainStoreController extends Controller
         //set a batch id
         $data['batch_id'] = 'BA' . HelperController::generateIdentifier(14);
 
-        $payload=[
-            'batch_id'=>  $data['batch_id'],
-            'phone'=>  $data['phone'],
-            'reference'=>  $data['transaction_ref'],
-            'status'=>  $payStackChargeVerify['status'],
-            'message'=>  $payStackChargeVerify['message'],
-            'data'=>  $payStackChargeVerify['data'],
+        $payload = [
+            'batch_id' => $data['batch_id'],
+            'phone' => $data['phone'],
+            'reference' => $data['transaction_ref'],
+            'status' => $payStackChargeVerify['status'],
+            'message' => $payStackChargeVerify['message'],
+            'data' => $payStackChargeVerify['data'],
         ];
 
         (new PaystackTransaction)->create($payload);
@@ -252,11 +252,9 @@ class MainStoreController extends Controller
         $data['buyer_id'] = $user->id;
 
         //invoice holder
-        $invoice = [];
         $invoice['items'] = [];
         $invoice['buyer_id'] = $data['buyer_id'];
 
-        $batch = [];
         $batch['batch_id'] = $data['batch_id'];
         $batch['buyer_id'] = $data['buyer_id'];
         $batch['items_total'] = $data['items_total'];
@@ -268,6 +266,7 @@ class MainStoreController extends Controller
          * so, we can get the store is using
          * the first order in the items list
          */
+
         $finder = $items[0]->store_identifier;
         $store = UserStore::where('identifier', '=', $finder)->first();
         if (is_null($store))
@@ -275,9 +274,8 @@ class MainStoreController extends Controller
         $batch['store_id'] = $store->id;
 
         //set store owner email on recipients to be sent notifications
-        $storeOwner =$store->user;
+        $storeOwner = $store->user;
         $recipients['store'] = ['email' => $storeOwner->email, 'store_name' => $store->store_name];
-
 
 
         //if there is no existing opening, create a new batch.
@@ -300,7 +298,7 @@ class MainStoreController extends Controller
             $recipients['ventures'][] = $mainProduct->venture_id;
 
             $data['batch_id'] = $newBatch->batch_id;
-            $data['identifier'] = 'OD' . HelperController::generateIdentifier(14); //unique order id
+//            $data['identifier'] = 'OD' . HelperController::generateIdentifier(14); //unique order id
             $data['product_id'] = $item->product_id;
             $data['business_id'] = $business;
             $data['store_id'] = $store->id;
@@ -321,7 +319,8 @@ class MainStoreController extends Controller
             UserVentureOrder::create($data);
 
             //set invoice data
-            $invoice['order_id'] = $businessOrder->identifier;
+//            $invoice['order_id'] = $businessOrder->identifier;
+            $invoice['order_id'] = $data['identifier'];
             $invoice['order_date'] = Carbon::now();
             $invoice['order_status'] = 'paid';
 
@@ -341,48 +340,54 @@ class MainStoreController extends Controller
                     $search->delete();
                 }
             }
-        }
-
-        //Attach total
-        $invoice['sub_total'] = $data['items_total'];
-        $invoice['total'] = $data['grand_total'];
-        $invoice['remark'] = "Thank you for your purchase. <br/> Our Rep will be in touch with you shortly for your order delivery";
-
-        //generate invoice
-        UserInvoice::create($invoice);
-
-        if ($data['buyer_id'] > 0) {
-            $cartItems = StoreHelperController::getCartItems();
-        } else {
-            $cartItems = [];
-        }
 
 
-        /**
-         * At this point, necessary recipients
-         * ro receive order notifications are already collected
-         * in recipients array with key referencing various entities.
-         *
-         * orders items is attached so we can send the buyer needed details
-         * about the order.
-         */
-        $totals = ['items_total' => $data['grand_total'], 'grant_total' => $data['grand_total'], 'delivery_fee' => $data['delivery_fee']];
-        $this->sendOrderMails($recipients, $totals, $items);
+            //Attach total
+            $invoice['sub_total'] = $data['items_total'];
+            $invoice['total'] = $data['grand_total'];
+            $invoice['remark'] = "Thank you for your purchase. <br/> Our Rep will be in touch with you shortly for your order delivery";
 
-        //send venture notifications
-        $this->sendVentureMail($recipients);
+            //generate invoice
+            UserInvoice::create($invoice);
+
+            if ($data['buyer_id'] > 0) {
+                $cartItems = StoreHelperController::getCartItems();
+            } else {
+                $cartItems = [];
+            }
 
 
-        //send push notification to target user if offline
+            /**
+             * At this point, necessary recipients
+             * ro receive order notifications are already collected
+             * in recipients array with key referencing various entities.
+             *
+             * orders items is attached so we can send the buyer needed details
+             * about the order.
+             */
+            $totals = ['items_total' => $data['grand_total'], 'grant_total' => $data['grand_total'], 'delivery_fee' => $data['delivery_fee']];
+            $this->sendOrderMails($recipients, $totals, $items);
+
+            //send venture notifications
+            $this->sendVentureMail($recipients);
+
+
+            //send push notification to target user if offline
 //        $this->handleOfflineOrderNotification($recipients);
 
+            $invoice['itemList'] = $items; //showing the user the item bought
 
-        // return success response with invoice
-        return response()->json([
-            'invoice' => $invoice,
-            'cartItems' => $cartItems,
-            'message' => "Your order has been successfully place. You will be notified on your order status."
-        ]);
+            //changing the value of status in OrderList table
+            Orderlist::where('identifier_id',$data['identifier'])
+                ->update(['status'=>'paid']);
+
+            // return success response with invoice
+            return response()->json([
+                'invoice' => $invoice,
+                'cartItems' => $cartItems,
+                'message' => "Your order has been successfully place. You will be notified on your order status."
+            ]);
+        }
     }
 
     private function sendOrderMails($recipients, $totals = [], $items = [])

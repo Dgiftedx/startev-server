@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class BlockUser extends Model
@@ -13,5 +14,8 @@ class BlockUser extends Model
     ];
     public function BlockedUsers() {
         return $this->belongsTo(User::class, 'blocked_user_id');
+    }
+    public function BlockingUser() {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

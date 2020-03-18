@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\BlockUser;
 use App\Jobs\SendEmailNotification;
 use App\Models\Business;
 use App\Models\CareerPath;
@@ -9,6 +10,7 @@ use App\Models\Graduate;
 use App\Models\Mentor;
 use App\Models\Student;
 use App\Models\User;
+use App\ReportUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HelperController as MainHelperController;
@@ -518,6 +520,15 @@ class PlatformUsersController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => "{$user->name} data was updated successfully"]);
+    }
+
+    public function reportedUsers() {
+        $reportedUsers = ReportUser::with('ReportedUser','ReportingUser')->get();
+        return view('pages.platform.reported-users')->with('reportedUsers',$reportedUsers);
+    }
+    public function blockedUsers() {
+        $blockedUsers = BlockUser::where('status',1)->with('BlockedUsers','BlockingUser')->get();
+        return view('pages.platform.blocked-users')->with('blockedUsers', $blockedUsers);
     }
 
 }

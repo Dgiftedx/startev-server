@@ -47,6 +47,7 @@
                             <li><a href="{{ route('admin new orders') }}">All Batch Orders</a></li>
                             <li><a href="{{ route('admin dispatched orders') }}">Dispatched Orders</a></li>
                             <li><a href="{{ route('admin delivered orders') }}">Confirmed Orders</a></li>
+                            <li><a href="{{ route('admin orders list') }}">Track Orders</a></li>
                         </ul>
                     </li>
 
@@ -67,6 +68,8 @@
                                 <li><a href="{{ route('platform students') }}">Students</a></li>
                                 <li><a href="{{ route('platform graduates') }}">Graduates</a></li>
                                 <li><a href="{{ route('platform businesses') }}">Businesses</a></li>
+                                <li><a href="{{ route('platform reportedUser') }}">Reported users</a></li>
+                                <li><a href="{{ route('platform blockedUser') }}">Blocked users</a></li>
                         </ul>
                     </li>
 

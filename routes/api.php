@@ -77,13 +77,14 @@ Route::group([
     Route::post('update-industry-data/{id}','ApiAccountController@updateIndustryData');
     Route::post('update-business-data/{id}','ApiAccountController@updateBusinessData');
     Route::post('reset-password','ApiPasswordResetController@sendEmail');
-    Route::post('resend-email-confirmation','ApiPasswordResetController@ResendConfirmEmail');
+    Route::post('resend-email-c`onfirmation','ApiPasswordResetController@ResendConfirmEmail');
     Route::post('change-password','ApiPasswordResetController@changePassword');
     Route::get('remove-header-image/{id}', 'ApiAccountController@removeBgImage');
     Route::post('update-user-header-image/{id}','ApiAccountController@updateHeaderImage');
     Route::post('submit-verification','ApiAccountController@submitVerification');
     Route::post('address-search-places','OpenApiController@searchPlacesByAddress');
     Route::post('main-store-calculate-delivery','OpenApiController@calculateDelivery');
+    Route::post('main-store-calculate-product','OpenApiController@calculateOrder');
     Route::post('generate-code', 'ApiAccountController@generateCode');
     Route::post('generate-store-url', 'ApiAccountController@generateStoreUrl');
 

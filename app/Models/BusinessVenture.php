@@ -14,6 +14,7 @@ class BusinessVenture extends Model implements Searchable
         'business_id',
         'venture_name',
         'venture_address',
+        'venture_phone',
         'venture_description',
         'bank_name',
         'bank_code',

@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('dispatched-orders', 'Admin\ViewsController@dispatchedOrders')->name('admin dispatched orders');
     Route::get('cancelled-orders', 'Admin\ViewsController@cancelledOrders')->name('admin cancelled orders');
     Route::get('delivered-orders', 'Admin\ViewsController@deliveredOrders')->name('admin delivered orders');
+    Route::get('delivered-orders', 'Admin\TransactionsController@orderList')->name('admin orders list');
 
     //Ajax calls
     Route::get('admin/order/get-orders-index/{type}','Admin\OrdersController@index');
@@ -88,6 +89,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('platform-create-graduate', 'Admin\PlatformUsersController@platformCreateGraduate');
     Route::post('platform-update-graduate/{id}', 'Admin\PlatformUsersController@platformUpdateGraduate');
     Route::get('platform-delete-graduate/{id}', 'Admin\PlatformUsersController@deleteGraduateAccount');
+    Route::get('platform-reported-user', 'Admin\PlatformUsersController@reportedUsers')->name('platform reportedUser');
+    Route::get('platform-blocked-user', 'Admin\PlatformUsersController@blockedUsers')->name('platform blockedUser');
 
     Route::get('get-platform-mentors', 'Admin\PlatformUsersController@platformMentors');
     Route::post('platform-create-mentor', 'Admin\PlatformUsersController@platformCreateMentor');

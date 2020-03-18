@@ -4,37 +4,32 @@
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">
-                Feeds Reports
+                Blocked users
             </h4>
         </div>
-        <div class="card-body status" id="feedreport_data">
+        <div class="card-body status" id="blockeduser_data">
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th>Report</th>
-                        <th>Reported by</th>
+                        <th>Blocked users</th>
+                        <th>Blocked by</th>
                         <th>Status</th>
                         <th class="text-nowrap">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @if (count($reports) > 0)
-                        @foreach($reports as $report)
-
+                    @if (count($blockedUsers) > 0)
+                        @foreach($blockedUsers as $blockedUser)
                             <tr>
-                                <td>
-                                    {{$report->reports}}
+                                <td>{{$blockedUser->BlockedUsers->name}} <br/>
+                                    <small>
+                                        {{$blockedUser->BlockedUsers->phone}}
+                                    </small>
                                 </td>
+                                <td>{{$blockedUser->BlockingUser->name}}</td>
                                 <td>
-                                    {{$report->reportUser->name}}
-                                </td>
-                                <td>
-                                    @if ($report->status == 0)
-                                        <button type="button" class="btn btn-danger btn-sm">Not resolved</button>
-                                    @else
-                                        <button type="button" class="btn btn-info">Not resolved</button>
-                                @endif
+                                    <button type="button" class="btn btn-danger btn-sm">Blocked</button>
                                 </td>
                                 <td class="text-nowrap">
                                     <button type="button" class="btn btn-circle btn-info"><i class="fa fa-eye"></i></button>
@@ -43,18 +38,17 @@
                                     @endrole
                                 </td>
                             </tr>
-                        @endforeach
+                            @endforeach
                         @else
                         <tr>
-                            <td style="height: 45px;" colspan="4">No available record.</td>
+                            <td style="height: 45px;text-align: center" colspan="4">No available record.</td>
                         </tr>
                         @endif
                     </tbody>
                 </table>
             </div>
-
         </div>
-    </div>
+
 @endsection
 @section('footerScript')
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>

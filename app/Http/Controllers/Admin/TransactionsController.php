@@ -29,4 +29,7 @@ class TransactionsController extends Controller
 
         return response()->json(['success' => true, 'settlements' => $settlements]);
     }
+    public function orderList() {
+        return view('pages.order.order-list');
+    }
 }

@@ -8,8 +8,10 @@ use App\Models\Broadcast\BroadcastSchedule;
 use App\Models\Business;
 use App\Models\BusinessVenture;
 use App\Models\Feed;
+use App\Models\Orderlist;
 use App\Models\Student;
 use App\Models\User;
+use Carbon\Carbon;
 use App\Repositories\GuzzleCall;
 use App\Repositories\VerifyAccountNumber;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -101,6 +103,45 @@ class OpenApiController extends Controller
         $result = $this->processPlacesResult($raw);
         //return json response
         return response()->json($result);
+    }
+
+    public function calculateOrder(Request $request) {
+//        $items = json_decode($request->get('items'));
+        $items = $request->all();
+        $startev_percentage = \App\Models\Setting::where('key', \App\Models\Setting::$STARTEV_PERCENTAGE_CHARGE)->first()->value;
+        $cart_items = json_decode($request->get('items'));
+        $total = 0;
+        $cart_ids = '';
+        foreach ($cart_items as $cart_item) {
+           $total += $cart_item->quantity * $cart_item->amount;
+           $cart_ids .= ($cart_item->id). '-';
+        }
+        $cart_ids = substr($cart_ids, 0, -1); //removing the last (-)
+        $deliveryFee = 1000;
+        $salePercentage = (($total * $startev_percentage) / 100);
+        $grandTotal = $total + $deliveryFee + $salePercentage;
+        $grandTotal = round($grandTotal);
+        $identifier = 'OD' . HelperController::generateIdentifier(14); //unique order id
+        $amount = [
+            'deliveryFee' => $deliveryFee,
+            'salePercentage' => $salePercentage,
+            'grandTotal' => $grandTotal,
+            'total' => $total,
+            'order_time' => Carbon::now(),
+            'identifier' => $identifier
+        ];
+        Orderlist::create([
+            'identifier_id' => $identifier,
+            'cart_id' => $cart_ids,
+            'buyer_email' => $items['email'],
+            'buyer_name' => $items['name'],
+            'buyer_address' => $items['delivery_address'],
+            'buyer_phone' => $items['phone'],
+            'status' => 'Not paid',
+            'amount' => $grandTotal
+        ]);
+
+        return response()->json(['amount' => $amount]);
     }
 
     public function calculateDelivery( Request $request )
