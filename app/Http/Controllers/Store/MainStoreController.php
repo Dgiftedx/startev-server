@@ -282,6 +282,7 @@ class MainStoreController extends Controller
 
         //if there is no existing opening, create a new batch.
 //        $storeSettlementBatch=(new StoreSettlementBatch)->firstOrNew(['store_id'=>$store->id,'active'=> 1],$settlementBatch);
+//        $storeSettlementBatch=(new StoreSettlementBatch)->firstOrNew(['store_id'=>$store->id,'active'=> 1],$settlementBatch);
 
         //Calculate total student's commission and save alongside with batch details
         $batch['total_student_commission'] = $this->calculateStudentCommission($items);
@@ -357,7 +358,6 @@ class MainStoreController extends Controller
             $cartItems = [];
         }
 
-
         /**
          * At this point, necessary recipients
          * ro receive order notifications are already collected
@@ -376,6 +376,43 @@ class MainStoreController extends Controller
         //send push notification to target user if offline
         $this->handleOfflineOrderNotification($recipients);
 
+//        $this->initSettlementProcess(['store_id'=>$store->id,'active'=> 1],$settlementBatch);
+        ////////////////////////////////////////////////////////////////////////////////////
+        // Start Vendor Settlement Processes
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        //Remove Settlement from Checkout
+        $settlementBatch['store_id'] = $store->id;
+        $settlementBatch['counter'] = 1;
+        $settlementBatch['active'] = 1;
+
+        //Pile request parameters for transaction calculations and settlements
+        $params = [
+            'delivery' => $data['delivery_fee'],
+            'amountTotal' => $businessOrder->amount, //amount
+            'starTev' => (new Setting)->value('STARTEV_PERCENTAGE_CHARGE'), //percentage
+            'commission' => $businessOrder->commission, //percentage
+            'payStack' => $payStackCharge, //amount
+            'batchGrandTotal' => $totals //Grand total
+        ];
+
+        //Perform transaction breakdown
+        $result = (new OrderTransaction($params))->calculate();
+        $result['batch_id'] = $businessOrder->batch_id;
+        $result['order_id'] = $businessOrder->id;
+        $result['store_id'] = $businessOrder->store_id;
+
+        //Log settlement split
+        $settlement = VendorSettlement::create($result);
+
+        //Log delivery charge
+        $deliveryCharge['order_id'] = $businessOrder->id;
+        $deliveryCharge['batch_id'] = $businessOrder->batch_id;
+        $deliveryCharge['vendor_settlement_id'] = $settlement->id;
+        $deliveryCharge['amount'] = $settlement->delivery;
+
+        UserBusinessOrder::find($businessOrder->id)->update(['vendor_settlement_id' => $settlement->id]);
+
 
         // return success response with invoice
         return response()->json([
@@ -385,7 +422,7 @@ class MainStoreController extends Controller
         ]);
     }
 
-    private function sendOrderMails($recipients, $totals = [], $items = [])
+    private function sendOrderMails($recipients, $totals, $items)
     {
         //First mail the buyer with items
         $mailContent = [
@@ -410,9 +447,12 @@ class MainStoreController extends Controller
         //send to student
         dispatch(new SendOrderNotification($mailContent));
 
+        $startevMail = Setting::where('key','STARTEV_EMAIL')->first();
+        $startevMailName = Setting::where('key', 'STARTEV_EMAIL_NAME')->first();
+//        dd($startevMail, $startevMailName);
         //What of the Store administrators
-        $mailContent['email'] = "info@startev.africa";
-        $mailContent['name'] = "Mfon";
+        $mailContent['email'] = $startevMail->value;
+        $mailContent['name'] = $startevMailName->value;
         dispatch(new SendOrderNotification($mailContent));
         Admin::all()
             ->mapToGroups(function ($admin) use (&$mailContent, $recipients) {
@@ -452,7 +492,7 @@ class MainStoreController extends Controller
     private  function handleOfflineOrderNotification($recipients)
     {
 
-        $ventures = array_unique($recipients['ventures'])->pluck('business_id');
+        $ventures = array_unique($recipients['ventures']);
 
 
         $pushData['content'] = [
@@ -500,18 +540,18 @@ class MainStoreController extends Controller
     }
 
 
-    public function initSettlementProcess(){
-
-        ////////////////////////////////////////////////////////////////////////////////////
-        // Start Vendor Settlement Processes
-        ////////////////////////////////////////////////////////////////////////////////////
-
-//Remove Settlement from Checkout
+//    public function initSettlementProcess(){
+//
+//        ////////////////////////////////////////////////////////////////////////////////////
+//        // Start Vendor Settlement Processes
+//        ////////////////////////////////////////////////////////////////////////////////////
+//
+//        //Remove Settlement from Checkout
 //        $settlementBatch['store_id'] = $store->id;
 //        $settlementBatch['counter'] = 1;
 //        $settlementBatch['active'] = 1;
-
-//Pile request parameters for transaction calculations and settlements
+//
+//        //Pile request parameters for transaction calculations and settlements
 //        $params = [
 //            'delivery' => $data['delivery_fee'],
 //            'amountTotal' => $businessOrder->amount, //amount
@@ -539,6 +579,6 @@ class MainStoreController extends Controller
 //
 //        //fetch original product
 //        $originalProduct = UserVentureProduct::find($item->product_id);
-    }
+//    }
 
 }

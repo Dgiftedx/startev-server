@@ -74,6 +74,78 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card bg-success">
+                    <div class="card-body">
+                        <!-- Single Widget -->
+                        <div class="single-widget-area d-flex align-items-center justify-content-between">
+                            <div class="profit-icon bg-white text-success">
+                                <i class="zmdi zmdi-money"></i>
+                            </div>
+
+                            <div class="total-profit">
+                                <h6>Startev Commission</h6>
+                                <div class="font-30 text-white font-weight-bold">NGN @{{ model.stats.startevCommission | number:0 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <!-- Single Widget -->
+                        <div class="single-widget-area d-flex align-items-center justify-content-between">
+                            <div class="profit-icon bg-white text-danger">
+                                <i class="zmdi zmdi-money-off"></i>
+                            </div>
+
+                            <div class="total-profit">
+                                <h6>Paystack Commission</h6>
+                                <div class="font-30 font-weight-bold text-white">NGN @{{ model.stats.paystack_charge | number:0 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <!-- Single Widget -->
+                        <div class="single-widget-area d-flex align-items-center justify-content-between">
+                            <div class="profit-icon bg-white text-danger">
+                                <i class="zmdi zmdi-money-off"></i>
+                            </div>
+
+                            <div class="total-profit">
+                                <h6>Agent Commission</h6>
+                                <div class="font-30 font-weight-bold text-white">NGN @{{ model.stats.commission_payout | number:0 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card bg-warning">
+                    <div class="card-body">
+                        <!-- Single Widget -->
+                        <div class="single-widget-area d-flex align-items-center justify-content-between">
+                            <div class="profit-icon bg-white text-success">
+                                <i class="zmdi zmdi-money"></i>
+                            </div>
+
+                            <div class="total-profit">
+                                <h6>Delivery Fee</h6>
+                                <div class="font-30 font-weight-bold">NGN @{{ model.stats.delivery | number:0 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- content -->
         <div class="row">

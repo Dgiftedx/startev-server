@@ -159,6 +159,9 @@ class PayoutsController extends Controller
                 $mailContent['base_url'] = env('APP_BASE_URL', 'https://app.startev.africa') . '/venture-dashboard';
                 //send to student
                 dispatch(new SendConfirmNotification($mailContent));
+
+                $this->handleOfflineSettlementNotification($result);
+
                 unset($mailContent['base_url']);
                 //send to all admins
                 Admin::all()
@@ -183,6 +186,29 @@ class PayoutsController extends Controller
         }
 
         return response()->json(['success' => true]);
+
+    }
+
+
+    //send push notification to target user if offline
+    private  function handleOfflineSettlementNotification($result)
+    {
+
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$Settlement],
+            'title'=>'Commission Settlement Alert :: Startev Africa',
+            'body'=>"Your Accumulated Commissions have been paid successfully for the Settlement Batch  #<strong>{$result->reference_id}</strong> for {$result->userVentureOrders->count()} COMPLETED orders!"
+        ];
+
+        //send to student
+        $pushData['users'][] = $result->store->user->id;
+
+        (new Notification)->sendPush($pushData);
+
+        //send to business
+        $pushData['users'][] = $result->venture->business->user->id;
+
+        (new Notification)->sendPush($pushData);
 
     }
 }

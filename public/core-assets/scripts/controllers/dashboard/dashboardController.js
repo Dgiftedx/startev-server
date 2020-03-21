@@ -8,6 +8,7 @@ mainApp.controller('dashboardController', ['$rootScope','lodash','$scope','$loca
             adminService.fetchData('/dashboard/get-stats',
                 function (resp) {
                     $scope.model.stats = resp.data.result;
+                    console.log($scope.model.stats );
                     //prepare chart Data
                     $scope.model.prepareBarChart(resp.data.result.chartData);
                 })

@@ -148,6 +148,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/general-settings/reload-banks','Admin\SettingsController@reloadBanks');
     Route::get('/general-settings/fetch-site-data','Admin\SettingsController@siteData');
     Route::get('general-settings/site-data-view', 'Admin\ViewsController@sideData')->name('site data');
+    Route::get('general-settings/site-data-update/{id}/{value}', 'Admin\SettingsController@updatesideData');
 
 
     //Payout Overview

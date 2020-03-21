@@ -88,6 +88,7 @@ class OrdersController extends Controller
         $recipients = [];
 
         $this->sendShippingMails($ventureOrder, $ventureOrder->batch_id, $ventureOrder->identifier);
+        $this->handleOfflineShippingNotification($ventureOrder, $ventureOrder->batch_id, $ventureOrder->identifier);
 
 
         return response()->json(['success' => true]);
@@ -105,6 +106,7 @@ class OrdersController extends Controller
 
         $this->implySettlement($businessOrder);
         $this->sendDeliveryConfirmationMails($ventureOrder, $ventureOrder->batch_id, $ventureOrder->identifier);
+        $this->handleOfflineDeliveryConfirmationNotification($ventureOrder, $ventureOrder->batch_id, $ventureOrder->identifier);
 
         return response()->json(['success' => true]);
     }
@@ -175,15 +177,20 @@ class OrdersController extends Controller
                 dispatch(new SendConfirmNotification($mailContent));
                 return [];
             });
+
+        $startevMail = Setting::where('key','STARTEV_EMAIL')->first();
+        $startevMailName = Setting::where('key', 'STARTEV_EMAIL_NAME')->first();
+//        dd($startevMail, $startevMailName);
         //Extra bcc
-        $msg = "Hi Mfon <br> An order #<strong>{$order_id}</strong> from  <strong>{$recipients->store->store_name}</strong> has been DISPATCHED! Kindly login and process Delivery";
+        $msg = "Hi {$startevMailName->value} <br> An order #<strong>{$order_id}</strong> from  <strong>{$recipients->store->store_name}</strong> has been DISPATCHED! Kindly login and process Delivery";
         $msg .= "<h3>Order ID: {$order_id}</h3>";
         $msg .= "<h3>Batch ID: {$batch_id}</h3>";
         $msg .= "<h3>Venture: {$recipients->venture->venture_name}</h3>";
         $msg .= "<h3>Buyer: {$recipients->buyer->name}</h3>";
         $msg .= "<h3>Store: {$recipients->store->store_name}</h3>";
-        $mailContent['email'] = "info@startev.africa";
-        $mailContent['name'] = "Mfon";
+        //What of the Store administrators
+        $mailContent['email'] = $startevMail->value;
+        $mailContent['name'] = $startevMailName->value;
         $mailContent['message'] = $msg;
         $mailContent['server_url'] = env('APP_SERVER_URL', 'https://startev.africa');
 
@@ -194,12 +201,15 @@ class OrdersController extends Controller
 
     private function sendDeliveryConfirmationMails($recipients, $batch_id, $order_id)
     {
+
+        $startevMail = Setting::where('key','STARTEV_EMAIL')->first();
+        $startevMailName = Setting::where('key', 'STARTEV_EMAIL_NAME')->first();
         //First mail the buyer with items
         $mailContent = [
             'email' => $recipients->buyer->email,
             'name' => $recipients->buyer->name,
             'subject' => "Your order has been completed!",
-            'message' => "Hi <strong>{$recipients->buyer->name}</strong>, <br> Your Order #<strong>{$order_id}</strong> has been Delivered! <br>This Transaction has been marked as COMPLETED. <br>For complaints or enquiry on this transaction, kindly send a mail to <a href='mailto:info@startev.africa'>info@startev.africa</a>",
+            'message' => "Hi <strong>{$recipients->buyer->name}</strong>, <br> Your Order #<strong>{$order_id}</strong> has been Delivered! <br>This Transaction has been marked as COMPLETED. <br>For complaints or enquiry on this transaction, kindly send a mail to <a href='mailto:{$startevMail->value}'>{$startevMail->value}</a>",
             'role' => 'buyer',
             'base_url' => env('APP_BASE_URL', 'https://app.startev.africa'),
         ];
@@ -278,6 +288,52 @@ class OrdersController extends Controller
 
     }
 
+
+    //send push notification to target user if offline
+    private  function handleOfflineShippingNotification($recipients, $batch_id, $order_id)
+    {
+
+        //Prepare store contents
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$ShippingOrder],
+            'title'=>'Order Dispatch Alert :: Startev Africa',
+            'body'=>"The order  #<strong>{$order_id}</strong> from your store has been DISPATCHED!"
+        ];
+
+        $pushData['users'][] = $recipients->store->user->id;
+        //send to student
+        (new Notification)->sendPush($pushData);
+
+        $pushData['users'][] = $recipients->venture->business->user->id;
+        //send to business
+        (new Notification)->sendPush($pushData);
+
+    }
+
+
+    //send push notification to target user if offline
+    private  function handleOfflineDeliveryConfirmationNotification($recipients, $batch_id, $order_id)
+    {
+
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$DeliveryOrder],
+            'title'=>'Order Delivery Alert :: Startev Africa',
+            'body'=>"The order  #<strong>{$order_id}</strong> from your store has been COMPLETED!"
+        ];
+
+        //send to student
+        $pushData['users'][] = $recipients->store->user->id;
+
+        (new Notification)->sendPush($pushData);
+
+        //send to business
+        $pushData['users'][] = $recipients->venture->business->user->id;
+
+        (new Notification)->sendPush($pushData);
+
+    }
+
+
     public function implySettlement($biz)
     {
         $businessOrder = (new UserBusinessOrder)->find($biz->id);
@@ -295,10 +351,10 @@ class OrdersController extends Controller
         //Pile request parameters for transaction calculations and settlements
         $paystackTransaction = $batch->paystackTransaction;
         if (!is_null($paystackTransaction) && !is_null($paystackTransaction->data))
-            $payStackCharge = number_format(($paystackTransaction->data['fees'] / 100), 0);
+            $payStackCharge = number_format((float)$paystackTransaction->data['fees'] / 100, 0);
         $totalBatchSale = $batch->ordersBusiness->count();
         if ($totalBatchSale > 0)
-            $payStackCharge = number_format($payStackCharge / $totalBatchSale, 0);
+            $payStackCharge = number_format((float)$payStackCharge / $totalBatchSale, 0);
         $params = [
             'delivery' => $batch->delivery_fee,
             'amountTotal' => $businessOrder->amount, //amount

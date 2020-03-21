@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\Setting;
 use App\Repositories\FetchBanks;
+use Illuminate\Support\Facades\Input;
 
 class SettingsController extends Controller
 {
@@ -51,5 +52,20 @@ class SettingsController extends Controller
         $banksCount = Bank::count();
 
         return response()->json(['success' => true, 'banksCount' => $banksCount]);
+    }
+
+
+    public function updatesideData($id, $value)
+    {
+//        $data = Input::all();
+//        dd($id, $value);
+        $setting = Setting::find($id);
+        $setting->value = $value;
+
+        if($setting->update()){
+            return response()->json('success', true);
+        }else{
+            return response()->json('success', true);
+        }
     }
 }

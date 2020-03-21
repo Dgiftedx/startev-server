@@ -21,6 +21,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BatchOrder;
 use App\Models\Store\UserVentureProduct;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Setting;
 
 class BusinessStoreController extends Controller
 {
@@ -480,6 +481,7 @@ class BusinessStoreController extends Controller
 
 
         $this->sendConfirmationMails($ventureOrder,$order->batch_id,$ventureOrder->identifier);
+        $this->handleOfflineConfirmationNotification($ventureOrder,$order->batch_id,$ventureOrder->identifier);
         /**
          * Wherever we need to send the payload to for delivery,
          * it's done below and success response is returned to the server
@@ -548,19 +550,39 @@ class BusinessStoreController extends Controller
                 return [];
             });
 
-        $msg="Hi Mfon. <br> An order #<strong>{$order_id}</strong> from  <strong>{$recipients->store->store_name}</strong> has been confirmed for Pickup by Venture! Kindly login and process Delivery";
+        $startevMail = Setting::where('key','STARTEV_EMAIL')->first();
+        $startevMailName = Setting::where('key', 'STARTEV_EMAIL_NAME')->first();
+        $msg="Hi {$startevMailName->value}. <br> An order #<strong>{$order_id}</strong> from  <strong>{$recipients->store->store_name}</strong> has been confirmed for Pickup by Venture! Kindly login and process Delivery";
         $msg.="<h3>Order ID: {$order_id}</h3>";
         $msg.="<h3>Batch ID: {$batch_id}</h3>";
         $msg.="<h3>Venture: {$recipients->venture->venture_name}</h3>";
         $msg.="<h3>Buyer: {$recipients->buyer->name}</h3>";
         $msg.="<h3>Store: {$recipients->store->store_name}</h3>";
-        $mailContent['email'] = "info@startev.africa";
-        $mailContent['name'] = "Mfon";
+
+        $mailContent['email'] = $startevMail->value;
+        $mailContent['name'] = $startevMailName->value;
         $mailContent['message']=$msg;
         $mailContent['server_url']= env('APP_SERVER_URL','https://startev.africa');
 
         dispatch( new SendConfirmNotification($mailContent));
         //All mail sent. Don't bother about the memory consumption. Job things!
+
+    }
+
+
+    //send push notification to target user if offline
+    private  function handleOfflineConfirmationNotification($recipients, $batch_id, $order_id)
+    {
+
+        $pushData['content'] = [
+            'data' => ['type'=>PushNotification::$OrderConfirmation],
+            'title'=>'Order Pickup Confirmation Alert :: Startev Africa',
+            'body'=>"The order  #<strong>{$order_id}</strong> from your store has been confirmed for Pickup!"
+        ];
+
+        $pushData['users'][] = $recipients->store->user->id;
+
+        (new Notification)->sendPush($pushData);
 
     }
 

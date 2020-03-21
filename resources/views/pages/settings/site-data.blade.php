@@ -14,6 +14,18 @@
                                     <button ng-click="model.reloadBanks()" button-spinner="model.reloading" type="button" class="btn btn-sm btn-warning">Reload Banks</button>
                                 </td>
                             </tr>
+                            <tr ng-repeat="data in model.siteData">
+                                <form action="">
+                                <td><strong>@{{ data.key }}:</strong> </td>
+                                <td>
+                                    <input type="@{{ data.type }}" ng-model="data.value" class="form-control-plaintext">
+                                    {{--<input type="@{{ data.type }}" ng-model="model.name" class="form-control-plaintext" value="@{{ data.value }}">--}}
+                                </td>
+                                <td>
+                                    <button ng-click="model.updateSiteData(data.id, data.value)" button-spinner="model.reloading" type="button" class="btn btn-sm btn-warning">Update</button>
+                                </td>
+                                </form>
+                            </tr>
                         </table>
                     </div>
                 </div>

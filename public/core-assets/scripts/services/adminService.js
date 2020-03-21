@@ -55,7 +55,6 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         });
     }
 
-
     function sendNormalData(url, data, onSuccess, onError) {
         $http.post(url, data
         ).then(function (response) {
@@ -272,6 +271,24 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         });
     }
 
+    function updateDataSvr(url, onSuccess, onError) {
+        $http.get(url
+        ).then(function (response) {
+            //console.log
+            if (response.data && response.data.success) {
+                onSuccess(response);
+            }
+            else {
+                onError(response);
+            }
+
+        }, function (response) {
+
+            onError(response);
+
+        });
+    }
+
 
     return {
         alert : alert,
@@ -283,6 +300,7 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         sendImageData : sendImageData,
         addMentorAccount : addMentorAccount,
         addStudentAccount : addStudentAccount,
-        addBusinessAccount : addBusinessAccount
+        addBusinessAccount : addBusinessAccount,
+        updateDataSvr : updateDataSvr
     };
 }]);

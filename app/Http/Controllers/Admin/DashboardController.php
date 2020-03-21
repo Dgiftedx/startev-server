@@ -25,22 +25,43 @@ class DashboardController extends Controller
         $chartData = HelperController::getChartData();
 
         //Get today sales
-        $todayOrdersQuery = VendorSettlement::whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->addHour()])
-        ->pluck('total')->toArray();
+//        $todayOrdersQuery = VendorSettlement::all()->pluck('total')->toArray();
+        $todayOrdersQuery = VendorSettlement::whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->addHour()])->pluck('total')->toArray();
+//        dd($todayOrdersQuery);
         $todaySales = array_sum($todayOrdersQuery);
 
         //Get unpaid Escrows
         $unpaidRaw = VendorSettlement::where('status', '=','unpaid')->get();
+        $paidRaw = VendorSettlement::all();
         $unpaidEscrowed = 0;
         $unpaidSettlements = 0; //adding escrowed and business payout and subtracting paystack charge
-
+        $startevCommission = 0;
+        $delivery = 0;
+        $paystack_charge = 0;
+        $commission_payout = 0;
 
         foreach($unpaidRaw as $settlement){
-            $unpaidEscrowed += $settlement->escrowed; //at checkout, paystack has been paid
+            $unpaidEscrowed = $unpaidEscrowed + $settlement->escrowed; //at checkout, paystack has been paid
         }
 
         foreach($unpaidRaw as $settlement)  {
             $unpaidSettlements += ($settlement->escrowed + $settlement->business_payout);
+        }
+
+        foreach($paidRaw as $settlement)  {
+            $startevCommission += $settlement->startev_charge;
+        }
+
+        foreach($paidRaw as $settlement)  {
+            $delivery+= $settlement->delivery;
+        }
+
+        foreach($paidRaw as $settlement)  {
+            $paystack_charge+= $settlement->paystack_charge;
+        }
+
+        foreach($paidRaw as $settlement)  {
+            $commission_payout+= $settlement->commission_payout;
         }
 
         $totalPayoutRaw = $unpaidRaw = VendorSettlement::where('status', '=','paid')->pluck('total')->toArray();
@@ -55,7 +76,11 @@ class DashboardController extends Controller
             'unpaid_escrowed' => $unpaidEscrowed,
             'unpaid_settlements' => $unpaidSettlements,
             'total_payout' => $totalPayout,
-            'chartData' => $chartData
+            'chartData' => $chartData,
+            'startevCommission' => $startevCommission,
+            'delivery' => $delivery,
+            'paystack_charge' => $paystack_charge,
+            'commission_payout' => $commission_payout,
         ];
 
         return response()->json(['success' => true, 'result' => $result]);
