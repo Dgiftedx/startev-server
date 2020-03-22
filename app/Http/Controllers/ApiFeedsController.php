@@ -19,6 +19,7 @@ use App\Providers\PushNotification;
 use App\Repositories\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Setting;
 
 class ApiFeedsController extends Controller
 {
@@ -52,7 +53,6 @@ class ApiFeedsController extends Controller
         $feeds = $this->feed->with('feedComments')
             ->with('feedComments.user')
             ->whereNotIn('id', $hiddenFeeds)
-            ->where('status', 1)
             ->orderBy('id','desc')
             ->paginate(5);
 
@@ -152,6 +152,7 @@ class ApiFeedsController extends Controller
 
     public function post( Request $request )
     {
+        $feedStatus = Setting::where('key', 'DEFAULT_FEED_VALUE')->first()->value;
         $data = $request->all();
         $mailContent = [];
 
@@ -167,7 +168,8 @@ class ApiFeedsController extends Controller
 //            'title' => $data['title'],
             'body' => $convertToLink->process($data['body']),
             'hasLiked' => 0,
-            'time' => Carbon::now()
+            'time' => Carbon::now(),
+            'status'=> $feedStatus
         ];
 
         $databaseUpdate = [
@@ -207,9 +209,10 @@ class ApiFeedsController extends Controller
         dispatch(new SendEmailNotification($mailContent));
 //            Log::info("user".$user);
 
-
-        //send push notification to recipient if offline
-        $this->handleOfflineFeedNotification($user);
+        if($feedStatus == 1) {
+            //send push notification to recipient if offline
+            $this->handleOfflineFeedNotification($user);
+        }
 
 
         return response()->json(['success' => true, 'message' => 'Post published successfully']);

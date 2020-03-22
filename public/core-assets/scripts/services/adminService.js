@@ -301,6 +301,6 @@ mainApp.factory('adminService', ['$http','$location', '$window', function($http,
         addMentorAccount : addMentorAccount,
         addStudentAccount : addStudentAccount,
         addBusinessAccount : addBusinessAccount,
-        updateDataSvr : updateDataSvr
+        updateDataSvr : updateDataSvr,
     };
 }]);

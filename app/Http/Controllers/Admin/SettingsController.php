@@ -44,7 +44,7 @@ class SettingsController extends Controller
                     'slug' => $bank['slug'],
                     'code' => $bank['code'],
                     'long_code' => $bank['longcode'],
-                    'gateway' => $bank['gateway']??''
+                    'gateway' => $bank['gateway']
                 ]);
             }
         }

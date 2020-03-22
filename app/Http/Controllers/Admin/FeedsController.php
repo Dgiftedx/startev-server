@@ -8,6 +8,7 @@ use App\Models\Feed;
 use App\Models\FeedComment;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Models\Setting;
 
 class FeedsController extends Controller
 {
@@ -122,43 +123,42 @@ class FeedsController extends Controller
     }
 
     public function feedsSettings(){
-        $table = 'feeds';
-        $database = env('DB_DATABASE');
-        $results = DB::select('
-            select column_default 
-            from information_schema.columns 
-            where 
-                table_schema = ? 
-                and table_name = ?
-        ', [$database, $table]);
-
-        // Flatten the results to get an array of the default values
-        $default = $results[14]->column_default;
-
-//        dd($results[14]->column_default);
-        return view('pages.feed.settings')->with('value', $default);
+        return view('pages.feed.settings');
     }
 
-    public function updateFeedSetting(Request $request)
+    public function getfeedsSettings(){
+        $default = Setting::where('key', 'DEFAULT_FEED_VALUE')->first()->value;
+//        dd($default);
+        return response()->json(['success' => true, 'result' => $default]);
+    }
+
+    public function updateFeedSetting()
     {
-        if(request()->ajax()) {
-            $status = $request->get('default');
-//            dd($status);
-
-            DB::statement('ALTER TABLE `feeds` CHANGE `status` `status` INT(11) NOT NULL DEFAULT '.$status.';');
-            $table = 'feeds';
-            $database = env('DB_DATABASE');
-            $results = DB::select('
-            select column_default 
-            from information_schema.columns 
-            where 
-                table_schema = ? 
-                and table_name = ?
-        ', [$database, $table]);
-
-            // Flatten the results to get an array of the default values
-            $value = $results[14]->column_default;
-            return view('pages.feed.settings_data', compact('value'))->render();
+        $default = Setting::where('key', 'DEFAULT_FEED_VALUE')->first();
+        if($default) {
+            if ($default->value > 0) {
+                $default->value = 0;
+            } else {
+                $default->value = 1;
+            }
+            $new = Setting::find($default->id);
+            $new->value = $default->value;
+            if ($new->update()) {
+//            dd($new->value);
+                $default = Setting::where('key', 'DEFAULT_FEED_VALUE')->first()->value;
+                return response()->json(['success' => true, 'result' => $default]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        }else{
+            $new = new Setting();
+            $new->key = 'DEFAULT_FEED_VALUE';
+            $new->value = 1;
+            if ($new->save()){
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['success' => false]);
+            }
         }
     }
 }

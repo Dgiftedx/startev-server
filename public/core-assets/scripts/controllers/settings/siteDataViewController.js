@@ -5,6 +5,8 @@ mainApp.controller('siteDataViewController', ['$rootScope','lodash','$scope','$l
         $scope.model.cargando_main = true;
         $scope.model.reloading = false;
         $scope.model.newSitedata = {};
+        $scope.model.feedSetting = 0;
+        $scope.model.feedSettingtrue =false;
 
 
         // Get bank statistics on system
@@ -18,6 +20,35 @@ mainApp.controller('siteDataViewController', ['$rootScope','lodash','$scope','$l
                     // }
                     $scope.model.banksCount = resp.data.banksCount;
                     $scope.model.cargando_main = false;
+                }
+            )
+
+            adminService.fetchData(
+                '/manage-contents/feeds/getsetting',
+                function(resp){
+                    $scope.model.feedSetting = resp.data.result;
+                    console.log($scope.model.feedSetting);
+                    if($scope.model.feedSetting == 1){
+                        $scope.model.feedSettingtrue = true;
+                    }else{
+                        $scope.model.feedSettingtrue = false;
+                    }
+                    $scope.model.banksCount = resp.data.banksCount;
+                    $scope.model.cargando_main = false;
+                }
+            )
+        };
+
+        $scope.model.changeFeedSetting = function () {
+            $scope.model.reloading = true;
+
+            adminService.fetchData(
+                '/manage-contents/feeds/updateFeedSetting',
+                function(resp) {
+                    adminService.alert("Data update successfully","success");
+                    $scope.model.feedSetting = resp.data.result;
+                    console.log($scope.model.feedSetting);
+                    $scope.model.fetchSiteData();
                 }
             )
         };

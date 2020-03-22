@@ -2,16 +2,22 @@
 @section('title', 'Manage Contents - Add New Feed :: Startev Africa')
 @section('content')
 
-    <div class="card">
+    <div class="card" ng-controller="siteDataViewController">
         <div class="card-header">
             <h4 class="card-title">
                 Feed Setting
                 <a href="{{ route('feeds') }}" class="btn btn-inverse float-right"><i class="fa fa-arrow-left"></i> Go Back</a>
             </h4>
         </div>
-        <div class="card-body status" id="table_data">
+        <div class="card-body status">
 
-            @include('pages.feed.settings_data')
+            <div class="custom-control custom-switch">
+                <input type="checkbox" id="hidden_status"  ng-click="model.changeFeedSetting()"  class="custom-control-input" ng-model="model.feedSetting" ng-checked="model.feedSettingtrue">
+                <label class="custom-control-label" for="hidden_status">Toggle this to
+                    <span ng-if="model.feedSetting == 1"> manualy publish feeds.</span>
+                    <span ng-if="model.feedSetting == 0">auto publish feeds.</span>
+                </label>
+            </div>
 
         </div>
     </div>
@@ -19,39 +25,5 @@
 
 @endsection
 @section('footerScript')
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <script>
-        $(document).ready(function() {
-            $(document).on('click', '.status', function (event) {
-                event.preventDefault(); //Stop the page from refreshing
-                var newstatus = '';
-                var status = $('#hidden_status').val();
-                if(status == 1){
-                    $('#hidden_status').val(0);
-                    newstatus =0;
-                }else{
-                    $('#hidden_status').val(1);
-                    newstatus = 1;
-                }
-
-                update_data(newstatus);
-            });
-
-            function update_data(newstatus){
-                console.log(newstatus);
-                $.ajax({
-                    type:'get',
-//                    url:"/manage-contents/feeds/setting?default="+feeddefault,
-                    url:"/manage-contents/feeds/updateFeedSetting?default="+newstatus,
-                    success:function(data){
-                        console.log(data);
-
-                        $('#table_data').html('');
-                        $('#table_data').html(data);
-                    }
-                })
-            }
-        });
-
-    </script>
-@endsection
+    <script src="{{ asset('/core-assets/scripts/controllers/settings/siteDataViewController.js') }}"></script>
+@stop
