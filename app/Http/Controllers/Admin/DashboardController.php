@@ -39,6 +39,7 @@ class DashboardController extends Controller
         $delivery = 0;
         $paystack_charge = 0;
         $commission_payout = 0;
+        $total_transaction = 0;
 
         foreach($unpaidRaw as $settlement){
             $unpaidEscrowed = $unpaidEscrowed + $settlement->escrowed; //at checkout, paystack has been paid
@@ -64,6 +65,10 @@ class DashboardController extends Controller
             $commission_payout+= $settlement->commission_payout;
         }
 
+        foreach($paidRaw as $settlement)  {
+            $total_transaction+= $settlement->total;
+        }
+
         $totalPayoutRaw = $unpaidRaw = VendorSettlement::where('status', '=','paid')->pluck('total')->toArray();
         $totalPayout = array_sum($totalPayoutRaw);
 
@@ -81,6 +86,7 @@ class DashboardController extends Controller
             'delivery' => $delivery,
             'paystack_charge' => $paystack_charge,
             'commission_payout' => $commission_payout,
+            'total_transaction' => $total_transaction,
         ];
 
         return response()->json(['success' => true, 'result' => $result]);

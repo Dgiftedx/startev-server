@@ -54,6 +54,7 @@ class ApiFeedsController extends Controller
             ->with('feedComments.user')
             ->whereNotIn('id', $hiddenFeeds)
             ->orderBy('id','desc')
+            ->where('status', 1)
             ->paginate(5);
 
         foreach ($feeds as $feed ) {
@@ -152,7 +153,12 @@ class ApiFeedsController extends Controller
 
     public function post( Request $request )
     {
-        $feedStatus = Setting::where('key', 'DEFAULT_FEED_VALUE')->first()->value;
+        $default = Setting::where('key', 'DEFAULT_FEED_VALUE')->first();
+        $status = 1;
+        if($default) {
+            $status = $default->value;
+        }
+
         $data = $request->all();
         $mailContent = [];
 
@@ -169,7 +175,7 @@ class ApiFeedsController extends Controller
             'body' => $convertToLink->process($data['body']),
             'hasLiked' => 0,
             'time' => Carbon::now(),
-            'status'=> $feedStatus
+            'status'=> $status
         ];
 
         $databaseUpdate = [
@@ -178,7 +184,8 @@ class ApiFeedsController extends Controller
             'body' => $convertToLink->process($data['body']),
             'post_type' => $data['post_type'],
             'hasLiked' => 0,
-            'time' => Carbon::now()
+            'time' => Carbon::now(),
+            'status'=> $status
         ];
 
         if (!is_null($request->file('images')) && count($request->file('images'))){
@@ -205,11 +212,11 @@ class ApiFeedsController extends Controller
         $mailContent['message'] = "Your Post, <strong>{$update->title}</strong>, has been published successfully. Login to see user reactions.";
         $mailContent['to'] = $user->email;
 
-        //send notification mail
-        dispatch(new SendEmailNotification($mailContent));
+        if($status == 1) {
+            //send notification mail
+            dispatch(new SendEmailNotification($mailContent));
 //            Log::info("user".$user);
 
-        if($feedStatus == 1) {
             //send push notification to recipient if offline
             $this->handleOfflineFeedNotification($user);
         }

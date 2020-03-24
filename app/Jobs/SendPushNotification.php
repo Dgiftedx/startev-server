@@ -36,20 +36,26 @@ class SendPushNotification implements ShouldQueue
         $token_ids = [];
         if (isset($this->payload['users'])){
             $ids = $this->payload['users'];
-            $temp = (new User)->whereIn('id',$ids)
+            if (count($ids)>0) {
+                $temp = (new User)->whereIn('id', $ids)
 //                ->whereHas('notification_settings', function ($query) {
 //                $query->where('push_notification', 1);
 //            })
-                ->where('push_token','!=',NULL)
-                ->pluck('push_token');
-            if(!is_null($temp))
-            $token_ids = array_merge($token_ids, $temp->toArray());
+                    ->where('push_token', '!=', NULL);
+                foreach ($temp as $tem){
+                    if ($tem->push_token) {
+                        $temp = $tem->push_token;
+                        if (!is_null($temp))
+                            $token_ids = array_merge($token_ids, $temp->toArray());
+                        if (count($token_ids) > 0) {
+                            $this->payload['content']['tokens'] = array_unique($token_ids);
+                            Notification::sendPushNotification($this->payload['content']);
+                        }
+                        Log::info("File push Done:  done", $this->payload);
+                    }
+                }
+            }
 
         }
-        if (count($token_ids) > 0){
-            $this->payload['content']['tokens'] = array_unique($token_ids);
-            Notification::sendPushNotification( $this->payload['content']);
-        }
-        Log::info("File push Done:  done",$this->payload);
     }
 }

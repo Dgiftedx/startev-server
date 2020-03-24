@@ -22,7 +22,8 @@ class Feed extends Model implements Searchable
         'link',
         'time',
         'hasLiked',
-        'post_type'
+        'post_type',
+        'status'
     ];
 
 
