@@ -190,6 +190,43 @@ class StoreHelperController extends Controller
         return $orders;
     }
 
+    public static function deliveredOrders($userId)
+    {
+        $orders = [];
+
+        $products = [];
+        UserVentureProduct::orderBy('id','asc')->get()->mapToGroups(function($item) use (&$products) {
+            $products[$item->sku] = $item;
+            return [];
+        });
+
+        $sortable = ['delivered'];
+
+        UserVentureOrder::with('buyer')
+            ->with('product')
+            ->where('store_id', '=', UserStore::storeId($userId))
+            ->whereIn('status',   $sortable)
+            ->get()
+            ->mapToGroups( function($item) use (&$orders, $products) {
+
+                $orders[$item->identifier][] = [
+                    'name' => $item->buyer->name,
+                    'order_id' => $item->identifier,
+                    'image' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->images[0]:'',
+                    'product_name' => self::checkIsset($products, $item->product_sku)?$products[$item->product_sku]->product_name:'',
+                    'amount' => $item->amount,
+                    'quantity' => $item->quantity,
+                    'date' => $item->created_at,
+                    'status' => $item->status
+                ];
+
+
+                return [];
+            });
+
+
+        return $orders;
+    }
 
 
 
@@ -459,6 +496,9 @@ class StoreHelperController extends Controller
 
                 return [];
             });
+//        $orders = UserBusinessOrder::with(['buyer','mainProduct','mainProduct.venture','store'])
+//            ->byFilter($query)
+//            ->get();
 
         return $orders;
     }

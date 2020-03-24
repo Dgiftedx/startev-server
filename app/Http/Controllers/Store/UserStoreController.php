@@ -140,7 +140,8 @@ class UserStoreController extends Controller
             'delivered_orders_avg' => UserVentureOrder::where('store_id','=', UserStore::storeId($userId))->where('status','=','delivered')->avg('amount'),
             'total_commission' => $totalCommisions,
 //            'total_commission' => StoreHelperController::totalCommission($userId),
-            'recent_orders' => StoreHelperController::recentOrders($userId)
+            'recent_orders' => StoreHelperController::recentOrders($userId),
+//            'delivered_order' => StoreHelperController::deliveredOrders($userId)
         ];
         // return json response
         return response()->json($data);
